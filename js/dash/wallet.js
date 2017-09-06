@@ -109,7 +109,7 @@ function confirmTransactionDetails(confirmed) {
 		 	} else if(data=="-2") {
 		 		$('#conftransmes').html("<div class='alert alert-warning'>Invalid Gulden address.</div>");
 		 		$('#confirmtransactionpass').val("");
-		 	} else if(data=="-4") {
+		 	} else if(data=="-6") {
 		 		$('#conftransmes').html("<div class='alert alert-warning'>Insufficient funds.</div>");
 		 		$('#confirmtransactionpass').val("");
 		 	} else {
