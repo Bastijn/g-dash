@@ -281,6 +281,7 @@ function getTransactionDetails($accounttransactions, $numoftransactionstoshow, $
 			$fromme = FALSE;
 			if(in_array($txfromaddress, $addresslist)==TRUE) {
 				$fromme = TRUE;
+				$foundFromMe = FALSE;
 			}
 			
 			for ($x=0; $x<count($txrawdetails->vout); $x++) {
@@ -288,16 +289,25 @@ function getTransactionDetails($accounttransactions, $numoftransactionstoshow, $
 				if($fromme==FALSE && in_array($txrawdetails->vout[$x]->scriptPubKey->addresses[0], $addresslist)==TRUE) {
 					$txtoaddress = $txrawdetails->vout[$x]->scriptPubKey->addresses[0];
 					$txvalue = $txrawdetails->vout[$x]->value;
-					//$transactionamount = "<font color='#2F900B'>+ ".round($txvalue,2)."</font>";
 					$transactionamount = round($txvalue,2);
 				}
 				
 				//From me, to other
 				if($fromme==TRUE && in_array($txrawdetails->vout[$x]->scriptPubKey->addresses[0], $addresslist)==FALSE) {
-					$txtoaddress = $txrawdetails->vout[$x]->scriptPubKey->addresses[0];
-					$txvalue = $txrawdetails->vout[$x]->value;
-					//$transactionamount = "<font color='#C80000'>- ".round($txvalue,2)."</font>";
-					$transactionamount = -round($txvalue,2);
+					
+					//If this is a "sendmany" transaction
+					if($foundFromMe == TRUE) {
+						$txtoaddress = $txrawdetails->vout[$x]->scriptPubKey->addresses[0];
+						$txvalue = $txrawdetails->vout[$x]->value;
+						$transactionamount = $transactionamount + -round($txvalue,2);
+					} else {
+						$txtoaddress = $txrawdetails->vout[$x]->scriptPubKey->addresses[0];
+						$txvalue = $txrawdetails->vout[$x]->value;
+						$transactionamount = -round($txvalue,2);
+						
+						//We found a first transaction; set to TRUE in case this is a sendmany transaction
+						$foundFromMe = TRUE;
+					}
 				}
 			}
 			
