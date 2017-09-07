@@ -80,7 +80,7 @@ if (php_sapi_name() == "cli") {
 		
 		//Get the latest transaction for all accounts
 		$numoftransactionstoshow = 1;
-		$accounttransactions = $gulden->listtransactions('', $numoftransactionstoshow);
+		$accounttransactions = $gulden->listtransactions();
 		
 		//Get the raw transaction details
 		$transactiondetails = getTransactionDetails($accounttransactions, $numoftransactionstoshow, $addresslist);
