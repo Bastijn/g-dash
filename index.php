@@ -116,7 +116,7 @@ require_once('lib/EasyGulden/easygulden.php');
 $gulden = new Gulden($CONFIG['rpcuser'],$CONFIG['rpcpass'],$CONFIG['rpchost'],$CONFIG['rpcport']);
 
 if($gulden->getinfo()=="") {
-	echo "<div class='alert alert-danger'>
+	echo "<div class='alert alert-danger' id='connectionerror'>
 		   <strong>Error:</strong><br>There is a problem connecting to the Gulden server.
 		   Check if the server is running (by looking at the CPU/MEM usage) and use the
 		   \"Config Check\" in settings to identify the problem.
