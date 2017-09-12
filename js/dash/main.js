@@ -18,6 +18,8 @@ $(document).ready(function() {
 		  }
 		  $('#tableblocks > tbody:last-child').html(data['table']);
 		  
+		  if(data['gulden']['version']!="") { $('#connectionerror').hide(); }
+		  
 		  $('#errordiv').html("");
 		  if(data['errors']!='') {
 		  	$('#errordiv').html("<div class='alert alert-warning'>"+data['errors']+"</div>")
