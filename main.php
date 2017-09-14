@@ -30,22 +30,22 @@
   <div class="row placeholders">
     <div class="col-xs-6 col-sm-3 placeholder text-center">
       
-      <div id="guldendiv"><h4>Gulden</h4></div>
+      <div id="guldendiv"><h4>Gulden<span class="glyphicon glyphicon-question-sign pull-right" id='guldenglyph' data-toggle="tooltip" data-placement="bottom" title=""></span></h4></div>
       <span class="text-muted"><div id="gulden"><img src="images/loading.gif" border="0" height="64" width="64"></div></span>
     </div>
     <div class="col-xs-6 col-sm-3 placeholder text-center">
       
-      <div  id="nodediv"><h4>Node</h4></div>
+      <div  id="nodediv"><h4>Node<span class="glyphicon glyphicon-question-sign pull-right" id='nodeglyph' data-toggle="tooltip" data-placement="bottom" title=""></span></h4></div>
       <span class="text-muted"><div id="node"><img src="images/loading.gif" border="0" height="64" width="64"></div></span>
     </div>
     <div class="col-xs-6 col-sm-3 placeholder text-center">
       
-      <div id="witnessdiv"><h4>Witness</h4></div>
+      <div id="witnessdiv"><h4>Witness<span class="glyphicon glyphicon-question-sign pull-right" id='witnessglyph' data-toggle="tooltip" data-placement="bottom" title=""></span></h4></div>
       <span class="text-muted"><div id="witness"><img src="images/loading.gif" border="0" height="64" width="64"></div></span>
     </div>
     <div class="col-xs-6 col-sm-3 placeholder text-center">
       
-      <div id="serverdiv"><h4>Server</h4></div>
+      <div id="serverdiv"><h4>Server<span class="glyphicon glyphicon-question-sign pull-right" id='serverglyph' data-toggle="tooltip" data-placement="bottom" title=""></span></h4></div>
       <span class="text-muted"><div id="server"><img src="images/loading.gif" border="0" height="64" width="64"></div></span>
     </div>
   </div>
