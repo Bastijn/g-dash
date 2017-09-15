@@ -1,6 +1,11 @@
 $(document).ready(function() {	
 	var refreshRate = 10000;
 	
+	//Load tooltips
+	$(function () {
+	  $('[data-toggle="tooltip"]').tooltip();
+	})
+	
 	//Load json data for the dashboard
 	var loadjsondata = function() {
 	  $.getJSON( "ajax/dashboard.php", function( data ) {				 
@@ -10,13 +15,15 @@ $(document).ready(function() {
 			  $('#node').html("<b>Connections:</b> "+data['node']['connections']+"<br><b>Inbound:</b> "+data['node']['inbound']);
 			  $('#witness').html(data['witness']);
 			  $('#server').html("<b>CPU:</b> "+data['server']['cpu']+"%<br><b>MEM:</b> "+data['server']['mem']+"%");
-			  $('#guldenglyph').prop('title', 'GuldenD server not up to date');
+			  $('#guldenglyph').attr('title', 'GuldenD server not up to date')
+			  				   .tooltip('fixTitle')
 		  } else {
 		  	  $('#gulden').html("GuldenD is not running");
 			  $('#node').html("GuldenD is not running");
 			  $('#witness').html("GuldenD is not running");
 			  $('#server').html("GuldenD is not running");
-			  $('#guldenglyph').prop('title', 'GuldenD server up to date');
+			  $('#guldenglyph').attr('title', 'GuldenD server is up to date')
+			  				   .tooltip('fixTitle')
 		  }
 		  $('#tableblocks > tbody:last-child').html(data['table']);
 		  
@@ -34,28 +41,35 @@ $(document).ready(function() {
 		  if(Number.isInteger(data['gulden']['version'])==false || data['gulden']['sync'] != '100%') { $("#guldendiv").css("background-color","#ffe6e6"); } else { $("#guldendiv").css("background-color","#e6ffe6"); }
 		  if(data['node']['inbound']=='' && (data['node']['connections']==0 || data['node']['connections']=='')) { 
 		  		$("#nodediv").css("background-color","#ffe6e6");
-		  		$('#nodeglyph').prop('title', 'No connections');
+		  		$('#nodeglyph').attr('title', 'No connections')
+			  				   .tooltip('fixTitle')
 		  		
 		  	} else if(data['node']['inbound']=='' && data['node']['connections']>0) {
 		  		$("#nodediv").css("background-color","#FEE2BA");
-		  		$('#nodeglyph').prop('title', 'No inbound connections');
+		  		$('#nodeglyph').attr('title', 'No inbound connections')
+			  				   .tooltip('fixTitle')
 		  	} else { 
 		  		$("#nodediv").css("background-color","#e6ffe6");
-		  		$('#nodeglyph').prop('title', 'Found inbound and outbound connections');
+		  		$('#nodeglyph').attr('title', 'Found inbound and outbound connections')
+			  				   .tooltip('fixTitle')
 		  	}
 		  if(data['witness']=='') { 
 		  		$("#witnessdiv").css("background-color","#ffe6e6"); 
-		  		$('#witnessglyph').prop('title', 'No witness activity');
+		  		$('#witnessglyph').attr('title', 'No witness activity')
+			  					  .tooltip('fixTitle')
 		  	} else { 
 		  		$("#witnessdiv").css("background-color","#e6ffe6");
-		  		$('#witnessglyph').prop('title', 'Witness activity found');
+		  		$('#witnessglyph').attr('title', 'Witness activity found')
+			  					  .tooltip('fixTitle')
 		  	}
 		  if(data['server']['cpu']=='') { 
 		  		$("#serverdiv").css("background-color","#ffe6e6");
-		  		$('#serverglyph').prop('title', 'GuldenD server is not running');
+		  		$('#serverglyph').attr('title', 'GuldenD server is not running')
+			  					 .tooltip('fixTitle')
 		  	} else { 
 		  		$("#serverdiv").css("background-color","#e6ffe6"); 
-		  		$('#serverglyph').prop('title', 'GuldenD server is running fine');
+		  		$('#serverglyph').attr('title', 'GuldenD server is running fine')
+			  					 .tooltip('fixTitle')
 		  	}	  
 	   });
 	};
