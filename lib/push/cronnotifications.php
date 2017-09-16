@@ -6,7 +6,12 @@ if (php_sapi_name() == "cli") {
 	require_once(__DIR__.'/../../lib/functions/functions.php');
 	require_once(__DIR__.'/../../lib/EasyGulden/easygulden.php');
 	
+	//Connect to Gulden
 	$gulden = new Gulden($CONFIG['rpcuser'],$CONFIG['rpcpass'],$CONFIG['rpchost'],$CONFIG['rpcport']);
+	
+	//Get the latest version info for G-DASH and Gulden
+	$latestversionsarray = array();
+	$latestversionsarray = @json_decode(file_get_contents($GDASH['updatecheck']));
 	
 	//Check if Gulden server is running
 	if($CONFIG['pushbulletgulden']['active']=="1") {
@@ -34,6 +39,35 @@ if (php_sapi_name() == "cli") {
 		}
 	}
 
+	//Check if there is a newer version of Gulden in the repository
+	if($CONFIG['pushbulletguldenupdate']['active']=="1") {
+		
+		//Get the info (last message and current message)
+		$lastmessage = $CONFIG['pushbulletguldenupdate']['lastmes'];
+		$currentmessage = "";
+		$ginfo = $gulden->getinfo();
+		$guldenversion = $latestversionsarray->gulden;
+		if($ginfo !="") {
+			$currentguldenversion = $ginfo['version'];
+			if($currentguldenversion < $guldenversion) {
+				$currentmessage = "A new version of Gulden is available ($guldenversion)";
+			}
+		}
+		
+		//Check the last message that was pushed to prevent multiple pushes of the same message
+		if($lastmessage!=$currentmessage && $currentmessage!="") {
+			
+			//The message is different, send a push notification
+			$sendpush = shell_exec("curl --header 'Authorization: Bearer ".$CONFIG['pushbullet']."' -X POST https://api.pushbullet.com/v2/pushes --header 'Content-Type: application/json' --data-binary '{\"type\": \"note\", \"title\": \"Gulden Update\", \"body\": \"".$currentmessage."\"}'");
+			
+			//Set the current message as the last message in the config file
+			$CONFIG['pushbulletguldenupdate']['lastmes'] = $currentmessage;
+			
+			//Update the config file
+			file_put_contents(__DIR__.'/../../config/config.php', '<?php $CONFIG = '.var_export($CONFIG, true).'; ?>');
+		}
+	}
+
 	//Check if there is a new version of G-DASH available
 	if($CONFIG['pushbulletgdash']['active']=="1") {
 		
@@ -44,10 +78,7 @@ if (php_sapi_name() == "cli") {
 		//What is the current version of G-DASH
 		$currentversion = $GDASH['currentversion'];
 		
-		//Check which version is the latest version of G-DASH
-		$latestversionsarray = array();
-		$latestversionsarray = @json_decode(file_get_contents($GDASH['updatecheck']));
-	  
+		//Check which version is the latest version of G-DASH	  
 		if($CONFIG['updatechannel']=="1") {
 			$getlatestversion = $latestversionsarray->beta;
 		} else {
@@ -79,8 +110,9 @@ if (php_sapi_name() == "cli") {
 		$addresslist = array_column($addresslistrpc, "address");
 		
 		//Get the latest transaction for all accounts
+		$accounttoshowtx = "*";
 		$numoftransactionstoshow = 1;
-		$accounttransactions = $gulden->listtransactions();
+		$accounttransactions = $gulden->listtransactions($accounttoshowtx, $numoftransactionstoshow);
 		
 		//Get the raw transaction details
 		$transactiondetails = getTransactionDetails($accounttransactions, $numoftransactionstoshow, $addresslist);

@@ -62,6 +62,8 @@
 	if($CONFIG['pushbulletgdash']['lastmes']=="") { $CONFIG['pushbulletgdash']['lastmes'] = ""; }
 	$CONFIG['pushbullettx']['active'] = $_POST['pushbullettx'];
 	if($CONFIG['pushbullettx']['lastmes']=="") { $CONFIG['pushbullettx']['lastmes'] = ""; }
+	$CONFIG['pushbulletguldenupdate']['active'] = $_POST['pushbulletguldenupdate'];
+	if($CONFIG['pushbulletguldenupdate']['lastmes']=="") { $CONFIG['pushbulletguldenupdate']['lastmes'] = ""; }
 	
 	//******************//
 	//**CRON FOR STATS**//
@@ -321,6 +323,14 @@
 	      <input type="checkbox" id="pushbulletgdash" name="pushbulletgdash" aria-describedby="pushbulletgdashhelp" value="1" <?php if($CONFIG['pushbulletgdash']['active']=="1") { echo "checked='checked'"; } ?>>Send a notification if an update of G-DASH is available.</label><br>
 	      <small id="pushbulletgdashhelp" class="form-text text-muted">A notification will be sent to pushbullet if an update is available for G-DASH.<br>
 	      																Last message pushed: <?php echo $CONFIG['pushbulletgdash']['lastmes']; ?>
+	      </small>
+	  </div>
+	  
+	  <div class="checkbox">
+	      <label>
+	      <input type="checkbox" id="pushbulletguldenupdate" name="pushbulletguldenupdate" aria-describedby="pushbulletguldenupdatehelp" value="1" <?php if($CONFIG['pushbulletguldenupdate']['active']=="1") { echo "checked='checked'"; } ?>>Send a notification when there is an update for Gulden.</label><br>
+	      <small id="pushbulletguldenupdatehelp" class="form-text text-muted">A notification will be sent to pushbullet when an update for Gulden is available in the Raspbian repository.<br>
+	      																		Last message pushed: <?php echo $CONFIG['pushbulletguldenupdate']['lastmes']; ?>
 	      </small>
 	  </div>
 	  
