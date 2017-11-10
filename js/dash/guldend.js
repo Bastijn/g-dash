@@ -71,6 +71,42 @@ $(document).ready(function() {
 					"padding"			: 5,
 					"background-color"	: "#a83209"
 				},
+	});
+	
+	// Create speedometer gauge TEMP
+	var TEMPmeter = $('#TEMP').SonicGauge ({
+		label	: 'TEMP (C)',
+		start	: {angle: -225, num: 0},
+		end		: {angle: 45, num: 100},
+		markers	: [
+			{
+				gap: 25,
+				line: {"width": 15, "stroke": "none", "fill": "#eeeeee"},
+				text: {"space": 16, "text-anchor": "middle", "fill": "#333333", "font-size": 12}
+			},{
+				gap: 10, 
+				line: {"width": 10, "stroke": "none", "fill": "#aaaaaa"},
+				text: {"space": 13, "text-anchor": "middle", "fill": "#333333", "font-size": 9}
+			},{
+				gap: 1, 
+				line: {"width": 7, "stroke": "none", "fill": "#999999"}
+			}
+		],
+		animation_speed : 2000,
+		diameter: 250,
+		style	: {
+					"label"		: {"font-size": 13}
+			},
+		digital	: {
+					"width"				: "25%",
+					"font-size"			: 13,
+					"color"				: '#fff',
+					"text-align"		: "center",
+					"border"			: "2px solid #590303",
+					"border-radius"		: 25,
+					"padding"			: 5,
+					"background-color"	: "#a83209"
+				},
 	});	
 	
 	//Load json data for the dashboard
@@ -81,6 +117,7 @@ $(document).ready(function() {
 		  if(data['server']['cpu']!='') {
 		  	  CPUmeter.SonicGauge ('val', data['server']['cpu']);
 		  	  MEMmeter.SonicGauge ('val', data['server']['mem']);
+		  	  TEMPmeter.SonicGauge ('val', data['server']['temperature']);
 		  	
 			  $('#serverinfopanel').html("<div class='table-responsive'><table class='table table-striped'>"+
 			  							 "<tr><td><b>Version:</b></td><td>"+data['gulden']['version']+"</td></tr>"+

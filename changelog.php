@@ -23,6 +23,25 @@
   </h1>
   
   <div class="panel panel-default">
+    <div class="panel-heading"><b>0.21</b></div>
+    <div class="panel-body">
+		<ul>
+			<li>Added the raspbian repository to the auto-installer and installation guide.</li>
+			<li>The wallet function returned the wrong error code for "Insufficient funds".</li>
+			<li>Listtransactions in the push notifications returned only data from the default account.</li>
+			<li>A push notification can be send when a new version of Gulden is available in the Raspbian repository.</li>
+			<li>The big red error notification will automatically go away when Gulden is up and running.</li>
+			<li>Fixed a bug in the auto-install script. RPC passwords can't contain a "#" sign.</li>
+			<li>Added tooltips to the dashboard main screen.</li>
+			<li>Multiple colors for the node section on the dashboard main screen (green, orange, red).</li>
+			<li>A notification is shown when there is an update of Gulden available in the Raspbian repository.</li>
+			<li>The check for required packages differentiates between PHP5 and PHP7.</li>
+			<li>Showing the temperature of the Linux system next to the CPU and MEM percentages.</li>
+		</ul>
+    </div>
+  </div>
+  
+  <div class="panel panel-default">
     <div class="panel-heading"><b>0.20</b></div>
     <div class="panel-body">
 		<ul>
@@ -156,6 +175,7 @@
 			<li>Added a repeated password field and a validator.</li>
 			<li>Automatically log out the user when changing the password.</li>
 			<li>Added info to the repeat password field.</li>
+			<li>Changelog started</li>
 		</ul>
     </div>
   </div>

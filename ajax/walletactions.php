@@ -147,7 +147,7 @@ if(isset($_GET['action'])) {
 				if($guldenresponse!="-14") {
 					//Create the transaction in Gulden
 					$dotransaction = $gulden->sendtoaddressfromaccount($fromaccount, $sendtoaddress, $sendamount);
-					if($gulden->response['error']['code']=="-4") {
+					if($gulden->response['error']['code']=="-6") {
 						$returnarray = "-6";
 					} else {
 						$returnarray = "1";

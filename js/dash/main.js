@@ -15,14 +15,14 @@ $(document).ready(function() {
 			  $('#node').html("<b>Connections:</b> "+data['node']['connections']+"<br><b>Inbound:</b> "+data['node']['inbound']);
 			  $('#witness').html(data['witness']);
 			  $('#server').html("<b>CPU:</b> "+data['server']['cpu']+"%<br><b>MEM:</b> "+data['server']['mem']+"%");
-			  $('#guldenglyph').attr('title', 'GuldenD server not up to date')
+			  $('#guldenglyph').attr('title', 'GuldenD server up to date')
 			  				   .tooltip('fixTitle')
 		  } else {
 		  	  $('#gulden').html("GuldenD is not running");
 			  $('#node').html("GuldenD is not running");
 			  $('#witness').html("GuldenD is not running");
 			  $('#server').html("GuldenD is not running");
-			  $('#guldenglyph').attr('title', 'GuldenD server is up to date')
+			  $('#guldenglyph').attr('title', 'GuldenD server is not up to date')
 			  				   .tooltip('fixTitle')
 		  }
 		  $('#tableblocks > tbody:last-child').html(data['table']);

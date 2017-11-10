@@ -32,6 +32,7 @@
     <div class="panel-body" id="meters" align="center">
     	<div id='CPU' class="gauge"></div>
 	    <div id='MEM' class="gauge"></div>
+	    <div id='TEMP' class="gauge"></div>
     </div>
   </div>
   

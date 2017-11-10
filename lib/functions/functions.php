@@ -22,6 +22,13 @@ function GetProgUpTime($program)
 	return trim($c_pid);
 }
 
+function GetLinuxTemp() 
+{
+	$l_temp = exec("cat /sys/class/thermal/thermal_zone0/temp");
+	$l_temp = round(trim($l_temp) / 1000, 0);
+	return $l_temp;
+}
+
 function checkOpenPort($address, $port) {
 	$connection = @fsockopen($address, $port);
 	if (is_resource($connection)) { return TRUE; } else { return FALSE;}
@@ -142,12 +149,28 @@ function checkRequiredPackages() {
 	$requiredPackages = array("apache2", "php5", "php5-curl", "curl", "php5-json", "libapache2-mod-php5");
 	$checkInstalled = "";
 	
-	foreach ($requiredPackages as $packvalue) {
-		if(in_array($packvalue, $installedPackages)) {
-			$checkInstalled .= "<font color='green'>$packvalue - Passed</font><br>";
-		} else {
-			$checkInstalled .= "<font color='red'>$packvalue - Not found!</font><br>";
+	if(in_array("php5", $installedPackages)) {
+		
+		foreach ($requiredPackages as $packvalue) {
+			if(in_array($packvalue, $installedPackages)) {
+				$checkInstalled .= "<font color='green'>$packvalue - Passed</font><br>";
+			} else {
+				$checkInstalled .= "<font color='red'>$packvalue - Not found!</font><br>";
+			}
 		}
+		
+	} elseif(in_array("php7.0", $installedPackages)) {
+		
+		$requiredPackages = array("apache2", "php7.0", "php7.0-curl", "curl", "php7.0-json", "libapache2-mod-php7.0");
+		foreach ($requiredPackages as $packvalue) {
+			if(in_array($packvalue, $installedPackages)) {
+				$checkInstalled .= "<font color='green'>$packvalue - Passed</font><br>";
+			} else {
+				$checkInstalled .= "<font color='red'>$packvalue - Not found!</font><br>";
+			}
+		}
+	} else {
+		$checkInstalled = "Check PHP packages!";
 	}
 	
 	return $checkInstalled;

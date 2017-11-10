@@ -31,7 +31,8 @@
   	<br><br>
   	This dashboard is created with the idea to keep everything as simple as possible. Of course, new ideas and comments
   	are always welcome. You can find me on the Gulden slack (@bastijn) at 
-  	<a href="https://guldencommunity.slack.com" target="_blank">https://guldencommunity.slack.com</a>. I'm happy to
+  	<a href="https://guldencom.slack.com" target="_blank">https://guldencom.slack.com</a>, or via e-mail at
+	<a href="mailto:bastijn@g-dash.nl">bastijn[at]g-dash.nl</a>. I'm happy to
   	talk to you, to answer any questions and to listen to any feedback.
   	<br><br>
   	The website, development, repositories and the coffee are paid for by donations. So if you like this dashboard, 

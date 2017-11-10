@@ -2,6 +2,8 @@
 //start session
 session_start();
 
+//TODO: Create functions for version checks below instead of static code in the index page
+
 include('lib/settings/settings.php');
 include('config/config.php');
 include('lib/functions/functions.php');
@@ -88,6 +90,7 @@ if($CONFIG['otp']=="1" && $CONFIG['disablelogin'] != "1") {
 </nav>
 
 <?php
+//Check if there is an update for G-DASH
 $currentversion = $GDASH['currentversion'];
 $latestversionsarray = array();
 $latestversionsarray = @json_decode(file_get_contents($GDASH['updatecheck']));
@@ -116,11 +119,25 @@ require_once('lib/EasyGulden/easygulden.php');
 $gulden = new Gulden($CONFIG['rpcuser'],$CONFIG['rpcpass'],$CONFIG['rpchost'],$CONFIG['rpcport']);
 
 if($gulden->getinfo()=="") {
+	//If there is a connection error to the Gulden server
 	echo "<div class='alert alert-danger' id='connectionerror'>
 		   <strong>Error:</strong><br>There is a problem connecting to the Gulden server.
 		   Check if the server is running (by looking at the CPU/MEM usage) and use the
 		   \"Config Check\" in settings to identify the problem.
 		  </div>";
+} else {
+	//Check if there is an update for Gulden
+	$checkversioninfo = $gulden->getinfo();
+	$currentguldenversion = $checkversioninfo['version'];
+	$guldenversion = $latestversionsarray->gulden;
+	
+	if($currentguldenversion < $guldenversion) {
+		echo "<div class='alert alert-info' id='guldenupdateavailable'>
+		   <strong>Gulden update available:</strong><br>There is an update available
+		   for Gulden. You are running version <b>$currentguldenversion</b> and the
+		   latest version is <b>$guldenversion</b>.
+		  </div>";
+	}
 }
 
 //what page are we on?

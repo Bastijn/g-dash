@@ -9,12 +9,14 @@ $gulden = new Gulden($CONFIG['rpcuser'],$CONFIG['rpcpass'],$CONFIG['rpchost'],$C
 $guldenD = "GuldenD";
 $guldenCPU = GetProgCpuUsage($guldenD);
 $guldenMEM = GetProgMemUsage($guldenD);
+$linuxTemp = GetLinuxTemp();
 $returnarray = array();
 
 if($guldenCPU > 0 && $guldenMEM > 0) {
 	
 	$returnarray['server']['cpu'] = $guldenCPU;
 	$returnarray['server']['mem'] = $guldenMEM;
+	$returnarray['server']['temperature'] = $linuxTemp;
 	
 	if($gulden->getinfo()=="") {
 		$returnarray['gulden']['version'] = '';
@@ -102,6 +104,7 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 	$returnarray['witness'] = '';
 	$returnarray['server']['cpu'] = '';
 	$returnarray['server']['mem'] = '';
+	$returnarray['server']['temperature'] = '';
 	$returnarray['table'] = $tablerows;
 	$returnarray['errors'] = '';
 }

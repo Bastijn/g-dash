@@ -51,20 +51,20 @@ if (php_sapi_name() == "cli") {
 			$currentguldenversion = $ginfo['version'];
 			if($currentguldenversion < $guldenversion) {
 				$currentmessage = "A new version of Gulden is available ($guldenversion)";
+				
+				//Check the last message that was pushed to prevent multiple pushes of the same message
+				if($lastmessage!=$currentmessage) {
+					
+					//The message is different, send a push notification
+					$sendpush = shell_exec("curl --header 'Authorization: Bearer ".$CONFIG['pushbullet']."' -X POST https://api.pushbullet.com/v2/pushes --header 'Content-Type: application/json' --data-binary '{\"type\": \"note\", \"title\": \"Gulden Update\", \"body\": \"".$currentmessage."\"}'");
+					
+					//Set the current message as the last message in the config file
+					$CONFIG['pushbulletguldenupdate']['lastmes'] = $currentmessage;
+					
+					//Update the config file
+					file_put_contents(__DIR__.'/../../config/config.php', '<?php $CONFIG = '.var_export($CONFIG, true).'; ?>');
+				}
 			}
-		}
-		
-		//Check the last message that was pushed to prevent multiple pushes of the same message
-		if($lastmessage!=$currentmessage && $currentmessage!="") {
-			
-			//The message is different, send a push notification
-			$sendpush = shell_exec("curl --header 'Authorization: Bearer ".$CONFIG['pushbullet']."' -X POST https://api.pushbullet.com/v2/pushes --header 'Content-Type: application/json' --data-binary '{\"type\": \"note\", \"title\": \"Gulden Update\", \"body\": \"".$currentmessage."\"}'");
-			
-			//Set the current message as the last message in the config file
-			$CONFIG['pushbulletguldenupdate']['lastmes'] = $currentmessage;
-			
-			//Update the config file
-			file_put_contents(__DIR__.'/../../config/config.php', '<?php $CONFIG = '.var_export($CONFIG, true).'; ?>');
 		}
 	}
 
