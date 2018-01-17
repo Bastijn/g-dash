@@ -13,6 +13,7 @@ $returnarray = array();
 
 $nodeconfig = readGuldenConf($CONFIG['datadir']."/Gulden.conf");
 
+//TODO: Find a better way to fetch transaction data (live)
 if($guldenCPU > 0 && $guldenMEM > 0) {
 	if($nodeconfig['disablewallet']!="1") {
 		//List all accounts

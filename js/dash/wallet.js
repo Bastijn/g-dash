@@ -218,7 +218,9 @@ function numberWithCommas(x) {
 $(document).ready(function() {
   	//Load json data for the dashboard
 	loadjsondata = function() {
-	  $.getJSON( "ajax/wallet.php?account="+accountuuid, function( data ) {				 
+	  $.getJSON( "ajax/wallet.php?account="+accountuuid, function( data ) {
+	  	
+	  	  $('#errordiv').html("");
 		  if(data['errors']!='') {
 		  	$('#errordiv').html("<div class='alert alert-warning'>"+data['errors']+"</div>");
 		  }

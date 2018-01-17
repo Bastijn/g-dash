@@ -29,8 +29,18 @@
 	
 	$CONFIG['rpcuser'] = $_POST['rpcuser'];
 	$CONFIG['rpcpass'] = $_POST['rpcpassword'];
-	$CONFIG['otp'] = $_POST['otp'];
-	if($_POST['otpkey']!="") { $CONFIG['otpkey'] = $_POST['otpkey']; }
+	
+	//TODO: REMOVE BEFORE VERSION 1.0. THIS IS TO REMOVE THE 2FA CODE AS IT WAS BUGGED IN VERSION 0.21
+	if($_POST['otpbug']=="1") {
+		$CONFIG['otp'] = "0";
+		$CONFIG['otpkey'] = "";
+	} else {
+	
+		$CONFIG['otp'] = $_POST['otp'];
+		if($_POST['otpkey']!="") { $CONFIG['otpkey'] = $_POST['otpkey']; }
+	
+	}
+	
 	$CONFIG['gdashuser'] = $_POST['gdashuser'];
 	if($_POST['gdashpassword']!="") {
 		 $originalpassworddash = $CONFIG['gdashpassword'];
@@ -271,7 +281,8 @@
 	  <?php if($CONFIG['disablelogin']!="1") {
 		require_once("lib/phpotp/rfc6238.php");
 		if($CONFIG['otpkey']=="") {
-			$otpkey = Base32Static::encode(md5(rand(0,999999)));
+			$randomkeyforotp = hash("sha1", rand(999,999999), false);
+			$otpkey = Base32Static::encode($randomkeyforotp);
 			echo "<input type='hidden' name='otpkey' id='otpkey' value='".$otpkey."'>";
 		} else {
 			$otpkey = $CONFIG['otpkey'];
@@ -292,6 +303,16 @@
 		print sprintf('<img src="%s"/>',TokenAuth6238::getBarCodeUrl('', $currentDomain, $otpkey, 'G-DASH'));
 	    } 
 	    ?>
+	    
+	    <div class="checkbox">
+	    <label>
+	    <input type="checkbox" id="otpbug" name="otpbug" aria-describedby="otpbughelp" value="1">Reset 2FA QR if bugged on Google Authenticator</label><br>
+	    <small id="otpbughelp" class="form-text text-muted"><font color='red'>On version 0.21 a bug was found that prevented the QR code from working on the Google
+	    												 Authenticator app. If you have problems with the QR code not being recognized by this
+	    												 program, check this box. 2FA will be disabled and a new key and QR code will be
+	    												 generated. <b>NOTE THAT THE PREVIOUS QR CODE AND KEY WILL NOT WORK ANYMORE!!</b>
+	    												 This function will be removed before version 1.0, so make sure you update your key before that.</font></small>
+	    </div>
     </div>
   </div>
   

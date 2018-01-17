@@ -42,8 +42,6 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 		if(isset($_GET['account'])) { $selectedaccount = $_GET['account']; } else { $selectedaccount = ""; }
 		
 		if($selectedaccount!="") {
-			//$selectedaccountkey = array_search_multidimensional($accountlist, "UUID", $_GET['account']);
-			//$selectedaccount = $accountlist[$selectedaccountkey]["UUID"];
 			$selectedaccount = $_GET['account'];
 		} else {
 			//Select the first account
@@ -71,19 +69,21 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 		
 		//Get the balance of all accounts
 		$totalbalance = round($gulden->getbalance(),2);
+		
+		//Use GuldenTrader API as the current euro price
 		$fetcheuroprice = @json_decode(file_get_contents("https://guldentrader.com/api/ticker"));
 		$europrice = $fetcheuroprice->buy;
 		
-		//Get the 2 latest transactions of this single account
-		$numoftransactions = 2;
+		//Use Nocks API as the current euro price
+		//$fetcheuroprice = @json_decode(file_get_contents("https://api.nocks.com/api/v2/trade-market/NLG-EUR"));
+		//$europrice = $fetcheuroprice->data->buy->amount;
+		
+		//TODO: Create a good function for showing a new unused address
+		//Temporary solution until a better way is found
+		//Get the 30 latest transactions of this single account
+		$numoftransactions = 30;
 		$accounttransactions = $gulden->listtransactions($selectedaccount, $numoftransactions);
 		
-		//TODO: Test this workaround
-		//Workaround to get a new address after a transaction?
-		//Does this also work if the number of transactions exceeds $numoftransactions?
-		//Nope...
-		//
-		//Another workaround, list all address transactions
 		//Get the addresses of this specific account
 		$listreceivedbyaddress = $gulden->listreceivedbyaddress(0, false);
 		if(count($accounttransactions)>0) {

@@ -23,6 +23,18 @@
   </h1>
   
   <div class="panel panel-default">
+    <div class="panel-heading"><b>0.22</b></div>
+    <div class="panel-body">
+		<ul>
+			<li>Solved a bug where the "Not encrypted wallet" message kept appending to the error message.</li>
+			<li>Added witness page (still empty for now).</li>
+			<li>A 'find my Pi' function was added for users who ordered a pre-installed Pi.</li>
+			<li>Fixed 2FA QR-code -was not working in Google Authenticator, but did work in Authy.</li>
+		</ul>
+    </div>
+  </div>
+  
+  <div class="panel panel-default">
     <div class="panel-heading"><b>0.21</b></div>
     <div class="panel-body">
 		<ul>

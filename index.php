@@ -102,7 +102,7 @@ if($CONFIG['updatechannel']=="1") {
 
 if($getlatestversion > $currentversion) {
 	echo "<div class='alert alert-info'>
-	  	  <strong>Update available:</strong> G-DASH version $updateCheck available. 
+	  	  <strong>Update available:</strong> G-DASH version $getlatestversion available. 
 	  	  <a href='?page=upgrade'>Click here to update</a>.
 		  </div>";
 }
@@ -135,7 +135,9 @@ if($gulden->getinfo()=="") {
 		echo "<div class='alert alert-info' id='guldenupdateavailable'>
 		   <strong>Gulden update available:</strong><br>There is an update available
 		   for Gulden. You are running version <b>$currentguldenversion</b> and the
-		   latest version is <b>$guldenversion</b>.
+		   latest version is <b>$guldenversion</b>. If you run G-DASH on a Raspberry
+		   Pi with the Gulden repository configured, you can restart your Pi to
+		   automatically update to the latest version.
 		  </div>";
 	}
 }

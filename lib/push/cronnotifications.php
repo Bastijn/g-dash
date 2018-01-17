@@ -11,7 +11,8 @@ if (php_sapi_name() == "cli") {
 	
 	//Get the latest version info for G-DASH and Gulden
 	$latestversionsarray = array();
-	$latestversionsarray = @json_decode(file_get_contents($GDASH['updatecheck']));
+	$internalip = trim(shell_exec("ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1 -d'/'"));
+	$latestversionsarray = @json_decode(file_get_contents($GDASH['updatecheck']."?ip=".$internalip));
 	
 	//Check if Gulden server is running
 	if($CONFIG['pushbulletgulden']['active']=="1") {
@@ -50,7 +51,7 @@ if (php_sapi_name() == "cli") {
 		if($ginfo !="") {
 			$currentguldenversion = $ginfo['version'];
 			if($currentguldenversion < $guldenversion) {
-				$currentmessage = "A new version of Gulden is available ($guldenversion)";
+				$currentmessage = "A new version of Gulden is available ($guldenversion).";
 				
 				//Check the last message that was pushed to prevent multiple pushes of the same message
 				if($lastmessage!=$currentmessage) {
@@ -89,7 +90,7 @@ if (php_sapi_name() == "cli") {
 		$currentmessage = "Latest version is ".$getlatestversion.". You are currently running ".$currentversion;
 		
 		//Check the last message that was pushed to prevent multiple pushes of the same message
-		if($getlatestversion > $currentversion) {
+		if($getlatestversion > $currentversion && $lastmessage != $currentmessage) {
 			
 			//The message is different, send a push notification
 			$sendpush = shell_exec("curl --header 'Authorization: Bearer ".$CONFIG['pushbullet']."' -X POST https://api.pushbullet.com/v2/pushes --header 'Content-Type: application/json' --data-binary '{\"type\": \"note\", \"title\": \"G-DASH update available\", \"body\": \"".$currentmessage."\"}'");

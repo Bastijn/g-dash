@@ -162,7 +162,7 @@
 	<!-- End set up passphrase modal content-->
 	
 	
-	<!-- Set up passphrase modal content-->
+	<!-- Change passphrase modal content-->
   	<div id="changepassphrase" class="modal fade" role="dialog">
 	  <div class="modal-dialog">
 	    <div class="modal-content" name="changepassphrasemodal" id="changepassphrasemodal">
@@ -193,7 +193,7 @@
 	    </div>	
 	  </div>
 	</div>
-	<!-- End set up passphrase modal content-->
+	<!-- End change passphrase modal content-->
 	
 	
 	<!-- Create a transaction modal content-->
