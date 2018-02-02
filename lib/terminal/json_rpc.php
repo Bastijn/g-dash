@@ -190,12 +190,17 @@ function get_json_request() {
     if ($request == "") {
         throw new JsonRpcExeption(101, "Parse Error: no data");
     }
+	/*
     $encoding = mb_detect_encoding($request, 'auto');
     //convert to unicode
     if ($encoding != 'UTF-8') {
         $request = iconv($encoding, 'UTF-8', $request);
     }
+	*/
+	
+	$request = utf8_encode($request);
     $request = json_decode($request);
+	
     if ($request == NULL) { // parse error
         $error = json_error();
         throw new JsonRpcExeption(101, "Parse Error: $error");
