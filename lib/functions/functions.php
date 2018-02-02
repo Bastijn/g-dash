@@ -99,6 +99,16 @@ function GEOonline($ip) {
 	return $result;
 }
 
+//TODO: This function can be removed at the 1.0 release
+function isPasswordUpdated() {
+	include('config/config.php');
+	if($CONFIG['bcrypt']=="1") {
+		return TRUE;
+	} else {
+		return FALSE;
+	}
+}
+
 function LoginCheck($guldenConf, $out=FALSE, $disabled="0")
 {
 	include('config/config.php');
@@ -111,18 +121,21 @@ function LoginCheck($guldenConf, $out=FALSE, $disabled="0")
 	
 	if(isset($_POST['login'])) {
 		$usernameposted = strtolower($_POST['rpcuser']);
-		$passwordposted = md5(sha1($_POST['rpcpassword']));
+		$passwordposted = $_POST['rpcpassword'];
 		
-		$usernameposted = strtolower($usernameposted);
+		//TODO: Remove the MD5 function and update check at 1.0 release
+		if(isPasswordUpdated()==FALSE) {
+			$passwordposted = md5(sha1($passwordposted));
+		}
 		
+		//TODO: Remove this part at the 1.0 release
 		//This method will fetch the username and password from the config.php file
-		if(($usernameposted==strtolower($CONFIG['gdashuser']) && $passwordposted==$CONFIG['gdashpassword'])
-		   ||
-		   //TODO: Remove the login check for RPC username and password in the next version. This is just for the upgrade to the next beta.
-		   ($usernameposted==strtolower($CONFIG['rpcuser']) && $passwordposted==md5(sha1($CONFIG['rpcpass'])))) {
-		   	
+		if($usernameposted==strtolower($CONFIG['gdashuser']) && $passwordposted==$CONFIG['gdashpassword'] && $CONFIG['bcrypt']!="1") {
 			$_SESSION['G-DASH-loggedin']=TRUE;
 			$returnvalue = TRUE;
+		} elseif($usernameposted==strtolower($CONFIG['gdashuser']) && password_verify($passwordposted, $CONFIG['gdashpassword']) && $CONFIG['bcrypt']=="1") {
+			$_SESSION['G-DASH-loggedin']=TRUE;
+			$returnvalue = TRUE;			
 		} else {
 			echo "<div class='alert alert-danger'>
 				   <strong>Error:</strong><br>

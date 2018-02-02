@@ -6,6 +6,7 @@
       <li><a href="?page=settings">Settings</a></li>
       <li class="active"><a href="?page=upgrade">Upgrade</a></li>
       <li><a href="?page=configcheck">Config Check</a></li>
+      <li><a href="?page=debug">Debug Console</a></li>
       <li><a href="?page=changelog">Changelog</a></li>
     </ul>
  </div><!--/span-->

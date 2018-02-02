@@ -51,6 +51,7 @@
   	<b>Jquery:</b> <a href="https://jquery.com/" target="_blank">jquery.com</a><br>
   	<b>Qrcodejs:</b> <a href="https://davidshimjs.github.io/qrcodejs/" target="_blank">davidshimjs.github.io/qrcodejs/</a><br>
   	<b>PHPOTP:</b> <a href="https://github.com/Voronenko/PHPOTP/" target="_blank">github.com/Voronenko/PHPOTP</a><br>
+	<b>Jquery terminal:</b> <a href="https://github.com/jcubic/jquery.terminal" target="_blank">github.com/jcubic/jquery.terminal</a><br>
   	
   	<br>
   	<img src="images/donations.png" border="0" width="175" height="175">

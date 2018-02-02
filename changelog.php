@@ -6,6 +6,7 @@
       <li><a href="?page=settings">Settings</a></li>
       <li><a href="?page=upgrade">Upgrade</a></li>
       <li><a href="?page=configcheck">Config Check</a></li>
+      <li><a href="?page=debug">Debug Console</a></li>
       <li class="active"><a href="?page=changelog">Changelog</a></li>
     </ul>
  </div><!--/span-->
@@ -21,6 +22,23 @@
     Changelog
     <p class="lead">G-DASH changelog</p>
   </h1>
+  
+  <div class="panel panel-default">
+    <div class="panel-heading"><b>0.23</b></div>
+    <div class="panel-body">
+		<ul>
+			<li>GitHub issue #5: A more secure hashing is used for passwords. Passwords are automatically updated
+				after logging in.</li>
+			<li>Removed deprecated RPC login function.</li>
+			<li>GitHub issue #3: Changed the link at the settings page to the new developer page at Gulden.com.</li>
+			<li>GitHub issue #2: Password strength check for password length fixed.</li>
+			<li>Updated jQuery to 1.7.1.</li>
+			<li>Added jQuery Terminal Emulator (version 1.11.4).</li>
+			<li>With terminal basic Gulden commands can be passed via RPC (Settings -> Debug Console).</li>
+			<li>Terminal is work in progress. More commands will be added.</li>
+		</ul>
+    </div>
+  </div>
   
   <div class="panel panel-default">
     <div class="panel-heading"><b>0.22</b></div>

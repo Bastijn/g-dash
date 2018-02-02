@@ -1,4 +1,4 @@
-$(document).ready(function() {	
+$(document).ready(function() {
 	var refreshRate = 120000;
 	
 	//Load json data for the dashboard
@@ -21,7 +21,7 @@ $(document).ready(function() {
 			  } else {
 			  	$('#serverinfopanel').html("No inbound connections. Did you open/forwarded TCP port 9231?<br>"+
 			  								"More information on how to set up a node can be found on "+
-			  								"<a href='https://developer.gulden.com/nodes/' target='_blank'>developer.gulden.com</a>");
+			  								"<a href='https://dev.gulden.com/contribute/#nodes' target='_blank'>https://dev.gulden.com/contribute/#nodes</a>");
 			  	$('#tablelocation > tbody:last-child').html("<tr><td colspan='4'>No incoming connections</td></tr>");
 				$('#tableversion > tbody:last-child').html("<tr><td colspan='4'>No incoming connections</td></tr>");
 			  }

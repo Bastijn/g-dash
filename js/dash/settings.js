@@ -1,20 +1,9 @@
 $(document).ready(function() {
-	$.validator.addMethod("pwcheck", function(value) {
-		if($("#gdashpassword").length>1) {
-	   	return /^[A-Za-z0-9\d=!\-@._*]*$/.test(value) // consists of only these
-	       && /[A-Z]/.test(value) // has a upperrcase letter
-	       && /\d/.test(value) // has a digit
-	   } else {
-	   	return true;
-	   }
-	});
-	
 	$("#settingsform").validate({
 	       rules: {
 	           gdashpassword: { 
 	             	required: false,
 	                minlength: 8,
-	                pwcheck: true,
 	           } , 
 	               gdashpasswordrepeat: { 
 	                equalTo: "#gdashpassword",
@@ -24,7 +13,6 @@ $(document).ready(function() {
 		 messages:{
 		     gdashpassword: { 
 		             required:"The password is required",
-		             pwcheck: "The password is not strong enough.",
 		             minlength: "Please enter at least 8 characters",
 		          },
 		     gdashpasswordrepeat: {

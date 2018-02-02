@@ -8,6 +8,7 @@
       <li class="active"><a href="?page=settings">Settings</a></li>
       <li><a href="?page=upgrade">Upgrade</a></li>
       <li><a href="?page=configcheck">Config Check</a></li>
+      <li><a href="?page=debug">Debug Console</a></li>
       <li><a href="?page=changelog">Changelog</a></li>
     </ul>
  </div><!--/span-->
@@ -20,6 +21,9 @@
   </p>
   
   <?php
+  //Only show this page if a user is logged in
+  if($_SESSION['G-DASH-loggedin']==TRUE) {
+  
   //If the settings are updated
   if(isset($_POST['weblocation'])) {
 	
@@ -44,14 +48,17 @@
 	$CONFIG['gdashuser'] = $_POST['gdashuser'];
 	if($_POST['gdashpassword']!="") {
 		 $originalpassworddash = $CONFIG['gdashpassword'];
-  		 $newpassworddash = md5(sha1($_POST['gdashpassword']));
-  		 
+		 $newpassworddash = password_hash($_POST['gdashpassword'], PASSWORD_BCRYPT);
+		 
 		 if($originalpassworddash != $newpassworddash) {
 		 	//Disable 2FA if the password has changed.
 			$CONFIG['otp'] = "0";
 		 }
 		 
-		 $CONFIG['gdashpassword'] = md5(sha1($_POST['gdashpassword'])); 
+		 $CONFIG['gdashpassword'] = $newpassworddash;
+		 
+		 //TODO: This config can be removed at 1.0 release
+		 $CONFIG['bcrypt'] = "1";
 	}
 	if($_POST['rpchost']=="") { $CONFIG['rpchost'] = "127.0.0.1"; } else { $CONFIG['rpchost'] = $_POST['rpchost']; }
 	if($_POST['rpcport']=="") { $CONFIG['rpcport'] = "9232"; } else { $CONFIG['rpcport'] = $_POST['rpcport']; }
@@ -420,6 +427,6 @@
   
   <button type="submit" class="btn btn-primary" id="savesettings">Submit</button>
 </form>
-
+<?php } ?>
   </div><!--/row-->
 </div>

@@ -33,6 +33,7 @@
 	  	<li><a href="#faq7">When I open my wallet in G-DASH for the first time, it is empty!</a></li>
 	  	<li><a href="#faq8">I want to see my Recovery Phrase, but I get the error the password is wrong, but I did not set a password.</a></li>
 	  	<li><a href="#faq9">I want to get a notification when my computer or internet connection is down, but how can I do that?</a></li>
+	  	<li><a href="#faq10">I'm 100 percent sure I set up my full node correctly, but I still don't get any incoming connections. What's wrong?</a></li>
   	</ul>
   	
   	<hr>
@@ -119,6 +120,21 @@
 			<a href="https://uptimerobot.com/" target="_blank">uptimerobot.com</a>. This service checks your connection
 			every 5 minutes. Just create an account, add a new monitor (type 'Port'), enter your IP address and port 
 			(custom port) '9231'. They also have a mobile app so you can receive push messages.
+	    </div>
+	</div>
+	
+	<div class="panel panel-default">
+	    <div class="panel-heading" id="faq10" name="faq10"><b>I'm 100 percent sure I set up my full node correctly, but I still don't get any incoming connections. 
+	    													  What's wrong?</b></div>
+	    <div class="panel-body">
+	    	A note from the lead developer of Gulden on this subject:
+	    	
+			Incoming connections when you first set up a device with a new IP can take quite a while before they start appearing, as it takes time for your node to be 
+			"discovered" by the infastructure and advertised to new peers as a potential place to try - and in addition to that there are also many other nodes they can 
+			connect too, also various other complexities of a large p2p network sometimes cause very bad discovery in certain cases (multiple days potentially).
+			If in doubt make sure you can reach port 9231 from an external machine (or get someone else to try) <code>telnet ip 9231</code> or try <code>-addnode=178.62.195.19 
+			-addnode=45.32.253.142 -addnode=199.247.1.84 -addnode=104.238.189.72 -addnode=149.210.165.218</code> in your config to boost your outgoing node count a bit and see 
+			if that makes you a bit more discoverable.
 	    </div>
 	</div>
     	
