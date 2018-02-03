@@ -39,11 +39,31 @@ class GuldenConsoleRPC {
     }
   }
   
+  //The 'addnode' command
+  public static $addnode_documentation = "Add a node by IP address (usage: addnode IP)";
+  public function addnode($ip) {	
+    if ($_SESSION['G-DASH-loggedin']==TRUE) {
+      include('../../config/config.php');
+	  require_once('../../lib/EasyGulden/easygulden.php');
+	  $gulden = new Gulden($CONFIG['rpcuser'],$CONFIG['rpcpass'],$CONFIG['rpchost'],$CONFIG['rpcport']);
+      $ginfo = $gulden->addnode($ip, 'add');
+	  $gresponse = $gulden->response['error']['message'];
+	  if($gresponse=="") {
+	  	$gresponse = "Added node $ip";
+	  }
+	  
+      return $gresponse;
+    } else {
+      throw new Exception("Access Denied");
+    }
+  }
+  
   public static $help_documentation = "Show available commands";
   public function help() {
     $availablecommands = "help - Show available commands\n";
 	$availablecommands .= "getinfo - Get GuldenD info\n";
 	$availablecommands .= "showlog - Show the last 30 lines of the Gulden debug log\n";
+	$availablecommands .= "addnode - Add a node by IP address (usage: addnode IP)\n";
 	
 	return $availablecommands;
   }

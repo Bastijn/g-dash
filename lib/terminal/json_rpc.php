@@ -190,6 +190,9 @@ function get_json_request() {
     if ($request == "") {
         throw new JsonRpcExeption(101, "Parse Error: no data");
     }
+	
+	//The mb_detect_encoding is not installed by default.
+	//Using utf8_encode instead.
 	/*
     $encoding = mb_detect_encoding($request, 'auto');
     //convert to unicode
