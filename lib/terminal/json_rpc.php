@@ -193,6 +193,8 @@ function get_json_request() {
 	
 	//The mb_detect_encoding is not installed by default.
 	//Using utf8_encode instead.
+	//utf8_encode is also not installed by default.
+	//Removing UTF8 encoding in general
 	/*
     $encoding = mb_detect_encoding($request, 'auto');
     //convert to unicode
@@ -201,7 +203,7 @@ function get_json_request() {
     }
 	*/
 	
-	$request = utf8_encode($request);
+	//$request = utf8_encode($request);
     $request = json_decode($request);
 	
     if ($request == NULL) { // parse error
