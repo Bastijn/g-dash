@@ -24,6 +24,15 @@
   </h1>
   
   <div class="panel panel-default">
+    <div class="panel-heading"><b>0.24</b></div>
+    <div class="panel-body">
+		<ul>
+			<li>Quick bug fix release for the terminal (UTF8 encoding).</li>
+		</ul>
+    </div>
+  </div>
+  
+  <div class="panel panel-default">
     <div class="panel-heading"><b>0.23</b></div>
     <div class="panel-body">
 		<ul>
