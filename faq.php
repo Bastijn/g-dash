@@ -127,14 +127,10 @@
 	    <div class="panel-heading" id="faq10" name="faq10"><b>I'm 100 percent sure I set up my full node correctly, but I still don't get any incoming connections. 
 	    													  What's wrong?</b></div>
 	    <div class="panel-body">
-	    	A note from the lead developer of Gulden on this subject:
-	    	
-			Incoming connections when you first set up a device with a new IP can take quite a while before they start appearing, as it takes time for your node to be 
-			"discovered" by the infastructure and advertised to new peers as a potential place to try - and in addition to that there are also many other nodes they can 
-			connect too, also various other complexities of a large p2p network sometimes cause very bad discovery in certain cases (multiple days potentially).
-			If in doubt make sure you can reach port 9231 from an external machine (or get someone else to try) <code>telnet ip 9231</code> or try <code>-addnode=178.62.195.19 
-			-addnode=45.32.253.142 -addnode=199.247.1.84 -addnode=104.238.189.72 -addnode=149.210.165.218</code> in your config to boost your outgoing node count a bit and see 
-			if that makes you a bit more discoverable.
+	    	First of all. Your system is not broken or anything if you have no incoming connections. But to make you a bit more discoverable, you can now use the
+	    	<code>noderequest</code> function in the debug console (within G-DASH --> settings) that adds your node to a database. This database is then checked
+	    	automatically by other G-DASH users and these instances (max 10) then make a connection with you for 24 hours, which makes you more discoverable to other
+	    	nodes and seeds. When 10 nodes have connected to your node, you are removed from the database.
 	    </div>
 	</div>
     	

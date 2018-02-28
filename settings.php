@@ -34,16 +34,8 @@
 	$CONFIG['rpcuser'] = $_POST['rpcuser'];
 	$CONFIG['rpcpass'] = $_POST['rpcpassword'];
 	
-	//TODO: REMOVE BEFORE VERSION 1.0. THIS IS TO REMOVE THE 2FA CODE AS IT WAS BUGGED IN VERSION 0.21
-	if($_POST['otpbug']=="1") {
-		$CONFIG['otp'] = "0";
-		$CONFIG['otpkey'] = "";
-	} else {
-	
-		$CONFIG['otp'] = $_POST['otp'];
-		if($_POST['otpkey']!="") { $CONFIG['otpkey'] = $_POST['otpkey']; }
-	
-	}
+	$CONFIG['otp'] = $_POST['otp'];
+	if($_POST['otpkey']!="") { $CONFIG['otpkey'] = $_POST['otpkey']; }
 	
 	$CONFIG['gdashuser'] = $_POST['gdashuser'];
 	if($_POST['gdashpassword']!="") {
@@ -71,6 +63,8 @@
 	
 	$CONFIG['updatechannel'] = $_POST['updatechannel'];
 	$CONFIG['nodeupload'] = $_POST['nodeupload'];
+	
+	$CONFIG['allownoderequests'] = $_POST['allownoderequests'];
 	
 	$CONFIG['pushbullet'] = $_POST['pushbullet'];
 	$CONFIG['pushbulletgulden']['active'] = $_POST['pushbulletgulden'];
@@ -144,7 +138,7 @@
 	//Check the crontab for pushbullet notifications
 	$pushbulletcron = exec("crontab -l | grep -q 'cronnotifications.php' && echo '1' || echo '0'");
 	
-	//Every five minutes
+	//Every two minutes
 	$pushbulletcronentry = "*/2 * * * * php ".__DIR__."/lib/push/cronnotifications.php >/dev/null 2>&1";
 	$currentcron = explode(PHP_EOL, shell_exec('crontab -l'));
 	
@@ -186,6 +180,64 @@
 	} else {
 		echo "<div class='alert alert-warning'>
 		  		<strong>Error:</strong> Could not write crontab for PushBullet. Please try saving your settings again.
+			  </div>";
+	}
+	
+	
+	
+	//*************************//
+	//**CRON FOR NODEREQUESTS**//
+	//*************************//
+	
+	//Check the crontab for node requests
+	$noderequestcron = exec("crontab -l | grep -q 'noderequests.php' && echo '1' || echo '0'");
+	
+	//Every 30 minutes
+	$noderequestcronentry = "*/30 * * * * php ".__DIR__."/lib/push/noderequests.php >/dev/null 2>&1";
+	$currentcron = explode(PHP_EOL, shell_exec('crontab -l'));
+	
+	if($noderequestcron=="0" && $CONFIG['allownoderequests']!="") {
+		
+		//If not available and user wants to allow requests
+		$currentcron[] = $noderequestcronentry;
+	
+	} elseif($noderequestcron=="1" && $CONFIG['allownoderequests']!="") {
+		
+		//If available and user wants to allow requests
+		for($i=0; $i < count($currentcron); $i++) { //Update current entry in case anything changed (path, ...)
+			if (strpos($currentcron[$i], 'noderequests.php') !== false) {
+				$currentcron[$i] = $noderequestcronentry;
+			}
+		}
+		
+	} elseif($noderequestcron=="1" && $CONFIG['allownoderequests']=="") {
+		
+		//If available and user doesn't want to allow requests
+		//Find entry and remove it
+		for($i=0; $i < count($currentcron); $i++) {
+			if (strpos($currentcron[$i], 'noderequests.php') !== false) {
+				unset($currentcron[$i]);
+			}
+		}
+		
+		//Empty the config parameters
+		$CONFIG['noderequest']['node'] = "";
+		$CONFIG['noderequest']['time'] = "";
+		
+	}
+	
+	//Remove empty array elements
+	$currentcron = array_filter($currentcron);
+	
+	//Update the cron tab
+	$cronstr = implode("\n", $currentcron);
+	
+	if(file_put_contents('/tmp/crontabnr.txt', $cronstr.PHP_EOL)) {
+		$out = shell_exec('crontab /tmp/crontabnr.txt');
+		unlink('/tmp/crontabnr.txt');
+	} else {
+		echo "<div class='alert alert-warning'>
+		  		<strong>Error:</strong> Could not write crontab for node requests. Please try saving your settings again.
 			  </div>";
 	}
 	
@@ -310,16 +362,6 @@
 		print sprintf('<img src="%s"/>',TokenAuth6238::getBarCodeUrl('', $currentDomain, $otpkey, 'G-DASH'));
 	    } 
 	    ?>
-	    
-	    <div class="checkbox">
-	    <label>
-	    <input type="checkbox" id="otpbug" name="otpbug" aria-describedby="otpbughelp" value="1">Reset 2FA QR if bugged on Google Authenticator</label><br>
-	    <small id="otpbughelp" class="form-text text-muted"><font color='red'>On version 0.21 a bug was found that prevented the QR code from working on the Google
-	    												 Authenticator app. If you have problems with the QR code not being recognized by this
-	    												 program, check this box. 2FA will be disabled and a new key and QR code will be
-	    												 generated. <b>NOTE THAT THE PREVIOUS QR CODE AND KEY WILL NOT WORK ANYMORE!!</b>
-	    												 This function will be removed before version 1.0, so make sure you update your key before that.</font></small>
-	    </div>
     </div>
   </div>
   
@@ -384,6 +426,20 @@
 	    														<a href="https://guldennodes.com/?crawler" target="_blank">
 	    														https://guldennodes.com/?crawler</a><br>(Note: This link only works if you visit 
 	    														this website from the same network as your node. Otherwise, use "?crawler=YourIP")</small>
+	  </div>
+	  
+	  <?php 
+	  //For fresh installs or upgrades enable the node requests by default
+	  if(!isset($CONFIG['allownoderequests'])) { $CONFIG['allownoderequests'] = "1"; } 
+	  ?>
+	  <div class="checkbox">
+	    <label>
+	    <input type="checkbox" id="allownoderequests" name="allownoderequests" aria-describedby="allownoderequestshelp" value="1" <?php if($CONFIG['allownoderequests']=="1") { echo "checked='checked'"; } ?>>Allow Node Requests</label><br>
+	    <small id="allownoderequestshelp" class="form-text text-muted">Help the Gulden network by temporarily (24 hours) connecting to a G-DASH node that requested
+	    															   inbound connections. You will only connect to 1 node from the list and it will automatically
+	    															   be removed after 24 hours and the next node in line will be added for the next 24 hours. This
+	    															   method allows G-DASH users without any inbound connections or a changed IP address to be found 
+	    															   by others in the Gulden network.</small>
 	  </div>
     </div>
   </div>

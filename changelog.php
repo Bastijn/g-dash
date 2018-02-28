@@ -24,6 +24,19 @@
   </h1>
   
   <div class="panel panel-default">
+    <div class="panel-heading"><b>0.25</b></div>
+    <div class="panel-body">
+		<ul>
+			<li>BUG: Removed temp fix for 2FA code from version 0.21.</li>
+			<li>FEATURE: Removed restrictions for upload node statistics (now available even if there are no inbound connections).</li>
+			<li>FEATURE: Added a notification to the terminal if the debug.log file is not readable by the webserver.</li>
+			<li>FEATURE: Added a new command 'noderequest' to the terminal to request being added by other nodes automatically (i.e. for zero inbound connections).</li>
+			<li>FEATURE: G-DASH automatically adds requested nodes for 24 hours if requests are allowed.</li>
+		</ul>
+    </div>
+  </div>
+  
+  <div class="panel panel-default">
     <div class="panel-heading"><b>0.24</b></div>
     <div class="panel-body">
 		<ul>
@@ -56,7 +69,7 @@
 			<li>Solved a bug where the "Not encrypted wallet" message kept appending to the error message.</li>
 			<li>Added witness page (still empty for now).</li>
 			<li>A 'find my Pi' function was added for users who ordered a pre-installed Pi.</li>
-			<li>Fixed 2FA QR-code -was not working in Google Authenticator, but did work in Authy.</li>
+			<li>Fixed 2FA QR-code: was not working in Google Authenticator, but did work in Authy.</li>
 		</ul>
     </div>
   </div>
