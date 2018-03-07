@@ -24,6 +24,16 @@
   </h1>
   
   <div class="panel panel-default">
+    <div class="panel-heading"><b>0.26</b></div>
+    <div class="panel-body">
+		<ul>
+			<li>BUG: Changes for node statistics where not applied in previous update.</li>
+			<li>ENHANCEMENT: Added a random delay to the cronjob for checking noderequests.</li>
+		</ul>
+    </div>
+  </div>
+  
+  <div class="panel panel-default">
     <div class="panel-heading"><b>0.25</b></div>
     <div class="panel-body">
 		<ul>

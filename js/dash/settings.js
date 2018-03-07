@@ -25,14 +25,4 @@ $(document).ready(function() {
 		$(location).attr("href", "?");
 	});
 	
-	
-	$.getJSON( "ajax/dashboard.php", function( data ) {
-  	  if(data['node']['inbound']=="0" || data['node']['inbound']=="") {
-  	  	$("#nodeupload").attr("disabled", true);
-  	  	$("#nodeuploaddiv").attr("disabled", true);
-  	  	$('#nodeupload').prop('checked', false);
-  	  	$('#nodeuploadhelp').html("You have no incoming connections. You have to configure your node to enable this option.");
-  	  }
-	});
-	
 });

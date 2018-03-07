@@ -192,8 +192,11 @@
 	//Check the crontab for node requests
 	$noderequestcron = exec("crontab -l | grep -q 'noderequests.php' && echo '1' || echo '0'");
 	
+	//Random between 1-300 seconds
+	$randomrequesttime = rand(1,300);
+	
 	//Every 30 minutes
-	$noderequestcronentry = "*/30 * * * * php ".__DIR__."/lib/push/noderequests.php >/dev/null 2>&1";
+	$noderequestcronentry = "*/30 * * * * sleep ".$randomrequesttime."; php ".__DIR__."/lib/push/noderequests.php >/dev/null 2>&1";
 	$currentcron = explode(PHP_EOL, shell_exec('crontab -l'));
 	
 	if($noderequestcron=="0" && $CONFIG['allownoderequests']!="") {
