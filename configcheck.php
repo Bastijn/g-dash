@@ -78,7 +78,7 @@
   </div>
   
   <div class="panel panel-default">
-    <div class="panel-heading"><b>Node and Witness port forward</b></div>
+    <div class="panel-heading"><b>Full Node port forward</b></div>
     <div class="panel-body" id="portforward">
 		<?php
 		//Check if the port is open using guldennode.com

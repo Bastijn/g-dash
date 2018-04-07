@@ -64,7 +64,7 @@
 	$CONFIG['updatechannel'] = $_POST['updatechannel'];
 	$CONFIG['nodeupload'] = $_POST['nodeupload'];
 	
-	$CONFIG['allownoderequests'] = $_POST['allownoderequests'];
+	if($_POST['allownoderequests']=="") { $CONFIG['allownoderequests'] = "0"; } else { $CONFIG['allownoderequests'] = "1"; }
 	
 	$CONFIG['pushbullet'] = $_POST['pushbullet'];
 	$CONFIG['pushbulletgulden']['active'] = $_POST['pushbulletgulden'];
@@ -305,17 +305,17 @@
     <div class="panel-body" id="dashboardsettings">
       <div class="form-group">
 	    <label for="gdashuser">G-DASH username</label>
-	    <input type="text" class="form-control" id="gdashuser" name="gdashuser" placeholder="Username" <?php if($CONFIG['gdashuser']!='') { echo "value='".$CONFIG['gdashuser']."'"; } ?>>
+	    <input type="text" class="form-control" id="gdashuser" name="gdashuser" autocomplete='off' placeholder="Username" <?php if($CONFIG['gdashuser']!='') { echo "value='".$CONFIG['gdashuser']."'"; } ?>>
 	  </div>
 	  
 	  <div class="form-group">
 	    <label for="gdashpassword">G-DASH password</label>
-	    <input type="password" class="form-control" id="gdashpassword" name="gdashpassword" placeholder="Password">
+	    <input type="password" class="form-control" id="gdashpassword" name="gdashpassword" placeholder="Password" autocomplete='off'>
 	  </div>
 	  
 	  <div class="form-group">
 	    <label for="gdashpasswordrepeat">Repeat G-DASH password</label>
-	    <input type="password" class="form-control" id="gdashpasswordrepeat" name="gdashpasswordrepeat" aria-describedby="gdashpasswordrepeathelp" placeholder="Password">
+	    <input type="password" class="form-control" id="gdashpasswordrepeat" name="gdashpasswordrepeat" aria-describedby="gdashpasswordrepeathelp" placeholder="Password" autocomplete='off'>
 	    <small id="gdashpasswordrepeathelp" class="form-text text-muted">Choose a strong password!! Minimum of 8 characters, 1 uppercase letter and 1 number.</small>
 	  </div>
     	
@@ -431,10 +431,6 @@
 	    														this website from the same network as your node. Otherwise, use "?crawler=YourIP")</small>
 	  </div>
 	  
-	  <?php 
-	  //For fresh installs or upgrades enable the node requests by default
-	  if(!isset($CONFIG['allownoderequests'])) { $CONFIG['allownoderequests'] = "1"; } 
-	  ?>
 	  <div class="checkbox">
 	    <label>
 	    <input type="checkbox" id="allownoderequests" name="allownoderequests" aria-describedby="allownoderequestshelp" value="1" <?php if($CONFIG['allownoderequests']=="1") { echo "checked='checked'"; } ?>>Allow Node Requests</label><br>
@@ -463,11 +459,11 @@
 	  </div>
 	  <div class="form-group">
 	    <label for="rpcuser">RPC username</label>
-	    <input type="text" class="form-control" id="rpcuser" name="rpcuser" placeholder="Username" <?php if($CONFIG['rpcuser']!='') { echo "value='".$CONFIG['rpcuser']."'"; } ?>>
+	    <input type="text" class="form-control" id="rpcuser" name="rpcuser" placeholder="Username" autocomplete='off' <?php if($CONFIG['rpcuser']!='') { echo "value='".$CONFIG['rpcuser']."'"; } ?>>
 	  </div>
 	  <div class="form-group">
 	    <label for="rpcpassword">RPC password</label>
-	    <input type="password" class="form-control" id="rpcpassword" name="rpcpassword" placeholder="Password" <?php if($CONFIG['rpcpass']!='') { echo "value='".$CONFIG['rpcpass']."'"; } ?>>
+	    <input type="password" class="form-control" id="rpcpassword" name="rpcpassword" placeholder="Password" autocomplete='off' <?php if($CONFIG['rpcpass']!='') { echo "value='".$CONFIG['rpcpass']."'"; } ?>>
 	    <small id="rpcpasswordrepeathelp" class="form-text text-muted">Note: The username and password must match the username and password used in the Gulden.conf file</small>
 	  </div>
 	  <div class="form-group">

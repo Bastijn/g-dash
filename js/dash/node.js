@@ -20,7 +20,7 @@ $(document).ready(function() {
 				  $('#tableversion > tbody:last-child').html(data['version']);
 			  } else {
 			  	$('#serverinfopanel').html("No inbound connections. Did you open/forwarded TCP port 9231?<br>"+
-			  								"More information on how to set up a node can be found on "+
+			  								"More information on how to set up a full node can be found on "+
 			  								"<a href='https://dev.gulden.com/contribute/#nodes' target='_blank'>https://dev.gulden.com/contribute/#nodes</a>");
 			  	$('#tablelocation > tbody:last-child').html("<tr><td colspan='4'>No incoming connections</td></tr>");
 				$('#tableversion > tbody:last-child').html("<tr><td colspan='4'>No incoming connections</td></tr>");

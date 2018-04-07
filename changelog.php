@@ -24,6 +24,19 @@
   </h1>
   
   <div class="panel panel-default">
+    <div class="panel-heading"><b>0.27</b></div>
+    <div class="panel-body">
+		<ul>
+			<li>BUG: OTP check is now only performed when user logs in.</li>
+			<li>TEXTUAL: Settings and config check page.</li>
+			<li>TEXTUAL: Define 'full node' and 'node' as 2 different items.</li>
+			<li>FEATURE: Added a G-DASH CLI for password resets (inspired by ownclouds' occ). Usage: <code>php /var/www/html/gdcli</code></li>
+			<li>ENHANCEMENT: GitHub issue #7: Turned of auto-complete for usernames and passwords in the settings.</li>
+		</ul>
+    </div>
+  </div>
+  
+  <div class="panel panel-default">
     <div class="panel-heading"><b>0.26</b></div>
     <div class="panel-body">
 		<ul>

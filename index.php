@@ -14,7 +14,7 @@ if($_GET['logout']=="true") {
 }
 }
 
-if($CONFIG['otp']=="1" && $CONFIG['disablelogin'] != "1") {
+if($CONFIG['otp']=="1" && $CONFIG['disablelogin'] != "1" && isset($_POST['login'])) {
 	require_once("lib/phpotp/rfc6238.php");
 	$otpkey = $CONFIG['otpkey'];
 	if (TokenAuth6238::verify($otpkey, $_POST['otppassword']))
@@ -191,7 +191,7 @@ include($page . ".php"); //include the selected page
 							  $otpkey = $CONFIG['otpkey'];
 							  echo "<div class='form-group'>
 						        		<label for='otppassword'>Two Factor Authentication code</label>
-						        		<input type='password' class='form-control' id='otppassword' name='otppassword' placeholder='2FA code'>
+						        		<input type='password' class='form-control' id='otppassword' name='otppassword' placeholder='2FA code' autocomplete='off'>
 						      		</div>";
 						  }
 						  ?>
