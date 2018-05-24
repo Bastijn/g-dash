@@ -291,6 +291,17 @@ function array_search_multidimensional($array, $field, $value)
    return false;
 }
 
+function selectElementWithValue($array, $field, $value){
+	$newArray = array();
+	
+	foreach($array as $subKey => $subArray){
+		if($subArray[$field] == $value){
+			$newArray[] = $array[$subKey];
+		}
+	}
+	return $newArray;
+}
+
 function getTransactionDetails($accounttransactions, $numoftransactionstoshow, $addresslist) {
 	$currenttxshown = 1;
 	$returntx = array();
@@ -306,8 +317,6 @@ function getTransactionDetails($accounttransactions, $numoftransactionstoshow, $
 			
 			//Get the raw transaction details from the Gulden blockchain Insight API
 			$txrawdetails = @json_decode(file_get_contents("https://blockchain.gulden.com/api/tx/".$transactiontxid));
-			//TestNet
-			//$txrawdetails = @json_decode(file_get_contents("http://testnet.guldenchain.com/api/tx/".$transactiontxid));
 			
 			$txfromaddress = $txrawdetails->vin[0]->addr;
 			$txtime = $txrawdetails->time;
@@ -348,7 +357,7 @@ function getTransactionDetails($accounttransactions, $numoftransactionstoshow, $
 			}
 			
 			if($txtime=="") {
-				//TODO: Fix the number of confirmations for unconfirmed transactions
+				//IGNORED: Fix the number of confirmations for unconfirmed transactions
 				//$transactiondate = "Unconfirmed ($txconfirmations confirmations)";
 				$transactiondate = "Unconfirmed";
 			} else {
@@ -356,7 +365,97 @@ function getTransactionDetails($accounttransactions, $numoftransactionstoshow, $
 			}
 			$transactionid = "<a href='https://blockchain.gulden.com/tx/".$transactiontxid."' target='_blank' title='".$transactiontxid."'>".substr($transactiontxid, 0, 7)."...</a>";
 			
-			//$tablerows .= "<tr><td title=\"$txconfirmations confirmations\">$transactiondate</td><td>$transactionamount</td><td>$transactionid</td></tr>";
+			$currenttxshown++;
+			
+			$currenttx['txfromaddress'] = $txfromaddress;
+			$currenttx['txtime'] = $txtime;
+			$currenttx['txconfirmations'] = $txconfirmations;
+			$currenttx['txfee'] = $txfee;
+			$currenttx['txtoaddress'] = $txtoaddress;
+			$currenttx['transactionamount'] = $transactionamount;
+			$currenttx['transactiondate'] = $transactiondate;
+			$currenttx['transactionid'] = $transactionid;
+			
+			$returntx[] = $currenttx;
+		}
+	}
+
+	return $returntx;
+}
+
+//Function to fetch the txdetails live from the wallet
+function getLiveTransactionDetails($accounttransactions, $numoftransactionstoshow, $addresslist, $gulden) {
+	$currenttxshown = 1;
+	$returntx = array();
+	
+	for ($i=count($accounttransactions)-1; $i >= 0 ; $i--) {
+		$transactiondetails = $accounttransactions[$i];
+		if($transactiondetails['txid'] != $transactiontxid) {
+			//Stop showing transactions if the limit is reached
+			if($numoftransactionstoshow == $currenttxshown) { $i = 0; }
+			
+			//Fetch the transaction ID
+			$transactiontxid = $transactiondetails['txid'];
+			
+			//Get the raw transaction details from the GuldenD for this transaction
+			$txrawdetails = $gulden->getrawtransaction($transactiontxid, 1);
+						
+			//Get the first vout txID and N (sender)
+			$txfromdetailstxid = $txrawdetails['vin'][0]['txid'];
+			$txfromdetailsvout = $txrawdetails['vin'][0]['vout'];
+			
+			//Get the raw transaction details from GuldenD for the senders' transaction
+			$txrawdetailssender = $gulden->getrawtransaction($txfromdetailstxid, 1);
+			
+			//Get the first address of the sender
+			$txfromaddress = $txrawdetailssender['vout'][$txfromdetailsvout]['scriptPubKey']['addresses'][0];
+			
+			//Time, # of confirmations and transaction fee
+			$txtime = $txrawdetails['time'];
+			$txconfirmations = $txrawdetails['confirmations'];
+			$txfee = 0; //TODO
+			
+			$fromme = FALSE;
+			if(in_array($txfromaddress, $addresslist)==TRUE) {
+				$fromme = TRUE;
+				$foundFromMe = FALSE;
+			}
+			
+			for ($x=0; $x<count($txrawdetails['vout']); $x++) {
+				//From other, to me
+				if($fromme==FALSE && in_array($txrawdetails['vout'][$x]['scriptPubKey']['addresses'][0], $addresslist)==TRUE) {
+					$txtoaddress = $txrawdetails['vout'][$x]['scriptPubKey']['addresses'][0];
+					$txvalue = $txrawdetails['vout'][$x]['value'];
+					$transactionamount = round($txvalue,2);
+				}
+				
+				//From me, to other
+				if($fromme==TRUE && in_array($txrawdetails['vout'][$x]['scriptPubKey']['addresses'][0], $addresslist)==FALSE) {
+					//If this is a "sendmany" transaction
+					if($foundFromMe == TRUE) {
+						$txtoaddress = $txrawdetails['vout'][$x]['scriptPubKey']['addresses'][0];
+						$txvalue = $txrawdetails['vout'][$x]['value'];
+						$transactionamount = $transactionamount + -round($txvalue,2);
+					} else {
+						$txtoaddress = $txrawdetails['vout'][$x]['scriptPubKey']['addresses'][0];
+						$txvalue = $txrawdetails['vout'][$x]['value'];
+						$transactionamount = -round($txvalue,2);
+						
+						//We found a first transaction; set to TRUE in case this is a sendmany transaction
+						$foundFromMe = TRUE;
+					}
+				}
+			}
+			
+			//IGNORED: unconfirmed transactions, don't show them in the list
+			/*
+			if($txconfirmations<6) {
+				$transactiondate = "Unconfirmed (".$txconfirmations.") (".date('d/m/Y H:i', $txtime).")";
+			}
+			*/
+			
+			$transactiondate = date('d/m/Y H:i', $txtime);
+			$transactionid = "<a href='https://blockchain.gulden.com/tx/".$transactiontxid."' target='_blank' title='".$transactiontxid."'>".substr($transactiontxid, 0, 7)."...</a>";
 			$currenttxshown++;
 			
 			$currenttx['txfromaddress'] = $txfromaddress;

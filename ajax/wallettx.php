@@ -13,9 +13,11 @@ $returnarray = array();
 
 $nodeconfig = readGuldenConf($CONFIG['datadir']."/Gulden.conf");
 
-//TODO: Find a better way to fetch transaction data (live)
+//Check if GuldenD is running
 if($guldenCPU > 0 && $guldenMEM > 0) {
+	//No need to check for transactions if the wallet is disabled
 	if($nodeconfig['disablewallet']!="1") {
+		
 		//List all accounts
 		$accountlist = $gulden->listaccounts();
 		
@@ -42,8 +44,8 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 		$tablerows = "";
 		
 		//Get the raw transaction details
-		$transactiondetails = getTransactionDetails($accounttransactions, $numoftransactionstoshow, $addresslist);
-		
+		$transactiondetails = getLiveTransactionDetails($accounttransactions, $numoftransactionstoshow, $addresslist, $gulden);
+				
 		//Loop through the transactions
 		foreach ($transactiondetails as $transactiondetailsitem) {
 			$transactionamount = $transactiondetailsitem['transactionamount'];

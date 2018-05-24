@@ -24,6 +24,19 @@
   </h1>
   
   <div class="panel panel-default">
+    <div class="panel-heading"><b>0.28</b></div>
+    <div class="panel-body">
+		<ul>
+			<li>ENHANCEMENT: Changed the layout of the settings page for easier access to specific settings.</li>
+			<li>FEATURE: New option in settings to set a currency exchange to your liking used in the wallet to calculate the current 
+				value of NLG to other currencies (i.e. Nocks and GuldenTrader for Euro, CryptoCompare for USD, BitTrex for BTC).</li>
+			<li>ENHANCEMENT: Rewrote the function for the wallet transaction list.</li>
+			<li>ENHANCEMENT: Show loading image when clicking on an account in the wallet.</li>
+		</ul>
+    </div>
+  </div>
+  
+  <div class="panel panel-default">
     <div class="panel-heading"><b>0.27</b></div>
     <div class="panel-body">
 		<ul>

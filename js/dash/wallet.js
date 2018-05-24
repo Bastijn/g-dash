@@ -4,6 +4,8 @@ var loadjsondata = '';
 
 function changeAccount(uuid) {
 	accountuuid = uuid;
+	$('#walletinfopanel').html("<img src='images/loading.gif' border='0' height='64' width='64'> Loading....");
+	
 	loadjsondata();
 	
 	$('#tabletransactions > tbody:last-child').html("<img src='images/loading.gif' border='0' height='64' width='64'> Loading....");
@@ -245,7 +247,7 @@ $(document).ready(function() {
 		  	  	}
 		  	  	
 		  	  	accountuuid = data['selectedaccount'];
-		  	  	$('#accountlistheader').html(encryptionpng+"Account list (G "+numberWithCommas(data['totalbalance'])+" / &euro; "+numberWithCommas(data['eurototalbalance'])+")");
+		  	  	$('#accountlistheader').html(encryptionpng+"Account list (G "+numberWithCommas(data['totalbalance'])+" / "+data['otherbalancesymbol']+" "+numberWithCommas(data['othertotalbalance'])+")");
 		  	  	$('#accountlistpanel').html("");
 		  	  	$.each(data['accountlist'], function( index, value ) {
 		  	  		if(value['UUID']==accountuuid) {
@@ -258,7 +260,7 @@ $(document).ready(function() {
 		  	  	
 		  	  	//"<b>Unconfirmed:</b> "+data['uncbalance']+"<br>"+
 		  	  	//"<b>Address:</b> "+data['address']+" <small><button type=\"button\" class=\"btn-link\" onclick=\"createNewAddress()\">( Generate new address )</button></small><br><br>"+
-		  	  	$('#walletinfopanel').html("<b>Balance:</b> G "+numberWithCommas(data['balance'])+" / &euro; "+numberWithCommas(data['eurobalance'])+"<br>"+
+		  	  	$('#walletinfopanel').html("<b>Balance:</b> G "+numberWithCommas(data['balance'])+" / "+data['otherbalancesymbol']+" "+numberWithCommas(data['otherbalance'])+"<br>"+
 										   "<b>Address:</b> "+data['address']+"<br><br>"+
 				  						   "<div id='guldenqr'></div>");
 				

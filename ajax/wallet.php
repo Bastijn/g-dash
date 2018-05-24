@@ -2,6 +2,7 @@
 session_start();
 if($_SESSION['G-DASH-loggedin']==TRUE) {
 include('../lib/functions/functions.php');
+include('../lib/settings/settings.php');
 include('../config/config.php');
 require_once('../lib/EasyGulden/easygulden.php');
 $gulden = new Gulden($CONFIG['rpcuser'],$CONFIG['rpcpass'],$CONFIG['rpchost'],$CONFIG['rpcport']);
@@ -71,12 +72,32 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 		$totalbalance = round($gulden->getbalance(),2);
 		
 		//Use GuldenTrader API as the current euro price
-		$fetcheuroprice = @json_decode(file_get_contents("https://guldentrader.com/api/ticker"));
-		$europrice = $fetcheuroprice->buy;
+		//$fetcheuroprice = @json_decode(file_get_contents("https://guldentrader.com/api/ticker"));
+		//$europrice = $fetcheuroprice->buy;
 		
 		//Use Nocks API as the current euro price
 		//$fetcheuroprice = @json_decode(file_get_contents("https://api.nocks.com/api/v2/trade-market/NLG-EUR"));
 		//$europrice = $fetcheuroprice->data->buy->amount;
+		
+		//Use the user defined exchange to check the conversion rate for NLG
+		$nlgprices = $GDASH['nlgrate'];
+		$currentnlgprovider = $CONFIG['nlgprovider'];
+		if($currentnlgprovider == "") { $currentnlgprovider = "0"; }
+		$fetchURL = $nlgprices[$currentnlgprovider]['market'];
+		$pricesymbol = $nlgprices[$currentnlgprovider]['symbol'];
+		$fetchmarket = @json_decode(file_get_contents($fetchURL));
+		$nlgpricelink = $nlgprices[$currentnlgprovider]['link'];
+		if(strpos($nlgpricelink, "->")!==false) {
+			$nlgpricelinkexpl = explode("->", $nlgpricelink);
+			foreach ($nlgpricelinkexpl as $addtolink) {
+				$fetchmarket = $fetchmarket->$addtolink;
+			}
+			$currentprice = $fetchmarket;
+		} else {
+			$currentprice = $fetchmarket->$nlgpricelink;
+		}
+		$currencyrounding = $nlgprices[$currentnlgprovider]['rounding'];
+		
 		
 		//TODO: Create a good function for showing a new unused address
 		//Temporary solution until a better way is found
@@ -117,8 +138,9 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 		$returnarray['address'] = $latestaddress;
   		$returnarray['balance'] = $confirmedbalance;
 		$returnarray['totalbalance'] = $totalbalance;
-		$returnarray['eurobalance'] = round($confirmedbalance * $europrice, 2);
-		$returnarray['eurototalbalance'] = round($totalbalance * $europrice, 2);
+		$returnarray['otherbalance'] = round($confirmedbalance * $currentprice, $currencyrounding);
+		$returnarray['othertotalbalance'] = round($totalbalance * $currentprice, $currencyrounding);
+		$returnarray['otherbalancesymbol'] = $pricesymbol;
 		$returnarray['uncbalance'] = $unconfirmedbalance;
 		$returnarray['disablewallet'] = "0";
 		$returnarray['encryption'] = $encryptioncheck;
