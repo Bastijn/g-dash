@@ -393,13 +393,17 @@ function getLiveTransactionDetails($accounttransactions, $numoftransactionstosho
 		$uniquetxids[] = $txvalue['txid'];
 	}
 	
-	//Make the array list unique and reset the keys
+	//Make the array list unique
 	$uniquetxids = array_unique($uniquetxids);
-	$uniquetxids = array_slice($uniquetxids, 0, $numoftransactionstoshow, true);
-	$uniquetxids = array_values($uniquetxids);
 	
 	//Reverse the order of the array
 	$uniquetxids = array_reverse($uniquetxids);
+	
+	//List a maximum number of TX
+	$uniquetxids = array_slice($uniquetxids, 0, $numoftransactionstoshow, true);
+	
+	//reset the keys
+	$uniquetxids = array_values($uniquetxids);
 	
 	//For each transaction ID
 	foreach ($uniquetxids as $transactiontxid) {
