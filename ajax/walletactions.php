@@ -75,34 +75,43 @@ if(isset($_GET['action'])) {
 		}
 	}
 	
-	/*
 	//Import a Recovery Phrase to this wallet
 	elseif($_GET['action']=="importrecphrase") {
 		if(isset($_POST['phrase'])!="") {
 			$gulden->importseed($_POST['phrase']);
-			//$gulden->setactiveseed();
 			$guldenresponse = $gulden->response;
 			
 			if($guldenresponse!="-14") {
-				$returnarray = "<div class='alert alert-success'>".$gulden->getmnemonicfromseed($gulden->getactiveseed())."</div>";
+				$returnarray = "<div class='alert alert-success'>Wallet imported, starting rescan. This can take a while.</div>";
+				$gulden->rescan;
 			} else {
-				$returnarray = "<div class='alert alert-warning'>Wallet passphrase incorrect.</div>";
+				$returnarray = "<div class='alert alert-warning'>Something went wrong:<br>".$guldenresponse."</div>";
 			}
-
-			echo json_encode($guldenresponse);
+			
+			echo json_encode($returnarray);
 		}
 	}
-	*/
 	
 	//Add a new account to this wallet
 	elseif($_GET['action']=="addaccount") {
 		if(isset($_POST['accountname'])!="") {
 			if(strpos($_POST['accountname'], "*")===false) {
-				$createaddr = $gulden->createaccount(trim($_POST['accountname']));
-				if($createaddr == "false") {
-					$returnarray = $gulden->response;
+				
+				//Check the passphrase and unlock the wallet for 10 seconds
+				$gulden->walletpassphrase($_POST['pass'], 10);
+				$guldenresponse = $gulden->response['error']['code'];
+				
+				if($guldenresponse!="-14") {
+					//Create the account
+					$createaddr = $gulden->createaccount(trim($_POST['accountname']));
+					if($createaddr == "false") {
+						$returnarray = $gulden->response;
+					} else {
+						$returnarray = $createaddr;
+					}
 				} else {
-					$returnarray = $createaddr;
+					//Passphrase incorrect
+					$returnarray = "-1";
 				}
 				
 				echo json_encode($returnarray);

@@ -1,5 +1,9 @@
 <?php
 session_start();
+
+//In case the server is very busy, lower the max execution time to 60 seconds
+set_time_limit(10);
+
 if($_SESSION['G-DASH-loggedin']==TRUE) {
 include('../lib/functions/functions.php');
 include('../config/config.php');
@@ -18,7 +22,21 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 	$returnarray['server']['mem'] = $guldenMEM;
 	$returnarray['server']['temperature'] = $linuxTemp;
 	
-	if($gulden->getinfo()=="") {
+	$guldengetinfo = $gulden->getinfo();
+	$guldenprimaryresponsecode = $gulden->response['error']['code'];
+	$guldenprimaryresponsemessage = $gulden->response['error']['message'];
+	
+	if($guldenprimaryresponsecode == "-28") {
+		$returnarray['gulden']['version'] = '';
+		$returnarray['gulden']['sync'] = '';
+		$returnarray['gulden']['uptime'] = '';
+		$returnarray['gulden']['protocolversion'] = '';
+		$returnarray['node']['connections'] = '';
+		$returnarray['node']['inbound'] = '';
+		$returnarray['witness'] = '';
+		$returnarray['table'] = "<tr><td colspan='4'>GuldenD Upgrading</td></tr>";
+		$returnarray['errors'] = "Upgrading block index... This can take some time...";
+	} elseif($guldengetinfo=="") {
 		$returnarray['gulden']['version'] = '';
 		$returnarray['gulden']['sync'] = '';
 		$returnarray['gulden']['uptime'] = '';
@@ -31,19 +49,36 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 	} else {
 	
 		//GuldenD info
-		$ginfo = $gulden->getinfo();
+		$ginfo = $guldengetinfo;
 		$gversion = $ginfo['version'];
 		$gblocks = $ginfo['blocks'];
 		$gconnections = $ginfo['connections'];
 		$gprotocolversion = $ginfo['protocolversion'];
 		$gtimeoffset = $ginfo['timeoffset'];
-		$gdifficulty = $ginfo['difficulty'];
+		$gdifficulty = round($ginfo['difficulty'],3);
 		$gerrors = $ginfo['errors'];
 		
-		$gallblocksjson = file_get_contents('https://blockchain.gulden.com/api/status?q=getInfo');
-		$array = json_decode($gallblocksjson);
-		$gallblocks = $array->info->blocks;
+		//Get synced blocks via blockchain api
+		//$gallblocksjson = file_get_contents('https://blockchain.gulden.com/api/status?q=getInfo');
+		//$array = json_decode($gallblocksjson);
+		//$gallblocks = $array->info->blocks;
+		
+		//Get synced blocks via GuldenD
+		$peerinfo = $gulden->getpeerinfo();
+		$gallblocks = $peerinfo[0]['synced_headers'];
+		
+		//Check if headers are synced
+		$bcinfo = $gulden->getblockchaininfo();
+		$gsyncedblocks = $bcinfo['blocks'];
+		$gsyncedheaders = $bcinfo['headers'];
+		
+		if($gsyncedblocks == 0 && $gsyncedheaders > 0) {
+			$gerrors = $gerrors."<br>Syncing headers. Please wait";
+		}
+		
+		//Calculate the percentage of synced blocks
 		$gblockspercent = floor(($gblocks/$gallblocks)*100)."%";
+		
 		$guptime = GetTimeAnno(GetProgUpTime("GuldenD"));
 		
 		//Node info
@@ -59,7 +94,7 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 			$blockinfo = $gulden->getblock($gulden->getblockhash($i));
 			$age = GetTimeAnno(time() - $blockinfo['time']);
 			$transactions = count($blockinfo['tx']);
-			$difficulty = $blockinfo['difficulty'];
+			$difficulty = round($blockinfo['difficulty'],3);
 			
 			$tablerows .= "
 			<tr>

@@ -1,5 +1,9 @@
 <?php
 session_start();
+
+//In case the server is very busy, lower the max execution time to 60 seconds
+set_time_limit(60);
+
 if($_SESSION['G-DASH-loggedin']==TRUE) {
 include('../lib/functions/functions.php');
 include('../lib/settings/settings.php');
@@ -35,9 +39,28 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 				$encryptioncheck = "-1";
 			}
 		}
-			
-		//List all accounts
-		$accountlist = $gulden->listaccounts();
+
+		//Check if sync is at 100%
+		$currentblock = $ginfo['blocks'];
+		$peerinfo = $gulden->getpeerinfo();
+		$gallblocks = $peerinfo[0]['synced_headers'];
+		$gblockspercent = floor(($currentblock/$gallblocks)*100);
+		
+		//List all accounts, don't show deleted accounts 
+		$accountlist = $gulden->listaccounts("*", "Normal");
+		
+		//List all accounts, including deleted accounts (comment above, uncomment this one)
+		//$accountlist = $gulden->listaccounts();
+		
+		//Only list wallet accounts
+		$accountlist = selectElementWithValue($accountlist, "type", "Desktop");
+		
+		//TODO: This can be removed after a while, as this is a "between" solution for 
+		//Gulden 1.6.10 -> 2.0. Account management changed, so no accounts are visible
+		//on 1.6.10 for users who upgraded G-DASH
+		if(count($accountlist)==0) {
+			$gerrors = "Your Gulden needs to be updated to 2.0 before you can see your accounts again";
+		}
 		
 		//If the users selected an account from the menu
 		if(isset($_GET['account'])) { $selectedaccount = $_GET['account']; } else { $selectedaccount = ""; }
@@ -70,14 +93,6 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 		
 		//Get the balance of all accounts
 		$totalbalance = round($gulden->getbalance(),2);
-		
-		//Use GuldenTrader API as the current euro price
-		//$fetcheuroprice = @json_decode(file_get_contents("https://guldentrader.com/api/ticker"));
-		//$europrice = $fetcheuroprice->buy;
-		
-		//Use Nocks API as the current euro price
-		//$fetcheuroprice = @json_decode(file_get_contents("https://api.nocks.com/api/v2/trade-market/NLG-EUR"));
-		//$europrice = $fetcheuroprice->data->buy->amount;
 		
 		//Use the user defined exchange to check the conversion rate for NLG
 		$nlgprices = $GDASH['nlgrate'];
@@ -144,6 +159,7 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 		$returnarray['uncbalance'] = $unconfirmedbalance;
 		$returnarray['disablewallet'] = "0";
 		$returnarray['encryption'] = $encryptioncheck;
+		$returnarray['syncprogress'] = $gblockspercent;
 	} else {
 		$returnarray['selectedaccount'] = "";
 		$returnarray['accountlist'] = "";
@@ -153,6 +169,7 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 		$returnarray['uncbalance'] = "";
 		$returnarray['disablewallet'] = "1";
 		$returnarray['encryption'] = "";
+		$returnarray['syncprogress'] = "";
 	}
 	$returnarray['errors'] = $gerrors;
 	$returnarray['server']['cpu'] = $guldenCPU;
@@ -167,6 +184,7 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 	$returnarray['totalbalance'] = "";
 	$returnarray['uncbalance'] = "";
 	$returnarray['encryption'] = "";
+	$returnarray['syncprogress'] = "";
 	
 	$returnarray['errors'] = "";
 	$returnarray['server']['cpu'] = "";

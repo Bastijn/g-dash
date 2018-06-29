@@ -24,6 +24,31 @@
   </h1>
   
   <div class="panel panel-default">
+    <div class="panel-heading"><b>0.99</b></div>
+    <div class="panel-body">
+		<ul>
+			<li>NOTE: This is the last beta release before version 1. After this update the stable and beta channel will be used as intended.</li>
+			<li>FEATURE: Witness functionality. Not described in detail here. See GitHub.</li>
+			<li>FEATURE: Import recovery phrase and rescan for transactions.</li>
+			<li>FEATURE: Set time limits on XHR calls.</li>
+			<li>FEATURE: Catch the 'Upgrading block index' note when updating to a new Gulden version.</li>
+			<li>FEATURE: Fetch headers from peers instead of the blockchain API.</li>
+			<li>FEATURE: Changed the account list fetch to the new standard.</li>
+			<li>FEATURE: Temp additions and warnings for the transition period to Gulden 2.0.</li>
+			<li>FEATURE: Temp additions and warnings for the different phases for witnessning.</li>
+			<li>FEATURE: Buttons are now colourful.</li>
+			<li>FEATURE: Changed update servers to HTTPS.</li>
+			<li>FEATURE: Added version numbers to JS scripts to prevent caching issues.</li>
+			<li>FEATURE: Added terminal commands 'walletunlock', 'rescan', and 'getrescanprogress'. Use 'help' for details.</li>
+			<li>FEATURE: Many more! Check GitHub 
+				(<a href='https://github.com/Bastijn/g-dash/' target='_blank'>
+				https://github.com/Bastijn/g-dash/
+				</a>) for detailed info.</li>
+		</ul>
+    </div>
+  </div>
+  
+  <div class="panel panel-default">
     <div class="panel-heading"><b>0.29</b></div>
     <div class="panel-body">
 		<ul>

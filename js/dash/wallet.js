@@ -15,9 +15,11 @@ function changeAccount(uuid) {
 function addAccount() {
 	
 	var newaccountnametosend = $('#newaccountname').val();
+	var accountpassword = $('#createaccpass').val();
 	$('#newaccountname').val("");
+	$('#createaccpass').val("");
 	
-	$.post( "ajax/walletactions.php?action=addaccount", { accountname: newaccountnametosend })
+	$.post( "ajax/walletactions.php?action=addaccount", { accountname: newaccountnametosend, pass: accountpassword })
 	 .done(function( data ) {
 	 	var data = jQuery.parseJSON(data);
 		//console.log(data);
@@ -138,20 +140,16 @@ function createNewAddress() {
 	});
 }
 
-/*
 function impRecovery() {
 	var imprec = $('#therecphrase').val();
 	$.post( "ajax/walletactions.php?action=importrecphrase", { phrase: imprec })
 	 .done(function( data ) {
 	 	var data = jQuery.parseJSON(data);
-	 	$('#importrecstatus').val(data);
-	 	
-		console.log(data);
-		//loadjsondata();
-		$('#therecphrase').val();
+	 	$('#importrecstatus').html(data);
+		$('#therecphrase').val("");
+		setTimeout(function(){ $('#importrecoveryphrase').modal('toggle'); }, 10000);
 	});
 }
-*/
 
 function setPassPhrase() {
 	$('#passerror').html("");
@@ -236,8 +234,12 @@ $(document).ready(function() {
 		  	  	var encryptionpng = '';
 		  	  	
 		  	  	if(encryptionerror=='-15') {
-		  	  		$('#errordiv').append("<div class='alert alert-warning'>Wallet is not encrypted! Set a password to secure your wallet.</div>");
-		  	  		$('#unencryptedwallet').show();
+		  	  		if(data['syncprogress'] < 100) {
+		  	  			$('#errordiv').append("<div class='alert alert-warning'>Wallet is not encrypted and can only be encrypted when sync is 100%. Currently " + data['syncprogress'] + "%)</div>");
+		  	  		} else {
+			  	  		$('#errordiv').append("<div class='alert alert-warning'>Wallet is not encrypted! Set a password to secure your wallet.</div>");
+			  	  		$('#unencryptedwallet').show();
+		  	  		}
 		  	  	} else if(encryptionerror=='-1') {
 		  	  		encryptionpng = "<img src='images/locked.png' height='20px' width='20px' title='Encrypted & locked'> ";
 		  	  		$('#encryptedwallet').show();

@@ -64,7 +64,7 @@ if($CONFIG['otp']=="1" && $CONFIG['disablelogin'] != "1" && isset($_POST['login'
   <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container-fluid">
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#mainnavbarcol">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -72,7 +72,7 @@ if($CONFIG['otp']=="1" && $CONFIG['disablelogin'] != "1" && isset($_POST['login'
           </button>
           <a class="navbar-brand" href="<?php echo $CONFIG['weblocation']; ?>"><img src="images/gblue64x64.png" width='20' height='20' border='0' style="display:inline;vertical-align:top;"> - DASH</a>
         </div>
-        <div class="navbar-collapse collapse">
+        <div class="navbar-collapse collapse" id="mainnavbarcol">
           <ul class="nav navbar-nav navbar-right">
             <li><a href="?">Dashboard</a></li>
             <li><a href="?page=settings">Settings</a></li>
@@ -93,7 +93,7 @@ if($CONFIG['otp']=="1" && $CONFIG['disablelogin'] != "1" && isset($_POST['login'
 //Check if there is an update for G-DASH
 $currentversion = $GDASH['currentversion'];
 $latestversionsarray = array();
-$latestversionsarray = @json_decode(file_get_contents($GDASH['updatecheck']));
+$latestversionsarray = @json_decode(file_get_contents($GDASH['updatecheck']."?cv=$currentversion"));
 if($CONFIG['updatechannel']=="1") {
 	$getlatestversion = $latestversionsarray->beta;
 } else {

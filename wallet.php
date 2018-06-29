@@ -1,5 +1,5 @@
-<script src="js/dash/wallet.js"></script>
-<script src="js/dash/wallettx.js"></script>
+<script src="js/dash/wallet.js?<?php echo $CONFIG['dashversion']; ?>"></script>
+<script src="js/dash/wallettx.js?<?php echo $CONFIG['dashversion']; ?>"></script>
 
 <div class="row row-offcanvas row-offcanvas-left">
 
@@ -43,6 +43,11 @@
 		      <label for="newaccountname"><small>Account name (Normal letters only and no &#42; allowed)</small></label><br>
 		      <input id="newaccountname" name="newaccountname" type="text" class="form-control">
 		    </div>
+		    
+		    <div class="form-group">
+		      <label for="createaccpass"><small>Unlock your wallet with your password</small></label><br>
+		      <input id="createaccpass" name="createaccpass" type="password" class="form-control">
+		    </div>
 	      </div>
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="addAccount()">Create account</button>
@@ -79,7 +84,6 @@
 	
 	
 	<!-- Import Recovery Phrase modal content-->
-	<!--
   	<div id="importrecoveryphrase" class="modal fade" role="dialog">
 	  <div class="modal-dialog">
 	    <div class="modal-content" name="importrecoveryphrasemodal" id="importrecoveryphrasemodal">
@@ -102,7 +106,6 @@
 	    </div>	
 	  </div>
 	</div>
-	-->
 	<!-- End import recovery phrase modal content-->
 	
 	
@@ -286,13 +289,16 @@
 		    <div class="panel-heading">Account actions</div>
 		    <div class="panel-body" id="accountactions">
 		    	<div id="unencryptedwallet" name="unencryptedwallet" style="display: none;">
-		    		<!--You have not configured your wallet yet. Choose one of the two options below.<br>
+		    		<b>You have not configured your wallet yet. Choose one of the options below.</b><br><br>
+		    		
+		    		This is a new wallet. To recover another wallet, import your wallet using the Recovery Phrase.<br>
 		    		<ul>
 		    			<li><a data-toggle="modal" href="#importrecoveryphrase">Import existing Recovery Phrase</a></li>
 		    		</ul>
-		    		-->
 		    		Your wallet is not encrypted. No transactions can be made until you encrypt your wallet.
-		    		<a data-toggle="modal" href="#setuppassphrase">Set a password to encrypt this wallet</a>
+		    		<ul>
+		    			<li><a data-toggle="modal" href="#setuppassphrase">Set a password to encrypt this wallet</a></li>
+		    		</ul>
 		    	</div>
 		    	<div id="encryptedwallet" name="encryptedwallet" style="display: none;">
 		    		<ul>

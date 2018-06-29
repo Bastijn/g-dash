@@ -107,6 +107,67 @@ class GuldenConsoleRPC {
       throw new Exception("Access Denied");
     }
   }
+
+  //The walletunlock command that calls the 'walletpassphrase' command
+  public static $walletunlock_documentation = "Unlock wallet for 5 minutes (usage: walletunlock 'walletpassword')";
+  public function walletunlock($walletpassword) {	
+    if ($_SESSION['G-DASH-loggedin']==TRUE) {
+      include('../../config/config.php');
+	  require_once('../../lib/EasyGulden/easygulden.php');
+	  $gulden = new Gulden($CONFIG['rpcuser'],$CONFIG['rpcpass'],$CONFIG['rpchost'],$CONFIG['rpcport']);
+      $ginfo = $gulden->walletpassphrase($walletpassword, 300);
+	  $gresponse = $gulden->response['error']['message'];
+	  if($gresponse=="") {
+	  	$gresponse = "Wallet unlocked for 5 minutes";
+	  }
+	  
+      return $gresponse;
+    } else {
+      throw new Exception("Access Denied");
+    }
+  }
+  
+  //The rescan command to re-check the blockchain
+  public static $rescan_documentation = "Rescan the blockchain for transactions (usage: rescan)";
+  public function rescan() {	
+    if ($_SESSION['G-DASH-loggedin']==TRUE) {
+      include('../../config/config.php');
+	  require_once('../../lib/EasyGulden/easygulden.php');
+	  $gulden = new Gulden($CONFIG['rpcuser'],$CONFIG['rpcpass'],$CONFIG['rpchost'],$CONFIG['rpcport']);
+      $ginfo = $gulden->rescan();
+	  $gresponse = $gulden->response['error']['message'];
+	  if($gresponse=="") {
+	  	$gresponse = "Running rescan. Progress: ".$gulden->getrescanprogress()."%";
+	  }
+	  
+      return $gresponse;
+    } else {
+      throw new Exception("Access Denied");
+    }
+  }
+  
+  //The getrescanprogress command to check the progress
+  public static $getrescanprogress_documentation = "Rescan progess in percentage (usage: getrescanprogress)";
+  public function getrescanprogress() {	
+    if ($_SESSION['G-DASH-loggedin']==TRUE) {
+      include('../../config/config.php');
+	  require_once('../../lib/EasyGulden/easygulden.php');
+	  $gulden = new Gulden($CONFIG['rpcuser'],$CONFIG['rpcpass'],$CONFIG['rpchost'],$CONFIG['rpcport']);
+      $ginfo = $gulden->getrescanprogress();
+	  $gresponse = $gulden->response['error']['message'];
+	  if($gresponse=="") {
+	  	if($ginfo=="false") {
+	  		$gresponse = "Rescan finished";
+	  	} else {
+	  		$gresponse = "Running rescan. Progress: ".$ginfo."%";
+	  	}
+	  }
+	  
+      return $gresponse;
+    } else {
+      throw new Exception("Access Denied");
+    }
+  }
   
   public static $help_documentation = "Show available commands";
   public function help() {
@@ -115,6 +176,9 @@ class GuldenConsoleRPC {
 	$availablecommands .= "showlog - Show the last 50 lines of the Gulden debug log\n";
 	$availablecommands .= "addnode - Add a node by IP address (usage: addnode IP)\n";
 	$availablecommands .= "noderequest - Add a request to be added by other nodes\n";
+	$availablecommands .= "walletunlock - Temporary unlock the wallet for Gulden services\n";
+	$availablecommands .= "rescan - Rescan the blockchain for transactions\n";
+	$availablecommands .= "getrescanprogress - Rescan progess in percentage\n";
 	
 	return $availablecommands;
   }
