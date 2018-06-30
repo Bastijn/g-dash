@@ -63,15 +63,24 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 		//$array = json_decode($gallblocksjson);
 		//$gallblocks = $array->info->blocks;
 		
-		//Get synced blocks via GuldenD
+		//Get total headers via GuldenD getpeerinfo
 		$peerinfo = $gulden->getpeerinfo();
-		$gallblocks = $peerinfo[0]['synced_headers'];
 		
-		//Check if headers are synced
+		//Walk through all the peers to get the most updated one and 
+		//grab the number of headers from that instance
+		$gallblocks = 0;
+		foreach ($peerinfo as $peervalue) {
+			if($peervalue['synced_headers'] > $gallblocks) {
+				$gallblocks = $peervalue['synced_headers'];
+			}
+		}
+		
+		//Check if headers are synced and the current number of blocks
 		$bcinfo = $gulden->getblockchaininfo();
 		$gsyncedblocks = $bcinfo['blocks'];
 		$gsyncedheaders = $bcinfo['headers'];
 		
+		//Check if headers are synced
 		if($gsyncedblocks == 0 && $gsyncedheaders > 0) {
 			$gerrors = $gerrors."<br>Syncing headers. Please wait";
 		}

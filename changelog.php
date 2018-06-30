@@ -41,8 +41,8 @@
 			<li>FEATURE: Added version numbers to JS scripts to prevent caching issues.</li>
 			<li>FEATURE: Added terminal commands 'walletunlock', 'rescan', and 'getrescanprogress'. Use 'help' for details.</li>
 			<li>FEATURE: Many more! Check GitHub 
-				(<a href='https://github.com/Bastijn/g-dash/' target='_blank'>
-				https://github.com/Bastijn/g-dash/
+				(<a href='https://github.com/Bastijn/g-dash/commit/fb4d1f8a855179744d79fb91a6d6123f247006ea' target='_blank'>
+				https://github.com/Bastijn/g-dash/commit/fb4d1f8a855179744d79fb91a6d6123f247006ea
 				</a>) for detailed info.</li>
 		</ul>
     </div>
