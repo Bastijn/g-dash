@@ -88,7 +88,14 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 		//Calculate the percentage of synced blocks
 		$gblockspercent = floor(($gblocks/$gallblocks)*100)."%";
 		
+		//Get the uptime of the GuldenD instance
 		$guptime = GetTimeAnno(GetProgUpTime("GuldenD"));
+		
+		//Check if Gulden is running a rescan
+		$grescancheck = $gulden->getrescanprogress();
+		if($grescancheck!=false) {
+	  		$gerrors = $gerrors."<br>Running rescan (".$grescancheck."%). Please wait";
+	  	}
 		
 		//Node info
 		$gpeerinfo = $gulden->getpeerinfo();
