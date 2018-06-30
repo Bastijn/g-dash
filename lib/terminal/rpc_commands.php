@@ -156,11 +156,30 @@ class GuldenConsoleRPC {
       $ginfo = $gulden->getrescanprogress();
 	  $gresponse = $gulden->response['error']['message'];
 	  if($gresponse=="") {
-	  	if($ginfo=="false") {
+	  	if($ginfo==false) {
 	  		$gresponse = "Rescan finished";
 	  	} else {
 	  		$gresponse = "Running rescan. Progress: ".$ginfo."%";
 	  	}
+	  }
+	  
+      return $gresponse;
+    } else {
+      throw new Exception("Access Denied");
+    }
+  }
+  
+  //The guldenstop command to shut down GuldenD
+  public static $guldenstop_documentation = "Stop GuldenD graciously";
+  public function guldenstop() {	
+    if ($_SESSION['G-DASH-loggedin']==TRUE) {
+      include('../../config/config.php');
+	  require_once('../../lib/EasyGulden/easygulden.php');
+	  $gulden = new Gulden($CONFIG['rpcuser'],$CONFIG['rpcpass'],$CONFIG['rpchost'],$CONFIG['rpcport']);
+      $ginfo = $gulden->stop();
+	  $gresponse = $gulden->response['error']['message'];
+	  if($gresponse=="") {
+	  	$gresponse = $ginfo;
 	  }
 	  
       return $gresponse;
@@ -179,6 +198,7 @@ class GuldenConsoleRPC {
 	$availablecommands .= "walletunlock - Temporary unlock the wallet for Gulden services\n";
 	$availablecommands .= "rescan - Rescan the blockchain for transactions\n";
 	$availablecommands .= "getrescanprogress - Rescan progess in percentage\n";
+	$availablecommands .= "guldenstop - Stop GuldenD graciously (i.e. before a reboot)\n";
 	
 	return $availablecommands;
   }
