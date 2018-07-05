@@ -64,6 +64,18 @@
 		} else {
 			echo "<font color='red'>Gulden-cli does not exist! Define the correct Gulden directory in the settings.</font>";
 		}
+		
+		echo "<br><br>";
+		
+		$guldenlogperms = getFilePermissions($CONFIG['datadir']."debug.log");
+		if($guldenlogperms['exists']) {
+			echo "The owner of debug.log is \"".$guldenlogperms['owner']['name']."\"<br>";
+			echo "The permissions of debug.log are \"".$guldenlogperms['permissions']."\"<br>";
+			echo "The file size of debug.log is \"".round(filesize($CONFIG['datadir']."debug.log") / pow(1024, 2), 2)."\" MB <br>";
+			if($guldenlogperms['readable']) { echo "<font color='green'>debug.log is readable</font>"; } else { echo "<font color='red'>debug.log is not readable</font>"; }
+		} else {
+			echo "<font color='red'>debug.log does not exist! Define the correct datadir in the settings.</font>";
+		}
 		?>
     </div>
   </div>
