@@ -14,6 +14,7 @@ $guldenD = "GuldenD";
 $guldenCPU = GetProgCpuUsage($guldenD);
 $guldenMEM = GetProgMemUsage($guldenD);
 $linuxTemp = GetLinuxTemp();
+//GetSystemMemUsage();
 $returnarray = array();
 
 if($guldenCPU > 0 && $guldenMEM > 0) {
@@ -36,6 +37,10 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 		$returnarray['witness'] = '';
 		$returnarray['table'] = "<tr><td colspan='4'>GuldenD Upgrading</td></tr>";
 		$returnarray['errors'] = "Upgrading block index... This can take some time...";
+		
+		//Write this status update to the log file
+		//logger(4, "GuldenD", "Upgrading block index");
+		
 	} elseif($guldengetinfo=="") {
 		$returnarray['gulden']['version'] = '';
 		$returnarray['gulden']['sync'] = '';

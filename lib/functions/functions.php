@@ -1,9 +1,13 @@
 <?php
+/* System functions */
+
 function GetProgCpuUsage($program)
 {
     if(!$program) return -1;
     
     $c_pid = exec("ps aux | grep ".$program." | grep -v grep | grep -v su | awk {'print $3'}");
+	//logger(5, "GuldenCpuUsage", $c_pid);
+	
     return trim($c_pid);
 }
 
@@ -12,6 +16,8 @@ function GetProgMemUsage($program)
     if(!$program) return -1;
     
     $c_pid = exec("ps aux | grep ".$program." | grep -v grep | grep -v su | awk {'print $4'}");
+	//logger(5, "GuldenMemUsage", $c_pid);
+	
     return trim($c_pid);
 }
 
@@ -19,6 +25,8 @@ function GetProgUpTime($program)
 {
 	if(!$program) return -1;
 	$c_pid = exec("ps -eo pid,comm,etimes | grep $program | awk {'print $3'}");
+	//logger(5, "GuldenUptime", $c_pid);
+	
 	return trim($c_pid);
 }
 
@@ -26,8 +34,190 @@ function GetLinuxTemp()
 {
 	$l_temp = exec("cat /sys/class/thermal/thermal_zone0/temp");
 	$l_temp = round(trim($l_temp) / 1000, 0);
+	//logger(5, "TempCheck", $l_temp);
+	
 	return $l_temp;
 }
+
+function GetSystemMemUsage() 
+{
+	exec("free", $free);
+	$free=implode(' ', $free);
+	preg_match_all("/(?<=\s)\d+/", $free, $match);
+	list($total_mem,$used_mem,$free_mem,$shared_mem,$buffered_mem,$available_mem)=$match[0];
+	
+	$used_mem -= ($buffered_mem);
+	$percent_used = (int)(($used_mem*100)/$total_mem);
+	//logger(5, "MemCheck", $percent_used);
+	
+	return $percent_used;
+}
+
+function AddTrailingSlash($string)
+{
+	$string = rtrim($string, '/') . '/';
+	return $string;
+}
+
+/**
+ * Log function with log file rotation
+ * and loglevel restrictions
+ */
+function logger($level, $event, $text = null) {
+	//Levels for logging:
+	//1: System errors
+	//2: GuldenD errors
+	//3: G-DASH errors
+	//4: General warnings
+	//5: General (system) stats
+	
+    $maxsize = 5242880; //Max filesize in bytes (e.q. 5MB)
+    $dir = __DIR__."/../../log/";
+    $filename = "gdash.log";
+    $loglevel = 5;
+	$maxlogs = 5;
+	
+	//Check if file exists and if the filesize exceeds the maxsize
+	if(file_exists($dir.$filename) && filesize($dir.$filename) > $maxsize) {
+        $nb = 1;
+        $logfiles = scandir($dir);
+        $oldestlog = "";
+		
+		//Find the last file name for renaming
+        foreach ($logfiles as $file) {
+            $tmpnb = substr($file, strlen($filename));
+            if($nb < $tmpnb) {
+                $nb = $tmpnb;
+            }
+			
+			if($tmpnb != '' && $oldestlog == '') {
+				$oldestlog = dir.$filename.$tmpnb;
+			}
+        }
+        
+		//Rename the current log file
+        rename($dir.$filename, $dir.$filename.($nb + 1));
+		
+		//Remove the oldest log file if the number of log files is more than maxlogs
+		if(count($logfiles) > $maxlogs) {
+			unlink($oldestlog);
+		}
+    }
+	
+	//Check if the level of this error is less than the restriced error level
+    if($level <= $loglevel && file_exists($dir.$filename)) { 
+       $data = date('Y-m-d H:i:s').";LEVEL: ".$level.";";
+       $data .= "EVENT: ".$event.";".$text.PHP_EOL;
+       file_put_contents($dir.$filename, $data, FILE_APPEND);
+    }
+}
+
+function getFilePermissions($file) {	
+	//Array with results of the function
+	$resultArray = array();	
+	
+	//Does the file exist?
+	if(file_exists($file)) {
+		
+		//Yes, exists
+		$resultArray['exists'] = TRUE;
+	
+		//Raw permissions
+		$perms = fileperms($file);
+		
+		//The owner of the file
+		$resultArray['owner'] = posix_getpwuid(fileowner($file));
+	
+		//Type of file
+		switch ($perms & 0xF000) {
+		    case 0xC000: // socket
+		        $type = 's';
+		        break;
+		    case 0xA000: // symbolic link
+		        $type = 'l';
+		        break;
+		    case 0x8000: // regular
+		        $type = 'r';
+		        break;
+		    case 0x6000: // block special
+		        $type = 'b';
+		        break;
+		    case 0x4000: // directory
+		        $type = 'd';
+		        break;
+		    case 0x2000: // character special
+		        $type = 'c';
+		        break;
+		    case 0x1000: // FIFO pipe
+		        $type = 'p';
+		        break;
+		    default: // unknown
+		        $type = 'u';
+		}
+		
+		$resultArray['type'] = $type;
+		
+		// Owner
+		$info = (($perms & 0x0100) ? 'r' : '-');
+		$info .= (($perms & 0x0080) ? 'w' : '-');
+		$info .= (($perms & 0x0040) ?
+		            (($perms & 0x0800) ? 's' : 'x' ) :
+		            (($perms & 0x0800) ? 'S' : '-'));
+		
+		// Group
+		$info .= (($perms & 0x0020) ? 'r' : '-');
+		$info .= (($perms & 0x0010) ? 'w' : '-');
+		$info .= (($perms & 0x0008) ?
+		            (($perms & 0x0400) ? 's' : 'x' ) :
+		            (($perms & 0x0400) ? 'S' : '-'));
+		
+		// World
+		$info .= (($perms & 0x0004) ? 'r' : '-');
+		$info .= (($perms & 0x0002) ? 'w' : '-');
+		$info .= (($perms & 0x0001) ?
+		            (($perms & 0x0200) ? 't' : 'x' ) :
+		            (($perms & 0x0200) ? 'T' : '-'));
+		
+		$resultArray['permissions'] = $info;
+		
+		//Writable, readable and executable
+		$resultArray['writable'] = is_writable($file);
+		$resultArray['readable'] = is_readable($file);
+		$resultArray['executable'] = is_executable($file);
+	} else {
+		//File does not exist
+		$resultArray['exists'] = FALSE;
+	}
+	
+	return $resultArray;
+}
+
+function array_search_multidimensional($array, $field, $value)
+{
+   foreach($array as $key => $item)
+   {
+      if ( $item[$field] === $value )
+         return $key;
+   }
+   return false;
+}
+
+function selectElementWithValue($array, $field, $value){
+	$newArray = array();
+	
+	foreach($array as $subKey => $subArray){
+		if($subArray[$field] == $value){
+			$newArray[] = $array[$subKey];
+		}
+	}
+	return $newArray;
+}
+
+
+
+
+
+/* Gulden specific functions */
 
 function checkOpenPort($address, $port) {
 	$connection = @fsockopen($address, $port);
@@ -54,12 +244,6 @@ function GetTimeAnno($timestamp)
       $how_long_ago = $seconds . ' second' . ($seconds != 1 ? 's' : '');
     }
     return $how_long_ago;
-}
-
-function AddTrailingSlash($string)
-{
-	$string = rtrim($string, '/') . '/';
-	return $string;
 }
 
 function readGuldenConf($file) {
@@ -199,107 +383,6 @@ function getGuldenServices() {
 	}
 	
 	return $runningService;
-}
-
-function getFilePermissions($file) {	
-	//Array with results of the function
-	$resultArray = array();	
-	
-	//Does the file exist?
-	if(file_exists($file)) {
-		
-		//Yes, exists
-		$resultArray['exists'] = TRUE;
-	
-		//Raw permissions
-		$perms = fileperms($file);
-		
-		//The owner of the file
-		$resultArray['owner'] = posix_getpwuid(fileowner($file));
-	
-		//Type of file
-		switch ($perms & 0xF000) {
-		    case 0xC000: // socket
-		        $type = 's';
-		        break;
-		    case 0xA000: // symbolic link
-		        $type = 'l';
-		        break;
-		    case 0x8000: // regular
-		        $type = 'r';
-		        break;
-		    case 0x6000: // block special
-		        $type = 'b';
-		        break;
-		    case 0x4000: // directory
-		        $type = 'd';
-		        break;
-		    case 0x2000: // character special
-		        $type = 'c';
-		        break;
-		    case 0x1000: // FIFO pipe
-		        $type = 'p';
-		        break;
-		    default: // unknown
-		        $type = 'u';
-		}
-		
-		$resultArray['type'] = $type;
-		
-		// Owner
-		$info = (($perms & 0x0100) ? 'r' : '-');
-		$info .= (($perms & 0x0080) ? 'w' : '-');
-		$info .= (($perms & 0x0040) ?
-		            (($perms & 0x0800) ? 's' : 'x' ) :
-		            (($perms & 0x0800) ? 'S' : '-'));
-		
-		// Group
-		$info .= (($perms & 0x0020) ? 'r' : '-');
-		$info .= (($perms & 0x0010) ? 'w' : '-');
-		$info .= (($perms & 0x0008) ?
-		            (($perms & 0x0400) ? 's' : 'x' ) :
-		            (($perms & 0x0400) ? 'S' : '-'));
-		
-		// World
-		$info .= (($perms & 0x0004) ? 'r' : '-');
-		$info .= (($perms & 0x0002) ? 'w' : '-');
-		$info .= (($perms & 0x0001) ?
-		            (($perms & 0x0200) ? 't' : 'x' ) :
-		            (($perms & 0x0200) ? 'T' : '-'));
-		
-		$resultArray['permissions'] = $info;
-		
-		//Writable, readable and executable
-		$resultArray['writable'] = is_writable($file);
-		$resultArray['readable'] = is_readable($file);
-		$resultArray['executable'] = is_executable($file);
-	} else {
-		//File does not exist
-		$resultArray['exists'] = FALSE;
-	}
-	
-	return $resultArray;
-}
-
-function array_search_multidimensional($array, $field, $value)
-{
-   foreach($array as $key => $item)
-   {
-      if ( $item[$field] === $value )
-         return $key;
-   }
-   return false;
-}
-
-function selectElementWithValue($array, $field, $value){
-	$newArray = array();
-	
-	foreach($array as $subKey => $subArray){
-		if($subArray[$field] == $value){
-			$newArray[] = $array[$subKey];
-		}
-	}
-	return $newArray;
 }
 
 function getTransactionDetails($accounttransactions, $numoftransactionstoshow, $addresslist) {

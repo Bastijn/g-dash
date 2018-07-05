@@ -14,6 +14,9 @@ if (php_sapi_name() == "cli") {
 	$internalip = trim(shell_exec("ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1 -d'/'"));
 	$latestversionsarray = @json_decode(file_get_contents($GDASH['updatecheck']."?ip=".$internalip));
 	
+	//Write the current Gulden status to the log file
+	//GetSystemMemUsage();
+	
 	//Check if Gulden server is running
 	if($CONFIG['pushbulletgulden']['active']=="1") {
 		
