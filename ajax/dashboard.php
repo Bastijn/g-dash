@@ -36,7 +36,7 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 		$returnarray['node']['inbound'] = '';
 		$returnarray['witness'] = '';
 		$returnarray['table'] = "<tr><td colspan='4'>GuldenD Upgrading</td></tr>";
-		$returnarray['errors'] = "Upgrading block index... This can take some time...";
+		$returnarray['errors'] = $guldenprimaryresponsemessage;
 		
 		//Write this status update to the log file
 		//logger(4, "GuldenD", "Upgrading block index");

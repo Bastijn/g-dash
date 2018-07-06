@@ -24,6 +24,18 @@
   </h1>
   
   <div class="panel panel-default">
+    <div class="panel-heading"><b>1.00</b></div>
+    <div class="panel-body">
+		<ul>
+			<li>BUG: Header sync progress was not shown correctly sometimes.</li>
+			<li>FEATURE: Added 'guldenstop' command to debug console.</li>
+			<li>FEATURE: Added rescan notification to dashboard.</li>
+			<li>FEATURE: In the config check page the details of the GuldenD debug.log file are shown.</li>
+		</ul>
+    </div>
+  </div>
+  
+  <div class="panel panel-default">
     <div class="panel-heading"><b>0.99</b></div>
     <div class="panel-body">
 		<ul>
