@@ -24,13 +24,17 @@
   </h1>
   
   <div class="panel panel-default">
-    <div class="panel-heading"><b>1.00</b></div>
+    <div class="panel-heading"><b>0.995</b></div>
     <div class="panel-body">
 		<ul>
+			<li>NOTE: This is the last beta release before version 1. After this update the stable and beta channel will be used as intended.</li>
+			<li>NOTE: This is a small in between release to make life easier for users to upgrade to Gulden 2.0.</li>
 			<li>BUG: Header sync progress was not shown correctly sometimes.</li>
 			<li>FEATURE: Added 'guldenstop' command to debug console.</li>
 			<li>FEATURE: Added rescan notification to dashboard.</li>
 			<li>FEATURE: In the config check page the details of the GuldenD debug.log file are shown.</li>
+			<li>IMPROVEMENT: Show the Gulden message when upgrading database / blocks instead of custom message.</li>
+			<li>IMPROVEMENT: Don't show an error when GuldenD is upgrading.</li>
 		</ul>
     </div>
   </div>
