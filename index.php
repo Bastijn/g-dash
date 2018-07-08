@@ -117,14 +117,19 @@ include('lib/checkconfig/checkconfig.php');
 require_once('lib/EasyGulden/easygulden.php');
 
 $gulden = new Gulden($CONFIG['rpcuser'],$CONFIG['rpcpass'],$CONFIG['rpchost'],$CONFIG['rpcport']);
-
+	
 if($gulden->getinfo()=="") {
-	//If there is a connection error to the Gulden server
-	echo "<div class='alert alert-danger' id='connectionerror'>
-		   <strong>Error:</strong><br>There is a problem connecting to the Gulden server.
-		   Check if the server is running (by looking at the CPU/MEM usage) and use the
-		   \"Config Check\" in settings to identify the problem.
-		  </div>";
+	$guldenprimaryresponsecode = $gulden->response['error']['code'];
+	
+	//Check if GuldenD is upgrading
+	if($guldenprimaryresponsecode != "-28") {
+		//If there is a connection error to the Gulden server
+		echo "<div class='alert alert-danger' id='connectionerror'>
+			   <strong>Error:</strong><br>There is a problem connecting to the Gulden server.
+			   Check if the server is running (by looking at the CPU/MEM usage) and use the
+			   \"Config Check\" in settings to identify the problem.
+			  </div>";
+	}
 } else {
 	//Check if there is an update for Gulden
 	$checkversioninfo = $gulden->getinfo();
