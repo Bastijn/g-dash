@@ -2,7 +2,7 @@
 
 Version 1
 
-July 11 2018
+July 12 2018
 
 
 
@@ -163,7 +163,9 @@ The versions used for this guide are currently:
 
 
 
-### Start GuldenD and optionally create a startup script for GuldenD
+### Start GuldenD and optionally use a startup script for GuldenD
+
+- When installing Gulden from the Raspbian repository the file `guldenstart.sh` is already created in the `/opt/gulden/` directory. If not, you can create this file yourself.
 
 - Create a new bash file in /opt/gulden/ (again, my favorite text editor is joe):
   `joe /opt/gulden/guldenstart.sh`
@@ -171,19 +173,23 @@ The versions used for this guide are currently:
 - Copy/paste the following lines (don't forget to edit the paths if applicable):
 
   ```bash
+  #!/bin/bash
   echo "Stopping GuldenD service"
   /opt/gulden/gulden/Gulden-cli -datadir=/opt/gulden/datadir stop
-  sleep 5
-  echo "Killing GuldenD"
-  killall -9 GuldenD
-  sleep 5
-  echo "Checking for Gulden update"
+  
+  echo "Fetching update headers"
   sudo apt-get update
+  
+  echo "Killing GuldenD if still running"
+  killall -9 GuldenD
+  
+  echo "Checking for Gulden update"
   sudo apt-get -y --allow-unauthenticated install gulden
-  sleep 5
+  
   echo "Removing peers.dat"
   rm /opt/gulden/datadir/peers.dat
   sleep 5
+  
   echo "Starting GuldenD"
   /opt/gulden/gulden/GuldenD -datadir=/opt/gulden/datadir &
   ```
@@ -201,23 +207,25 @@ The versions used for this guide are currently:
 
 - If you want to run a script that checks if GuldenD is running (every 5 minutes), and automatically restart GuldenD if it has somehow stopped or crashed, you can use the following script and cronjob.
 
+- When installing Gulden from the Raspbian repository the file `guldendchecker.sh` is already created in the `/opt/gulden/` directory. If not, you can create this file yourself.
+
 - Create a new bash file in /opt/gulden/:
   `joe /opt/gulden/guldendchecker.sh`
 
 - Copy/paste the following lines (don't forget to edit the paths if applicable):
 
   ```bash
-  \#!/bin/sh
-  \# set -x
-  \# Shell script to monitor GuldenD running on the G-DASH node
-  \# If the number of GuldenD processes is <= 0
-  \# it will start GuldenD.
-  \# -------------------------------------------------------------------------
-  \# set alert level 0 is default
+  #!/bin/sh
+  # set -x
+  # Shell script to monitor GuldenD running on the G-DASH node
+  # If the number of GuldenD processes is <= 0
+  # it will start GuldenD.
+  # -------------------------------------------------------------------------
+  # set alert level 0 is default
   ALERT=0
-  \#
-  \#::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-  \#
+  #
+  #:::::::::::::::::::::::::::::::::::::
+  #
   usep=$(ps aux | grep GuldenD | wc -l | awk '{print $1-1}')
   echo $usep
   if [ $usep -le $ALERT ] ; then
