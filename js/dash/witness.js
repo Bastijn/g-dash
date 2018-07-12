@@ -410,8 +410,8 @@ $(document).ready(function() {
 		  	  		
 			        	witnesspanelbody += "<ul class='dropdown-menu' aria-labelledby='" + moreinfocollapsename + "actions'>";
 			        		//Witness actions
-				  	  		//TODO: If statement can be removed after a G-DASH update when > Gulden 2.0 Phase 2 as witness accounts can be funded from Phase 3 onwards
-				  	  		if(data['witness']['currentPhase'] > 2) {
+				  	  		//TODO: If statement can be removed after a G-DASH update when > Gulden 2.0 Phase 2 as witness accounts can be funded from Phase 2 onwards
+				  	  		if(data['witness']['currentPhase'] > 1) {
 				  	  			
 				  	  			//Options available only for accounts that are not yet funded
 				  	  			if(data['witnessaccountdetails'][value['label']]['status'] == "Not funded") {
@@ -444,7 +444,7 @@ $(document).ready(function() {
 				  	  			if(data['witnessaccountdetails'][value['label']]['status'] == "Not funded") {
 					  	  			witnesspanelbody += "<li><a data-toggle='modal' href='#fundwitnessaccount' onclick=\"changeWitnessAccount('"+value['UUID']+"')\">Fund witness account</a></li>";
 					  	  		}
-				  	  			witnesspanelbody += "<li><a href='#'>Other witness actions are available from Phase 3 onwards.</a></li>";
+				  	  			witnesspanelbody += "<li><a href='#'>Other witness actions are available from Phase 2 onwards.</a></li>";
 				  	  		}
 			        		
 				    	witnesspanelbody += "</ul>";
