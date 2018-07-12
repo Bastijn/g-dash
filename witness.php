@@ -44,7 +44,7 @@
 		    </div>
 		    <div class="form-group">
 		      <label for="confirmwithdrawpass"><small>Pass Phrase</small></label><br>
-			  <input type="password" id="newaccountpassword" name="newaccountpassword">
+			  <input type="password" id="newaccountpassword" name="newaccountpassword" autocomplete='off'>
 		    </div>
 	      </div>
 	      <div class="modal-footer">
@@ -127,7 +127,7 @@
 		    </p>
 			<p>
 				<label for="confirmtransactionpass"><small>Pass Phrase</small></label><br>
-				<div><input type="password" id="confirmtransactionpass" name="confirmtransactionpass"></div>
+				<div><input type="password" id="confirmtransactionpass" name="confirmtransactionpass" autocomplete='off'></div>
 			</p>
 			<div id="conftransmes" name="conftransmes"></div>
 	      </div>
@@ -161,7 +161,7 @@
 		    </div>
 		    <div class="form-group">
 		      <label for="importpass"><small>Pass Phrase</small></label><br>
-			  <input type="password" id="importpass" name="importpass">
+			  <input type="text" id="importpass" name="importpass">
 		    </div>
 		    <div id="keyimportmessage" name="keyimportmessage"></div>
 	      </div>
@@ -195,7 +195,7 @@
 		    </div>
 		    <div class="form-group">
 		      <label for="confirmwithdrawpass"><small>Pass Phrase</small></label><br>
-			  <input type="password" id="confirmwithdrawpass" name="confirmwithdrawpass">
+			  <input type="password" id="confirmwithdrawpass" name="confirmwithdrawpass" autocomplete='off'>
 		    </div>
 		    <div id="withdrawmessage" name="withdrawmessage"></div>
 	      </div>
@@ -224,7 +224,7 @@
 		    </div>
 	      	<div class="form-group">
 		      <label for="rppass"><small>Unlock your wallet with your password</small></label><br>
-		      <input id="rppass" name="rppass" type="password" class="form-control">
+		      <input id="rppass" name="rppass" type="password" class="form-control" autocomplete='off'>
 		    </div>
 		    <div id="showkey" name="showkey"></div>
 	      </div>
@@ -280,7 +280,7 @@
 	      	<br><br>
 	      	<div class="form-group">
 		      <label for="delpass"><small>Unlock your wallet with your password</small></label><br>
-		      <input id="delpass" name="delpass" type="password" class="form-control">
+		      <input id="delpass" name="delpass" type="password" class="form-control" autocomplete='off'>
 		    </div>
 	      <div id="showdelresponse" name="showdelresponse"></div>
 	    </div>

@@ -46,7 +46,7 @@
 		    
 		    <div class="form-group">
 		      <label for="createaccpass"><small>Unlock your wallet with your password</small></label><br>
-		      <input id="createaccpass" name="createaccpass" type="password" class="form-control">
+		      <input id="createaccpass" name="createaccpass" type="password" class="form-control" autocomplete='off'>
 		    </div>
 	      </div>
 	      <div class="modal-footer">
@@ -95,7 +95,7 @@
 	      <div class="modal-body">
 	      	<div class="form-group">
 		      <label for="therecphrase"><small>Recovery Phrase</small></label><br>
-		      <input id="therecphrase" name="therecphrase" type="password" class="form-control">
+		      <input id="therecphrase" name="therecphrase" type="password" class="form-control" autocomplete='off'>
 		    </div>
 		    <div id="importrecstatus" name="importrecstatus"></div>
 	      </div>
@@ -121,7 +121,7 @@
 	      <div class="modal-body">
 	      	<div class="form-group">
 		      <label for="rppass"><small>Unlock your wallet with your password</small></label><br>
-		      <input id="rppass" name="rppass" type="password" class="form-control">
+		      <input id="rppass" name="rppass" type="password" class="form-control" autocomplete='off'>
 		    </div>
 		    <div id="showrp" name="showrp"></div>
 	      </div>
@@ -147,11 +147,11 @@
 	      <div class="modal-body">
 	        <div class="form-group">
 		      <label for="rpnewpass"><small>Normal letters only and no &#42; allowed</small></label><br>
-		      <input id="rpnewpass" name="rpnewpass" type="password" class="form-control">
+		      <input id="rpnewpass" name="rpnewpass" type="password" class="form-control" autocomplete='off'>
 		    </div>
 		    <div class="form-group">
 		      <label for="rpnewpasstwo"><small>Repeat password</small></label><br>
-		      <input id="rpnewpasstwo" name="rpnewpasstwo" type="password" class="form-control">
+		      <input id="rpnewpasstwo" name="rpnewpasstwo" type="password" class="form-control" autocomplete='off'>
 		    </div>
 		    <div id="passerror" name="passerror"></div>
 	      </div>
@@ -177,15 +177,15 @@
 	      <div class="modal-body">
 	        <div class="form-group">
 		      <label for="oldrpnewpass"><small>Current password</small></label><br>
-		      <input id="oldrpnewpass" name="oldrpnewpass" type="password" class="form-control">
+		      <input id="oldrpnewpass" name="oldrpnewpass" type="password" class="form-control" autocomplete='off'>
 		    </div>
 	        <div class="form-group">
 		      <label for="changedrpnewpass"><small>New password (normal letters only and no &#42; allowed)</small></label><br>
-		      <input id="changedrpnewpass" name="changedrpnewpass" type="password" class="form-control">
+		      <input id="changedrpnewpass" name="changedrpnewpass" type="password" class="form-control" autocomplete='off'>
 		    </div>
 		    <div class="form-group">
 		      <label for="changedrpnewpasstwo"><small>Repeat password</small></label><br>
-		      <input id="changedrpnewpasstwo" name="changedrpnewpasstwo" type="password" class="form-control">
+		      <input id="changedrpnewpasstwo" name="changedrpnewpasstwo" type="password" class="form-control" autocomplete='off'>
 		    </div>
 		    <div id="changepasserror" name="changepasserror"></div>
 	      </div>
@@ -248,7 +248,7 @@
 		    </p>
 			<p>
 				<label for="confirmtransactionpass"><small>Pass Phrase</small></label><br>
-				<div><input type="password" id="confirmtransactionpass" name="confirmtransactionpass"></div>
+				<div><input type="password" id="confirmtransactionpass" name="confirmtransactionpass" autocomplete='off'></div>
 			</p>
 			<div id="conftransmes" name="conftransmes"></div>
 	      </div>
