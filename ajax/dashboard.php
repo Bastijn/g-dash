@@ -86,12 +86,17 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 		$gsyncedheaders = $bcinfo['headers'];
 		
 		//Check if headers are synced
-		if($gsyncedblocks == 0 && $gsyncedheaders > 0) {
+		if(($gsyncedblocks == 0 && $gsyncedheaders > 0) || $gallblocks == 0) {
 			$gerrors = $gerrors."<br>Syncing headers. Please wait";
 		}
 		
-		//Calculate the percentage of synced blocks
-		$gblockspercent = floor(($gblocks/$gallblocks)*100)."%";
+		//Calculate the percentage of synced blocks if all blocks > 0
+		if($gallblocks>0) {
+			$gblockspercent = floor(($gblocks/$gallblocks)*100)."%";
+		} else {
+			$gblockspercent = "Syncing";
+		}
+		
 		
 		//Get the uptime of the GuldenD instance
 		$guptime = GetTimeAnno(GetProgUpTime("GuldenD"));
