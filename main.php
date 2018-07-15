@@ -76,7 +76,7 @@
   </div>
   
   <hr>
-
+  
   <p class="lead">Last 10 blocks</p>
   <div class="table-responsive">
     <table class="table table-striped" id="tableblocks">

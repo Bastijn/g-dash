@@ -48,6 +48,7 @@ if($CONFIG['otp']=="1" && $CONFIG['disablelogin'] != "1" && isset($_POST['login'
   <script src="js/bootstrap/js/bootstrap.min.js"></script>
   <script src="js/jquery/js/jquery.validate.min.js"></script>
   <script src="js/qrcodejs/qrcode.min.js"></script>
+  <script src="https://code.highcharts.com/highcharts.js"></script>
   
   <script>
   $(document).ready(function() {

@@ -13,7 +13,7 @@ $(document).ready(function() {
 		  if(data['server']['cpu']!='') {
 			  $('#gulden').html("<b>Version:</b> "+data['gulden']['version']+"<br><b>Sync:</b> "+data['gulden']['sync']);
 			  $('#node').html("<b>Connections:</b> "+data['node']['connections']+"<br><b>Inbound:</b> "+data['node']['inbound']);
-			  $('#witness').html(data['witness']);
+			  $('#witness').html("<b>PoW<sup>2</sup> Phase:</b> "+data['witness']['phase']+"<br><b>Activity: </b>"+data['witness']['lastactive']);
 			  $('#server').html("<b>CPU:</b> "+data['server']['cpu']+"%<br><b>MEM:</b> "+data['server']['mem']+"%");
 			  $('#guldenglyph').attr('title', 'GuldenD server up to date')
 			  				   .tooltip('fixTitle')
@@ -53,13 +53,13 @@ $(document).ready(function() {
 		  		$('#nodeglyph').attr('title', 'Found inbound and outbound connections')
 			  				   .tooltip('fixTitle')
 		  	}
-		  if(data['witness']=='') { 
+		  if(data['witness']['phase']=='') { 
 		  		$("#witnessdiv").css("background-color","#ffe6e6"); 
 		  		$('#witnessglyph').attr('title', 'No witness activity')
 			  					  .tooltip('fixTitle')
 		  	} else { 
 		  		$("#witnessdiv").css("background-color","#e6ffe6");
-		  		$('#witnessglyph').attr('title', 'Witness activity found')
+		  		$('#witnessglyph').attr('title', 'Current witness phase')
 			  					  .tooltip('fixTitle')
 		  	}
 		  if(data['server']['cpu']=='') { 
@@ -70,7 +70,7 @@ $(document).ready(function() {
 		  		$("#serverdiv").css("background-color","#e6ffe6"); 
 		  		$('#serverglyph').attr('title', 'GuldenD server is running fine')
 			  					 .tooltip('fixTitle')
-		  	}	  
+		  	}
 	   });
 	};
 	

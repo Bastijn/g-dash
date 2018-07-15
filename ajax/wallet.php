@@ -18,6 +18,8 @@ $returnarray = array();
 
 $nodeconfig = readGuldenConf($CONFIG['datadir']."/Gulden.conf");
 
+session_write_close();
+
 if($guldenCPU > 0 && $guldenMEM > 0) {
 	//GuldenD info
 	$ginfo = $gulden->getinfo();
@@ -194,5 +196,4 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 
 echo json_encode($returnarray);
 }
-session_write_close();
 ?>

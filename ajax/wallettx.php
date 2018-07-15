@@ -17,6 +17,8 @@ $returnarray = array();
 
 $nodeconfig = readGuldenConf($CONFIG['datadir']."/Gulden.conf");
 
+session_write_close();
+
 //Check if GuldenD is running
 if($guldenCPU > 0 && $guldenMEM > 0) {
 	//No need to check for transactions if the wallet is disabled
@@ -78,5 +80,4 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 
 echo json_encode($returnarray);
 }
-session_write_close();
 ?>

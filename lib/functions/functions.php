@@ -398,8 +398,19 @@ function getTransactionDetails($accounttransactions, $numoftransactionstoshow, $
 			//Fetch the transaction ID
 			$transactiontxid = $transactiondetails['txid'];
 			
+			//If the API is offline, set a time limit of execution time
+			$opts = array('http' =>
+			    array(
+			        'method'  => 'GET',
+			        'timeout' => 5 
+			    )
+			);
+			
+			//Put the limit in a stream context
+			$context  = stream_context_create($opts);
+			
 			//Get the raw transaction details from the Gulden blockchain Insight API
-			$txrawdetails = @json_decode(file_get_contents("https://blockchain.gulden.com/api/tx/".$transactiontxid));
+			$txrawdetails = @json_decode(file_get_contents("https://blockchain.gulden.com/api/tx/".$transactiontxid, false, $context));
 			
 			$txfromaddress = $txrawdetails->vin[0]->addr;
 			$txtime = $txrawdetails->time;
@@ -460,6 +471,11 @@ function getTransactionDetails($accounttransactions, $numoftransactionstoshow, $
 			$currenttx['transactionid'] = $transactionid;
 			
 			$returntx[] = $currenttx;
+			
+			if($txtime == "") {
+				return "offline";
+				exit;
+			}
 		}
 	}
 
@@ -498,6 +514,15 @@ function getLiveTransactionDetails($accounttransactions, $numoftransactionstosho
 			$temptxarray = array();
 			$temptxarray[]['txid'] = $transactiontxid;
 			$singletxdata = getTransactionDetails($temptxarray, 1, $addresslist);
+			
+			//If the Insight API is offline, exit this function as it will keep trying for other transactions
+			if($singletxdata=="offline") {
+				
+				$txconnecterror = "APIoffline";
+				return $txconnecterror;
+				exit;
+			}
+			
 			$returntx[] = $singletxdata[0];
 		} else {
 							
@@ -581,5 +606,56 @@ function getLiveTransactionDetails($accounttransactions, $numoftransactionstosho
 	}
 
 	return $returntx;
+}
+
+//Loop through the witness earnings and return the total earnings
+function getWitnessTransactions($witnesstransactions) {
+	//Get the witness earnings from the transactions of this witness account
+	//This is a very ugly temp solution until a better fix is ready. Working on it...
+	//TODO: Ugly, but hey, it works
+	$tempwitnesstransactions = array();
+	$remembertxid = array();
+	$lowestfound = "";
+	foreach ($witnesstransactions as $witnesstx) {
+		//Get the txid from the first item encountered
+		$txid = $witnesstx['txid'];
+		
+		//Don't check the same txid multiple times
+		if(!in_array($txid, $remembertxid)) {
+		
+			//Find others with the same txid
+			$listwithtxid = selectElementWithValue($witnesstransactions, "txid", $txid);
+			
+			//Find the one with the lowest number, but positive number if there are 3 transactions involved
+			if(count($listwithtxid) == 3) {
+				$lowesttxamount = 99999999;
+				foreach ($listwithtxid as $txkey => $listtx) {
+					
+					if($listtx['amount'] > 0 && $listtx['amount'] < $lowesttxamount) {
+						$lowesttxamount = $listtx['amount'];
+						$lowestfound = $listwithtxid[$txkey];
+					}
+				}
+				$tempwitnesstransactions[] = $lowestfound;
+			} elseif(count($listwithtxid) == 2) {
+				//$witnessdetailsarray['originaltxtwo'][] = $listwithtxid;
+				//Not negative, not the same amount as initial funding
+				if($listtx['amount'] > 0 && $listtx['amount'] != $witnessdata['amount']) {
+					$tempwitnesstransactions[] = $listwithtxid[0];
+				}
+			} elseif(count($listwithtxid) == 1) {
+				//$witnessdetailsarray['originaltxsingle'][] = $listwithtxid;
+				if($listwithtxid[0]['vout']==2) {
+					$tempwitnesstransactions[] = $listwithtxid[0];
+				}
+			}
+			
+		}
+		
+		//Build a list of txids
+		$remembertxid[] = $txid;
+	}
+
+	return $tempwitnesstransactions;
 }
 ?>

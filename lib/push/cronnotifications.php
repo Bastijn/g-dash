@@ -153,5 +153,50 @@ if (php_sapi_name() == "cli") {
 			}
 		}
 	}
+
+	//Notification if there is a new incoming witness transaction
+	if($CONFIG['pushbulletwitness']['active']=="1") {
+		
+		//Get witness activity
+		$mywitnessaccountsnetwork = $gulden->getwitnessinfo("tip", true, true);
+		
+		//Get all witness accounts
+		$mywitnessaccountsnetwork = $mywitnessaccountsnetwork[0]['witness_address_list'];
+		
+		//Get the current block height
+		$ginfo = $gulden->getinfo();
+		$currentblock = $ginfo['blocks'];
+		
+		//Loop through the witness accounts and find the most recent action	
+		$lastwitnessactionblock = 0;
+		foreach ($mywitnessaccountsnetwork as $witnessdata) {
+			if($witnessdata['last_active_block'] > $lastwitnessactionblock) {
+				$witnessdetailsname = $witnessdata['ismine_accountname'];
+				$lastwitnessactionblock = $witnessdata['last_active_block'];
+				$lastwitnessactiondate = date("d/m/Y H:i:s", time() - (($currentblock - $lastwitnessactionblock) / (576 / (24 * 60 * 60))));
+			}
+		}
+		
+		//Get the last block that was active in the config
+		$lastblock = $CONFIG['pushbulletwitness']['lastblock'];
+		
+		//Get the info (last message and current message)
+		$lastmessage = $CONFIG['pushbulletwitness']['lastmes'];
+		$currentmessage = $lastwitnessactiondate.": New witness action for $witnessdetailsname";
+		
+		//Check the last message that was pushed to prevent multiple pushes of the same message
+		if($lastmessage!=$currentmessage && $lastwitnessactionblock != $lastblock) {
+			
+			//The message is different, send a push notification
+			$sendpush = shell_exec("curl --header 'Authorization: Bearer ".$CONFIG['pushbullet']."' -X POST https://api.pushbullet.com/v2/pushes --header 'Content-Type: application/json' --data-binary '{\"type\": \"note\", \"title\": \"Gulden Witness Action\", \"body\": \"".$currentmessage."\"}'");
+			
+			//Set the current message as the last message in the config file
+			$CONFIG['pushbulletwitness']['lastmes'] = $currentmessage;
+			$CONFIG['pushbulletwitness']['lastblock'] = $lastwitnessactionblock;
+			
+			//Update the config file
+			file_put_contents(__DIR__.'/../../config/config.php', '<?php $CONFIG = '.var_export($CONFIG, true).'; ?>');
+		}
+	}
 }
 ?>

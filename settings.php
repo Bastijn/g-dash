@@ -75,7 +75,10 @@
 	if($CONFIG['pushbullettx']['lastmes']=="") { $CONFIG['pushbullettx']['lastmes'] = ""; }
 	$CONFIG['pushbulletguldenupdate']['active'] = $_POST['pushbulletguldenupdate'];
 	if($CONFIG['pushbulletguldenupdate']['lastmes']=="") { $CONFIG['pushbulletguldenupdate']['lastmes'] = ""; }
-
+	$CONFIG['pushbulletwitness']['active'] = $_POST['pushbulletwitness'];
+	if($CONFIG['pushbulletwitness']['lastmes']=="") { $CONFIG['pushbulletwitness']['lastmes'] = ""; }
+	if($CONFIG['pushbulletwitness']['lastblock']=="") { $CONFIG['pushbulletwitness']['lastblock'] = ""; }
+	
 	$CONFIG['nlgprovider'] = $_POST['nlgprice'];
 	
 	//******************//
@@ -430,6 +433,13 @@
 			      </small>
 			  </div>
 			  
+			  <div class="checkbox">
+			      <label>
+			      <input type="checkbox" id="pushbulletwitness" name="pushbulletwitness" aria-describedby="pushbulletwitnesshelp" value="1" <?php if($CONFIG['pushbulletwitness']['active']=="1") { echo "checked='checked'"; } ?>>Send a notification on witness activity.</label><br>
+			      <small id="pushbullettxhelp" class="form-text text-muted">A notification will be sent to pushbullet when there was any activity with your witness account.<br>
+			      																Last message pushed: <?php echo $CONFIG['pushbulletwitness']['lastmes']; ?>
+			      </small>
+			  </div>
 		    </div>
 		</div>
 	</div>

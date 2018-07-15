@@ -1,4 +1,5 @@
 <script src="js/dash/witness.js?<?php echo $CONFIG['dashversion']; ?>"></script>
+<script src="js/dash/witnessnetwork.js?<?php echo $CONFIG['dashversion']; ?>"></script>
 <script src="js/jquery-ui/js/jquery-ui.min.js?<?php echo $CONFIG['dashversion']; ?>"></script>
 <link rel="stylesheet" href="js/jquery-ui/css/jquery-ui.min.css">
 <div class="row row-offcanvas row-offcanvas-left">
@@ -264,7 +265,7 @@
 	<!-- Delete account modal content-->
   	<div id="deleteaccount" class="modal fade" role="dialog">
 	  <div class="modal-dialog">
-	    <div class="modal-content" name="deleteaccount" id="deleteaccount">
+	    <div class="modal-content" name="deleteaccountmodal" id="deleteaccountmodal">
 	      <div class="modal-header">
 	        <button type="button" class="close" data-dismiss="modal">&times;</button>
 	        <div id="deleteaccounttitle"><h4 class="modal-title">Delete account</h4></div>
@@ -292,6 +293,48 @@
 	  </div>
 	</div>
 	<!-- End delete account modal content-->
+	
+	<!-- Witness network charts modal content-->
+  	<div id="witnessnetwork" class="modal fade" role="dialog">
+	  <div class="modal-dialog">
+	    <div class="modal-content" name="witnessnetworkmodal" id="witnessnetworkmodal">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        <div id="witnessnetworktitle"><h4 class="modal-title">Witness network charts</h4></div>
+	      </div>
+	      
+	      <div class="modal-body">
+	      	<div id="monthslocked" name="monthslocked"></div>
+	      	<br><br>
+	      	<div id="addresseslocked" name="addresseslocked"></div>
+	      </div>
+	      <div class="modal-footer">
+	        
+	      </div>
+	    </div>	
+	  </div>
+	</div>
+	<!-- End witness network charts modal content-->
+	
+	<!-- Witness earnings projection charts modal content-->
+  	<div id="witnessearningsgraph" class="modal fade" role="dialog">
+	  <div class="modal-dialog">
+	    <div class="modal-content" name="witnessearningsgraphmodal" id="witnessearningsgraphmodal">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        <div id="witnessnetworktitle"><h4 class="modal-title">Witness earnings projection</h4></div>
+	      </div>
+	      
+	      <div class="modal-body">
+	      	<div id="witnessprojection" name="witnessprojection"></div>
+	      </div>
+	      <div class="modal-footer">
+	        
+	      </div>
+	    </div>	
+	  </div>
+	</div>
+	<!-- End witness earnings projection modal content-->
   
   <div class="row">
   	<div class="col-md-12">

@@ -86,7 +86,7 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 		$gsyncedheaders = $bcinfo['headers'];
 		
 		//Check if headers are synced
-		if(($gsyncedblocks == 0 && $gsyncedheaders > 0) || $gallblocks == 0) {
+		if(($gsyncedblocks == 0 && $gsyncedheaders > 0) || $gallblocks == 0 || $gallblocks == -1) {
 			$gerrors = $gerrors."<br>Syncing headers. Please wait";
 		}
 		
@@ -114,6 +114,10 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 		  if($innerArray['inbound']=="1") { $ginboundconnections++; }
 		}
 		
+		//Get information on the network regarding witnessing
+		$witnessNetwork = $gulden->getwitnessinfo();
+		$currentPhase = $witnessNetwork[0]['pow2_phase'];
+		
 		//Block info
 		$tablerows = "";
 		for ($i=$gallblocks; $i > $gallblocks-10 ; $i--) {
@@ -132,6 +136,22 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 	        ";
 		}
 		
+		//Get witness activity
+		$mywitnessaccountsnetwork = $gulden->getwitnessinfo("tip", true, true);
+		
+		//Get all witness accounts
+		$mywitnessaccountsnetwork = $mywitnessaccountsnetwork[0]['witness_address_list'];
+		
+		//Loop through the witness accounts and find the most recent action	
+		$lastwitnessactionblock = 0;
+		foreach ($mywitnessaccountsnetwork as $witnessdata) {
+			if($witnessdata['last_active_block'] > $lastwitnessactionblock) {
+				$witnessdetailsname = $witnessdata['ismine_accountname'];
+				$lastwitnessactionblock = $witnessdata['last_active_block'];
+				$lastwitnessactiondate = date("d/m/Y H:i:s", time() - (($gblocks - $lastwitnessactionblock) / (576 / (24 * 60 * 60))));
+			}
+		}
+		
 		//Data array
 		$returnarray['gulden']['version'] = $gversion;
 		$returnarray['gulden']['sync'] = $gblockspercent;
@@ -145,12 +165,12 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 		$returnarray['node']['connections'] = $gconnections;
 		$returnarray['node']['inbound'] = $ginboundconnections;
 		
-		$returnarray['witness'] = '';
+		$returnarray['witness']['phase'] = $currentPhase;
+		$returnarray['witness']['lastactive'] = $lastwitnessactiondate;
 		
 		$returnarray['table'] = $tablerows;
 		
 	  	$returnarray['errors'] = $gerrors;
-		
 	}
 	
 } else {

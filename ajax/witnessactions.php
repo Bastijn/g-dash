@@ -153,8 +153,26 @@ if(isset($_GET['action'])) {
 			//Get the balance from the witness account that can be withdrawn
 			$currentbalance = $gulden->getbalance($fromaccount);
 			
+			//TODO: Can be removed when fixed, and original call can be used again
+			//Temp solution as the getlockedbalance RPC command is broken in Gulden 2.0.0.5
+			//Get the witness accounts that belong to this wallet
+			$mywitnessaccountsnetwork = $gulden->getwitnessinfo("tip", true, true);
+			
+			//Only get the witness address list of the witness accounts that belong to this wallet
+			$mywitnessaddresslist = $mywitnessaccountsnetwork[0]['witness_address_list'];
+			
+			//Get the witness account data from the list of all witness accounts
+			$witnessdata = selectElementWithValue($mywitnessaddresslist, "ismine_accountname", $fromaccount);
+			
+			//Change multidimensional array to single array
+			$witnessdata = $witnessdata[0];
+			
+			//Get the amount of NLG locked
+			$lockedbalance = $witnessdata['amount'];
+			
+			//TODO: When fixed, remove from previous todo until here and uncomment below
 			//Get the amount that was locked for this account
-			$lockedbalance = $gulden->getlockedbalance($fromaccount);
+			//$lockedbalance = $gulden->getlockedbalance($fromaccount);
 			
 			//Substract the locked balance from the current balance, resulting in a value that can be withdrawn
 			$sendamount = $currentbalance - $lockedbalance;

@@ -15,6 +15,8 @@ $guldenCPU = GetProgCpuUsage($guldenD);
 $guldenMEM = GetProgMemUsage($guldenD);
 $returnarray = array();
 
+session_write_close();
+
 if($guldenCPU > 0 && $guldenMEM > 0) {
 	$ginfo = $gulden->getinfo();
 	$gerrors = $ginfo['errors'];	
@@ -152,63 +154,8 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 				//Get the transactions of this witness account
 				$witnesstransactions = $gulden->listtransactions($currentwitnessaccountname, 999999);
 				
-				//TODO: This is still not correct. And what happens when compounding is activated?
-				//This is a very ugly temp solution until a better fix is ready. Working on it...
-				$tempwitnesstransactions = array();
-				$remembertxid = array();
-				$lowestfound = "";
-				foreach ($witnesstransactions as $witnesstx) {
-					//Get the txid from the first item encountered
-					$txid = $witnesstx['txid'];
-					
-					//Don't check the same txid multiple times
-					if(!in_array($txid, $remembertxid)) {
-					
-						//Find others with the same txid
-						$listwithtxid = selectElementWithValue($witnesstransactions, "txid", $txid);
-						
-						//Find the one with the lowest number, but positive number if there are 3 transactions involved
-						if(count($listwithtxid) == 3) {
-							$lowesttxamount = 99999999;
-							foreach ($listwithtxid as $txkey => $listtx) {
-								
-								if($listtx['amount'] > 0 && $listtx['amount'] < $lowesttxamount) {
-									$lowesttxamount = $listtx['amount'];
-									$lowestfound = $listwithtxid[$txkey];
-								}
-							}
-							$tempwitnesstransactions[] = $lowestfound;
-						} elseif(count($listwithtxid) == 2) {
-							//$witnessdetailsarray['originaltxtwo'][] = $listwithtxid;
-							//Not negative, not the same amount as initial funding
-							if($listtx['amount'] > 0 && $listtx['amount'] != $witnessdata['amount']) {
-								$tempwitnesstransactions[] = $listwithtxid[0];
-							}
-						} elseif(count($listwithtxid) == 1) {
-							//$witnessdetailsarray['originaltxsingle'][] = $listwithtxid;
-							if($listwithtxid[0]['vout']==2) {
-								$tempwitnesstransactions[] = $listwithtxid[0];
-							}
-						}
-						
-					}
-					
-					//Build a list of txids
-					$remembertxid[] = $txid;
-				}
-				
-				//Get the witness transactions back into the original name array
-				$witnesstransactions = $tempwitnesstransactions;
-				
-				//TODO: This was the first attempt, but not all (10%) transactions fit these criteria
-				//Only select the generated earnings (initial funding + witness earnings)
-				//$witnesstransactions = selectElementWithValue($witnesstransactions, "category", "generate");
-				
-				//Only select the generated earnings
-				//$witnesstransactions = selectElementWithValue($witnesstransactions, "generated", "true");
-				
-				//Select only the witness transaction (vout 1)
-				//$witnesstransactions = selectElementWithValue($witnesstransactions, "vout", "1");				
+				//Get the witness transactions details
+				$witnesstransactions = getWitnessTransactions($witnesstransactions);			
 				
 				//Sum the earnings
 				$totalwitnessearnings = 0;
@@ -238,8 +185,14 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 					$witnessdetailsarray['status'] = "<i class='glyphicon glyphicon-hourglass'></i> Ready to witness";
 					$witnessdetailsarray['status_long'] = "Waiting to be picked to witness a block.";
 				} elseif($witnessdata['eligible_to_witness']==false && $countwitnessearnings == 0) {
-					$witnessdetailsarray['status'] = "<i class='glyphicon glyphicon-link'></i> Confirming";
-					$witnessdetailsarray['status_long'] = "Confirming initial funding (".$witnessdata['age']." / 100 blocks).";
+					//TODO: Can be removed after Phase 3 activated
+					if($currentPhase == "2") {
+						$witnessdetailsarray['status'] = "<i class='glyphicon glyphicon-link'></i> Waiting for Phase 3";
+						$witnessdetailsarray['status_long'] = "Waiting for Phase 3 to activate.";
+					} else {
+						$witnessdetailsarray['status'] = "<i class='glyphicon glyphicon-link'></i> Confirming";
+						$witnessdetailsarray['status_long'] = "Confirming initial funding (".$witnessdata['age']." / 100 blocks).";
+					}
 				} elseif($witnessdata['eligible_to_witness']==false && $witnessdata['expired_from_inactivity']==false && $witnessdata['lock_period_expired']==false && $witnessdata['age'] < 101) {
 					$witnessdetailsarray['status'] = "<i class='glyphicon glyphicon-refresh'></i> Cooldown";
 					$witnessdetailsarray['status_long'] = "Cooldown period after last witness action (".$witnessdata['age']." / 100 blocks).";
@@ -297,5 +250,4 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 
 echo json_encode($returnarray);
 }
-session_write_close();
 ?>

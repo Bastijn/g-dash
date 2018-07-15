@@ -304,6 +304,139 @@ function confirmDeleteAccount(deletesure) {
 	}
 }
 
+//Create a graph for the witness earnings projection
+function createProjectionGraph(witnessuuid) {
+	//Catch errors
+	Highcharts.error = function (code) {
+		// See https://github.com/highcharts/highcharts/blob/master/errors/errors.xml
+		// for error id's
+		alert("Graph error with code: " + code);
+	};
+	
+	//Create the options for the graph
+	var earningschart = '';
+	var earningsx = '';
+	
+	var options = {
+		global: {
+        },
+	    chart: {
+	    	width: 500,
+			renderTo: 'witnessprojection',
+			events: {
+	            
+	        }
+	    },
+	    
+	    xAxis: {
+	    	type: 'datetime',
+	    	labels: {
+		      formatter: function() {
+		        return Highcharts.dateFormat('%a %d %b %Y', this.value);
+		      }
+		    },
+		    dateTimeLabelFormats: {
+            	day: '%e %b %Y'
+        	},
+	    },
+	    yAxis: {
+	    	title: {
+	    		text: "Earnings (NLG)"
+	    	}
+	    },
+	
+	    rangeSelector: {
+	        inputEnabled: false,
+	        selected: 0
+	    },
+	
+	    title: {
+	        text: 'Projected earnings'
+	    },
+	    
+	    credits: {
+	        enabled: false
+	    },
+	    
+	    legend: {
+	    	enabled: true
+	    },
+	
+	    exporting: {
+	        enabled: true
+	    },
+	
+	};
+	
+	//Create an array to store the data
+	var earningsdata = [];
+	var expecteddata = [];
+	
+	//Get data from ajax
+	$.getJSON("ajax/witnessearnings.php?uuid="+witnessuuid, function(earningsjson) {
+		
+		//Get the local timezone offset
+		var localtzDate = new Date();
+		var currentTimeZoneOffsetInHours = localtzDate.getTimezoneOffset() / 60;
+		var currentTimeZoneOffsetInEpoch = (currentTimeZoneOffsetInHours * 3600000) * -1;
+		
+		//Get the epoch values from json
+		var startTime = (earningsjson['lock_from_date'] * 1000) + currentTimeZoneOffsetInEpoch;
+		var endTime = (earningsjson['lock_until_date'] * 1000) + currentTimeZoneOffsetInEpoch;
+		var expectedEarnings = earningsjson['expectedearnings'];
+		
+		expecteddata.push([startTime, 0]);
+		expecteddata.push([endTime, expectedEarnings]);
+		
+		//For each witness cycle
+		var earningsEpoch = 0;
+		var earningsAmount = 0;
+		
+		//Put the data in an array
+		$.each(earningsjson['earnings'], function( index, value ) {
+			earningsEpoch = (index * 1000) + currentTimeZoneOffsetInEpoch;
+			earningsAmount = value;
+			
+			earningsdata.push([earningsEpoch, earningsAmount]);
+		});
+	
+		//Create 2 series for the chart
+		var seriesOptions = [];
+		
+		//Add the data for expected earnings
+		seriesOptions[0] = {
+            name: 'Expected earnings',
+            data: expecteddata
+        };
+        
+        //Add the data for current earnings
+		seriesOptions[1] = {
+            name: 'Earnings',
+            data: earningsdata
+        };
+	
+		//Send the expected array to the chart
+		//options.series[0].data = expecteddata;
+		
+		//Send the earnings array to the chart
+		//options.series[1].data = earningsdata;
+		
+		//Add the series to the options
+		options.series = seriesOptions;
+		
+		//Keep some space on the left side of the graph (5% of witness period)
+		options.xAxis.min = startTime - ((endTime - startTime) * 0.05);
+		
+		//Set the tickpositions to the start and end time
+		options.xAxis.tickPositions = [startTime, endTime];
+		
+		//Create the chart
+		var chart = new Highcharts.chart(options);
+	
+	});
+}
+
+
 $(document).ready(function() {
 	//Set the slider for funding the witness account
 	var handle = $( "#locktime" );
@@ -350,7 +483,7 @@ $(document).ready(function() {
 		  	  		$('#witnessstatuspanel').html("<ul>" +
 		  	  									  "<li><a data-toggle='modal' href='#addwitnessaccount'>Create account</a></li>" +
 		  	  									  "<li><a data-toggle='modal' href='#importwitnessaccount'>Import witness key</a></li>" +
-		  	  									  "<li><a data-toggle='modal' href='#witnessstats'>Network statistics</a></li>" + 
+		  	  									  "<li><a data-toggle='modal' href='#witnessnetwork'>Network statistics</a></li>" + 
 		  	  									  "</ul>");
 		  	  	} else {
 		  	  		$('#witnessaccountspanel').html("Witness accounts can be created from Phase 2 onwards.");
@@ -420,21 +553,21 @@ $(document).ready(function() {
 					  	  			
 					  	  			//Options only available for witness accounts with earnings more than zero
 					  	  			if(data['witnessaccountdetails'][value['label']]['earningsavailable'] > 0) {
-					  	  				witnesspanelbody += "<li><a data-toggle='modal' href='#withdrawwitnessaccount' onclick=\"changeWitnessAccount('"+value['UUID']+"')\">Withdraw witness earnings</a></li>";
+					  	  				witnesspanelbody += "<li><a data-toggle='modal' href='#withdrawwitnessaccount' onclick=\"changeWitnessAccount('"+value['UUID']+"')\"><i class='glyphicon glyphicon-piggy-bank'></i> Withdraw witness earnings</a></li>";
 					  	  			}
 					  	  			
 					  	  			//Options only available for non-imported accounts
 					  	  			if(data['witnessaccountdetails'][value['label']]['witnessonly'] == false) {
-						  	  			witnesspanelbody += "<li><a data-toggle='modal' href='#exportwitnesskey' onclick=\"changeWitnessAccount('"+value['UUID']+"')\">Get witness keys</a></li>";
+						  	  			witnesspanelbody += "<li><a data-toggle='modal' href='#exportwitnesskey' onclick=\"changeWitnessAccount('"+value['UUID']+"')\"><i class='glyphicon glyphicon-share'></i> Get witness keys</a></li>";
 						  	  			//TODO: Will make this available at a later stage (Phase 3+)
 						  	  			//witnesspanelbody += "<li><a href='#'>Extend locking time and amount of witness account</a></li>";
 					  	  			}
 					  	  			
 					  	  			//Options available for all funded accounts
-					  	  			witnesspanelbody += "<li><a data-toggle='modal' href='#renameaccount' onclick=\"changeWitnessAccount('"+value['UUID']+"')\">Rename witness account</a></li>";
-					  	  			witnesspanelbody += "<li><a href='#'>Show witness earnings graph</a></li>";
+					  	  			witnesspanelbody += "<li><a data-toggle='modal' href='#renameaccount' onclick=\"changeWitnessAccount('"+value['UUID']+"')\"><i class='glyphicon glyphicon-pencil'></i> Rename witness account</a></li>";
+					  	  			witnesspanelbody += "<li><a data-toggle='modal' href='#witnessearningsgraph' onclick=\"createProjectionGraph('"+value['UUID']+"')\"><i class='glyphicon glyphicon-object-align-bottom'></i> Show witness earnings graph</a></li>";
 					  	  			witnesspanelbody += "<li class='divider'></li>";
-					  	  			witnesspanelbody += "<li><a data-toggle='modal' href='#deleteaccount' onclick=\"changeWitnessAccount('"+value['UUID']+"')\">Delete witness account</a></li>";
+					  	  			witnesspanelbody += "<li><a data-toggle='modal' href='#deleteaccount' onclick=\"changeWitnessAccount('"+value['UUID']+"')\"><i class='glyphicon glyphicon-trash'></i> Delete witness account</a></li>";
 					  	  			
 					  	  		}
 				  	  		} else {
@@ -442,7 +575,7 @@ $(document).ready(function() {
 				  	  			//Options available for non-funded witness accounts in Phase 2
 				  	  			//TODO: Can be removed after Phase 2 is activated
 				  	  			if(data['witnessaccountdetails'][value['label']]['status'] == "Not funded") {
-					  	  			witnesspanelbody += "<li><a data-toggle='modal' href='#fundwitnessaccount' onclick=\"changeWitnessAccount('"+value['UUID']+"')\">Fund witness account</a></li>";
+					  	  			witnesspanelbody += "<li><a data-toggle='modal' href='#fundwitnessaccount' onclick=\"changeWitnessAccount('"+value['UUID']+"')\"><i class='glyphicon glyphicon-credit-card'></i> Fund witness account</a></li>";
 					  	  		}
 				  	  			witnesspanelbody += "<li><a href='#'>Other witness actions are available from Phase 2 onwards.</a></li>";
 				  	  		}

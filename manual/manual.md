@@ -437,11 +437,12 @@ If there are problems with Gulden or with G-DASH, this page can be used as a ref
 
 **Gulden:** The Gulden checks contain a list of files and their file permissions. If the file permissions of the files are not set correctly, and there are problems with the Gulden installation, this could be the cause. The most important permissions are: 
 
-​	<u>Gulden.conf</u> is readable by G-DASH.
+- <u>Gulden.conf</u> is readable by G-DASH.
 
-​	<u>GuldenD</u> is executable.
+- <u>GuldenD</u> is executable.
 
-​	<u>Gulden-cli</u> is executable.
+- <u>Gulden-cli</u> is executable.
+
 
 The "least important" one is the <u>debug.log</u> file. As G-DASH contains a function to read the log file from the Debug Console, it could happen an error is thrown saying the file is not readable. This is nothing to worry about, it only means the file can not be accessed from within G-DASH and should be accessed directly on the server. To change the permissions of the debug.log to being readable by G-DASH, the following command can be executed on the server (assuming a basic installation as mentioned in the installation guide; file paths may differ from this example):  `chmod 0644 /opt/gulden/datadir/debug.log`
 

@@ -24,6 +24,25 @@
   </h1>
   
   <div class="panel panel-default">
+    <div class="panel-heading"><b>1.0</b></div>
+    <div class="panel-body">
+		<ul>
+			<li>IMPROVEMENT: Enabled funding of witness accounts and importing witness keys in Phase 2.</li>
+			<li>IMPROVEMENT: Disabled auto-complete for passwords in the wallet and witness pages.</li>
+			<li>BUG: When no peers are connected yet, total blocks and sync percentage were off.</li>
+			<li>ENHANCEMENT: GitHub issue #9: Show command in Config Check page for making debug.log file readable.</li>
+			<li>IMPROVEMENT: Current Phase shown on the dashboard screen.</li>
+			<li>FEATURE: Added a graph in the witness screen showing the distribution of locked Guldens.</li>
+			<li>FEATURE: Added a graph that plots the expected earnings and current earnings.</li>
+			<li>BUG: Fixed withdraw balance from witness account.</li>
+			<li>IMPROVEMENT: In the wallet TX list, when the blockchain API is down, stop trying to connect.</li>
+			<li>IMPROVEMENT: Close the session before performing large requests in AJAX scripts, allowing multiple pages to be opened.</li>
+			<li>FEATURE: Added push message feature for witness activity.</li>
+		</ul>
+    </div>
+  </div>
+  
+  <div class="panel panel-default">
     <div class="panel-heading"><b>0.995</b></div>
     <div class="panel-body">
 		<ul>
@@ -56,10 +75,7 @@
 			<li>FEATURE: Changed update servers to HTTPS.</li>
 			<li>FEATURE: Added version numbers to JS scripts to prevent caching issues.</li>
 			<li>FEATURE: Added terminal commands 'walletunlock', 'rescan', and 'getrescanprogress'. Use 'help' for details.</li>
-			<li>FEATURE: Many more! Check GitHub 
-				(<a href='https://github.com/Bastijn/g-dash/commit/fb4d1f8a855179744d79fb91a6d6123f247006ea' target='_blank'>
-				https://github.com/Bastijn/g-dash/commit/fb4d1f8a855179744d79fb91a6d6123f247006ea
-				</a>) for detailed info.</li>
+			<li>FEATURE: Many more! Check <a href='https://github.com/Bastijn/g-dash/commit/fb4d1f8a855179744d79fb91a6d6123f247006ea' target='_blank'>GitHub</a></li>
 		</ul>
     </div>
   </div>
