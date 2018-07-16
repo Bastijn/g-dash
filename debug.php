@@ -1,5 +1,5 @@
-<script src="js/terminal/js/jquery.terminal.min.js"></script>
-<script src="js/terminal/js/runterm.js"></script>
+<script src="js/terminal/js/jquery.terminal.min.js?<?php echo $CONFIG['dashversion']; ?>"></script>
+<script src="js/terminal/js/runterm.js?<?php echo $CONFIG['dashversion']; ?>"></script>
 <link rel="stylesheet" type="text/css" href="js/terminal/css/jquery.terminal.min.css">
 
 <div class="row row-offcanvas row-offcanvas-left">

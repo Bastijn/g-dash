@@ -24,6 +24,15 @@
   </h1>
   
   <div class="panel panel-default">
+    <div class="panel-heading"><b>1.01</b></div>
+    <div class="panel-body">
+		<ul>
+			<li>IMPROVEMENT: Add G-DASH version on calls to remaining JS files to prevent browser caching on new releases.</li>
+		</ul>
+    </div>
+  </div>
+  
+  <div class="panel panel-default">
     <div class="panel-heading"><b>1.0</b></div>
     <div class="panel-body">
 		<ul>

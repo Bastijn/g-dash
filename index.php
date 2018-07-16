@@ -42,13 +42,13 @@ if($CONFIG['otp']=="1" && $CONFIG['disablelogin'] != "1" && isset($_POST['login'
   <link rel="stylesheet" type="text/css" href="style/style.css">
 </head>
 <body>
-  <script src="js/jquery/js/jquery.min.js"></script>
-  <script src="js/sonic/jquery.sonic-gauge.min.js"></script>
-  <script src="js/sonic/raphael-min.js"></script>
-  <script src="js/bootstrap/js/bootstrap.min.js"></script>
-  <script src="js/jquery/js/jquery.validate.min.js"></script>
-  <script src="js/qrcodejs/qrcode.min.js"></script>
-  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="js/jquery/js/jquery.min.js?<?php echo $CONFIG['dashversion']; ?>"></script>
+  <script src="js/sonic/jquery.sonic-gauge.min.js?<?php echo $CONFIG['dashversion']; ?>"></script>
+  <script src="js/sonic/raphael-min.js?<?php echo $CONFIG['dashversion']; ?>"></script>
+  <script src="js/bootstrap/js/bootstrap.min.js?<?php echo $CONFIG['dashversion']; ?>"></script>
+  <script src="js/jquery/js/jquery.validate.min.js?<?php echo $CONFIG['dashversion']; ?>"></script>
+  <script src="js/qrcodejs/qrcode.min.js?<?php echo $CONFIG['dashversion']; ?>"></script>
+  <script src="https://code.highcharts.com/highcharts.js?<?php echo $CONFIG['dashversion']; ?>"></script>
   
   <script>
   $(document).ready(function() {

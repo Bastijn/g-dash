@@ -1,4 +1,4 @@
-<script src="js/dash/main.js"></script>
+<script src="js/dash/main.js?<?php echo $CONFIG['dashversion']; ?>"></script>
 
 <div class="row row-offcanvas row-offcanvas-left">
 
