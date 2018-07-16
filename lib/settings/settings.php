@@ -1,5 +1,5 @@
 <?php $GDASH = array (
-  'currentversion' => '1.0',
+  'currentversion' => '1.01',
   'updatecheck' => 'https://g-dash.nl/autoupdate.php',
   'updatelocation' => 'https://g-dash.nl/download/',
   'nlgrate' => 
