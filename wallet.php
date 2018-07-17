@@ -39,6 +39,7 @@
 	      </div>
 	      
 	      <div class="modal-body">
+	      	<p><b>Note: This will overwrite your current wallet.</b></p>
 	      	<div class="form-group">
 		      <label for="newaccountname"><small>Account name (Normal letters only and no &#42; allowed)</small></label><br>
 		      <input id="newaccountname" name="newaccountname" type="text" class="form-control">
@@ -304,6 +305,7 @@
 		    		<ul>
 			    		<li><a data-toggle="modal" href="#changepassphrase">Change wallet password</a></li>
 			    		<li><a data-toggle="modal" href="#showrecoveryphrase">Show the Recovery Phrase</a></li>
+			    		<li><a data-toggle="modal" href="#importrecoveryphrase">Import existing Recovery Phrase</a></li>
 			    		<!--<li>Backup wallet</li>-->
 			    		<li><a data-toggle="modal" href="#createtransaction">Create a transaction</a></li>
 			    	</ul>
