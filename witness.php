@@ -162,7 +162,7 @@
 		    </div>
 		    <div class="form-group">
 		      <label for="importpass"><small>Pass Phrase</small></label><br>
-			  <input type="text" id="importpass" name="importpass">
+			  <input type="password" id="importpass" name="importpass" autocomplete='off'>
 		    </div>
 		    <div id="keyimportmessage" name="keyimportmessage"></div>
 	      </div>
