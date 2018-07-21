@@ -620,7 +620,7 @@ $(document).ready(function() {
 								witnesspanelbody += "Locked until: " + data['witnessaccountdetails'][value['label']]['lock_until_date'] + "<br>";
 								witnesspanelbody += "Witness cycles: " + data['witnessaccountdetails'][value['label']]['totalcycles'] + "<br>";
 								witnesspanelbody += "Gulden available: " + data['witnessaccountdetails'][value['label']]['earningsavailable'] + " NLG<br>";
-								witnesspanelbody += "Gulden immature: " + data['witnessaccountdetails'][value['label']]['earningsimmature'] + " NLG<br>";
+								//witnesspanelbody += "Gulden immature: " + data['witnessaccountdetails'][value['label']]['earningsimmature'] + " NLG<br>";
 								witnesspanelbody += "Current Weight: " + data['witnessaccountdetails'][value['label']]['raw_weight'] + " (" + data['witnessaccountdetails'][value['label']]['weight_percentage_raw'] + ")<br>";
 								witnesspanelbody += "Adjusted Weight: " + data['witnessaccountdetails'][value['label']]['adjusted_weight'] + " (" + data['witnessaccountdetails'][value['label']]['weight_percentage_adj'] + ")<br>";
 								witnesspanelbody += "Expected earnings: " + data['witnessaccountdetails'][value['label']]['expectedearnings'] + " NLG (" + data['witnessaccountdetails'][value['label']]['expectedearningspercentage'] + "%)<br>";
