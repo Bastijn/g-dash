@@ -185,7 +185,7 @@ if (php_sapi_name() == "cli") {
 		$currentmessage = $lastwitnessactiondate.": New witness action for $witnessdetailsname";
 		
 		//Check the last message that was pushed to prevent multiple pushes of the same message
-		if($lastmessage!=$currentmessage && $lastwitnessactionblock != $lastblock) {
+		if($lastmessage!=$currentmessage && $lastwitnessactionblock != $lastblock && $witnessdetailsname != "") {
 			
 			//The message is different, send a push notification
 			$sendpush = shell_exec("curl --header 'Authorization: Bearer ".$CONFIG['pushbullet']."' -X POST https://api.pushbullet.com/v2/pushes --header 'Content-Type: application/json' --data-binary '{\"type\": \"note\", \"title\": \"Gulden Witness Action\", \"body\": \"".$currentmessage."\"}'");
