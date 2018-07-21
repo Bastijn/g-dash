@@ -24,6 +24,20 @@
   </h1>
   
   <div class="panel panel-default">
+    <div class="panel-heading"><b>1.02</b></div>
+    <div class="panel-body">
+		<ul>
+			<li>IMPROVEMENT: Always show import recovery phrase option.</li>
+			<li>BUG: Password field for witness key import was marked as normal text field.</li>
+			<li>BUG: Orphaned blocks were counted as normal blocks in witness statistics.</li>
+			<li>FEATURE: Show expected earnings percentage in witness screen.</li>
+			<li>BUG: Fixed empty witness push messages when GuldenD is not running.</li>
+			<li>BUG: Temporary disable the immature balance, currently work in progress.</li>
+		</ul>
+    </div>
+  </div>
+  
+  <div class="panel panel-default">
     <div class="panel-heading"><b>1.01</b></div>
     <div class="panel-body">
 		<ul>

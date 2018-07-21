@@ -84,8 +84,8 @@ Download the latest version from [G-DASH.nl](https://g-dash.nl) and upload this 
 
 The versions used for this guide are currently:
 
-- G-DASH: `1.0`
-- Gulden: `2.0.0.5`
+- G-DASH: `1.02`
+- Gulden: `2.0.0.6`
 
  
 
@@ -147,11 +147,11 @@ The versions used for this guide are currently:
 - Go to your /home/pi folder:
   `cd /home/pi`
 - Download the latest version of G-DASH using "wget":
-  `wget https://g-dash.nl/download/G-DASH-1.0.tar.gz`
+  `wget https://g-dash.nl/download/G-DASH-1.02.tar.gz`
 - If not done already. Create the folder where you want to install G-DASH:
   `sudo mkdir /var/www/g-dash`
 - Extract the file in the web folder of your Pi (note: typically /var/www/ but you can change this to whichever directory inside the "www" folder):
-  `sudo tar -xvf G-DASH-1.0.tar.gz --directory /var/www/g-dash`
+  `sudo tar -xvf G-DASH-1.02.tar.gz --directory /var/www/g-dash`
 - Copy the sample config to create an actual config file:
   `cp /var/www/g-dash/config/config_sample.php /var/www/g-dash/config/config.php`
 - Make www-data the owner of the web folder:
@@ -276,7 +276,7 @@ This script has only been tested on a freshly installed Raspberry Pi 3B with Ras
 
 - Login to your Pi using SSH (for example on Windows use [Putty](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html))
 - Run this command to download, extract and start the auto installer:
-  `wget https://g-dash.nl/download/autoinstall-G2.0.0.5-D1.0.tar.gz && tar -xvf autoinstall-G2.0.0.5-D1.0.tar.gz && chmod -R a+rwx autoinstall.sh && source autoinstall.sh`
+  `wget https://g-dash.nl/download/autoinstall-G2.0.0.6-D1.02.tar.gz && tar -xvf autoinstall-G2.0.0.6-D1.02.tar.gz && chmod -R a+rwx autoinstall.sh && source autoinstall.sh`
 - Login to G-DASH (as displayed on the screen after installation).
 
 
