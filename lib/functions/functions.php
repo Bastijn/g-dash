@@ -626,30 +626,37 @@ function getWitnessTransactions($witnesstransactions) {
 			//Find others with the same txid
 			$listwithtxid = selectElementWithValue($witnesstransactions, "txid", $txid);
 			
-			//Find the one with the lowest number, but positive number if there are 3 transactions involved
-			if(count($listwithtxid) == 3) {
-				$lowesttxamount = 99999999;
-				foreach ($listwithtxid as $txkey => $listtx) {
-					
-					if($listtx['amount'] > 0 && $listtx['amount'] < $lowesttxamount) {
-						$lowesttxamount = $listtx['amount'];
-						$lowestfound = $listwithtxid[$txkey];
+			//Find if any of the elements with this txid has "orphan" blocks
+			$listwithtxidorphans = selectElementWithValue($listwithtxid, "category", "orphan");
+			
+			//If this is an orphan block, don't take it along
+			if(count($listwithtxidorphans)==0) {
+			
+				//Find the one with the lowest number, but positive number if there are 3 transactions involved
+				if(count($listwithtxid) == 3) {
+					$lowesttxamount = 99999999;
+					foreach ($listwithtxid as $txkey => $listtx) {
+						
+						if($listtx['amount'] > 0 && $listtx['amount'] < $lowesttxamount) {
+							$lowesttxamount = $listtx['amount'];
+							$lowestfound = $listwithtxid[$txkey];
+						}
+					}
+					$tempwitnesstransactions[] = $lowestfound;
+				} elseif(count($listwithtxid) == 2) {
+					//$witnessdetailsarray['originaltxtwo'][] = $listwithtxid;
+					//Not negative, not the same amount as initial funding
+					if($listtx['amount'] > 0 && $listtx['amount'] != $witnessdata['amount']) {
+						$tempwitnesstransactions[] = $listwithtxid[0];
+					}
+				} elseif(count($listwithtxid) == 1) {
+					//$witnessdetailsarray['originaltxsingle'][] = $listwithtxid;
+					if($listwithtxid[0]['vout']==2) {
+						$tempwitnesstransactions[] = $listwithtxid[0];
 					}
 				}
-				$tempwitnesstransactions[] = $lowestfound;
-			} elseif(count($listwithtxid) == 2) {
-				//$witnessdetailsarray['originaltxtwo'][] = $listwithtxid;
-				//Not negative, not the same amount as initial funding
-				if($listtx['amount'] > 0 && $listtx['amount'] != $witnessdata['amount']) {
-					$tempwitnesstransactions[] = $listwithtxid[0];
-				}
-			} elseif(count($listwithtxid) == 1) {
-				//$witnessdetailsarray['originaltxsingle'][] = $listwithtxid;
-				if($listwithtxid[0]['vout']==2) {
-					$tempwitnesstransactions[] = $listwithtxid[0];
-				}
+				
 			}
-			
 		}
 		
 		//Build a list of txids
