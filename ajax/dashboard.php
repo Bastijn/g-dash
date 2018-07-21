@@ -34,7 +34,7 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 		$returnarray['gulden']['protocolversion'] = '';
 		$returnarray['node']['connections'] = '';
 		$returnarray['node']['inbound'] = '';
-		$returnarray['witness'] = '';
+		$returnarray['witness']['phase'] = '';
 		$returnarray['table'] = "<tr><td colspan='4'>GuldenD Upgrading</td></tr>";
 		$returnarray['errors'] = $guldenprimaryresponsemessage;
 		
@@ -48,7 +48,7 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 		$returnarray['gulden']['protocolversion'] = '';
 		$returnarray['node']['connections'] = '';
 		$returnarray['node']['inbound'] = '';
-		$returnarray['witness'] = '';
+		$returnarray['witness']['phase'] = '';
 		$returnarray['table'] = "<tr><td colspan='4'>GuldenD error</td></tr>";
 		$returnarray['errors'] = "Error connecting to server";
 	} else {
@@ -182,7 +182,7 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 	$returnarray['gulden']['protocolversion'] = '';
 	$returnarray['node']['connections'] = '';
 	$returnarray['node']['inbound'] = '';
-	$returnarray['witness'] = '';
+	$returnarray['witness']['phase'] = '';
 	$returnarray['server']['cpu'] = '';
 	$returnarray['server']['mem'] = '';
 	$returnarray['server']['temperature'] = '';

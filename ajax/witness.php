@@ -173,6 +173,7 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 				$witnessdetailsarray['totalearnings'] = $totalwitnessearnings;
 				$witnessdetailsarray['totalcycles'] = $countwitnessearnings;
 				$witnessdetailsarray['expectedearnings'] = $expectedearnings;
+				$witnessdetailsarray['expectedearningspercentage'] = round(($expectedearnings / $witnessdata['amount']) * 100, 2);
 				
 				//Check the status of the current witness account (Finished/Expired/Witnessing)
 				if($witnessdata['lock_period_expired']==true) {

@@ -623,7 +623,7 @@ $(document).ready(function() {
 								witnesspanelbody += "Gulden immature: " + data['witnessaccountdetails'][value['label']]['earningsimmature'] + " NLG<br>";
 								witnesspanelbody += "Current Weight: " + data['witnessaccountdetails'][value['label']]['raw_weight'] + " (" + data['witnessaccountdetails'][value['label']]['weight_percentage_raw'] + ")<br>";
 								witnesspanelbody += "Adjusted Weight: " + data['witnessaccountdetails'][value['label']]['adjusted_weight'] + " (" + data['witnessaccountdetails'][value['label']]['weight_percentage_adj'] + ")<br>";
-								witnesspanelbody += "Expected earnings: " + data['witnessaccountdetails'][value['label']]['expectedearnings'] + " NLG<br>";
+								witnesspanelbody += "Expected earnings: " + data['witnessaccountdetails'][value['label']]['expectedearnings'] + " NLG (" + data['witnessaccountdetails'][value['label']]['expectedearningspercentage'] + "%)<br>";
 							witnesspanelbody += "</div>"; //End secondary info div
 							
 							witnesspanelbody += "<div class='col-lg-12 col-md-12' id='" + moreinfocollapsename + "evenmoreinfo'>"; //Third info div
