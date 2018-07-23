@@ -214,8 +214,40 @@ function selectElementWithValue($array, $field, $value){
 }
 
 
+/* Check if ports is open from the outside */
+function fullNodeCheck() {
+	$checks = array();
+	
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+	curl_setopt($ch, CURLOPT_DNS_CACHE_TIMEOUT, 0);
+	curl_setopt($ch, CURLOPT_URL, "https://guldennodes.com/portcheck/?json");
+	$openportcheck = curl_exec($ch);
+	
 
-
+	if ($openportcheck && $openportreturn = json_decode($openportcheck, true)) {
+		$checks[] = $openportreturn['success']?$openportreturn['success']:$openportreturn['error'];
+		$info = curl_getinfo($ch);		
+		curl_close($ch);
+		
+		if(filter_var($info['local_ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) { // check if ipv6 is used, if true do ipv4 check
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+			curl_setopt($ch, CURLOPT_DNS_CACHE_TIMEOUT, 0);
+			curl_setopt($ch, CURLOPT_URL, "https://guldennodes.com/portcheck/?json");
+			curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+			$openportcheck = curl_exec($ch);
+			if ($openportcheck && $openportreturn = json_decode($openportcheck, true)) {
+				$checks[] = $openportreturn['success']?$openportreturn['success']:$openportreturn['error'];
+			}
+			curl_close($ch);
+		}
+	} else {
+		$checks[] = 'Check failed';
+	}
+	
+	return $checks;
+}
 
 /* Gulden specific functions */
 
