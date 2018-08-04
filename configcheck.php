@@ -96,15 +96,11 @@
     <div class="panel-heading"><b>Full Node port forward</b></div>
     <div class="panel-body" id="portforward">
 		<?php
-		//Check if the port is open using guldennode.com
-		$openportcheck = file_get_contents("https://guldennodes.com/portcheck/?json");
-		$openportreturn = json_decode($openportcheck, true);
-		
-		if($openportreturn['success']) {
-		  	echo $openportreturn['success'];
-		  } elseif($openportreturn['error']) {
-		  	echo $openportreturn['error'];
-		  }
+			$checks = fullNodeCheck();
+			
+			foreach ($checks as $check) {
+				echo $check . "<br />";
+			}
 		?>
     </div>
   </div>
