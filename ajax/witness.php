@@ -193,7 +193,7 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 				
 				//Calculate the expected earnings
 				//$expectedearnings = round(((($witnessdata['lock_until_block'] - $currentblock) / $witnessdata['estimated_witness_period']) * 20) + $totalwitnessearnings);
-				$expectedearnings_prop = (((576/(1/($witnessdata['adjusted_weight']/$totalNetworkWeightAdjusted) +100))*365)*20)/$witnessdata['amount'];
+				$expectedearnings_prop = (((576/(1/($witnessdata['adjusted_weight']/$totalNetworkWeightAdjusted) +100))*($witnessdata['lock_period'] / 576))*20)/$witnessdata['amount'];
 				$expectedearnings = round($witnessdata['amount'] * $expectedearnings_prop);
 				
 				//Put the earnings in the return array
