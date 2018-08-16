@@ -24,7 +24,7 @@
   </h1>
   
   <div class="panel panel-default">
-    <div class="panel-heading"><b>1.03</b></div>
+    <div class="panel-heading"><b>1.03 and 1.04</b></div>
     <div class="panel-body">
 		<ul>
 			<li>ENHANCEMENT: GitHub issue #6: Config check page shows info for IPv4 and IPv6.</li>
@@ -43,6 +43,7 @@
 			<li>ENHANCEMENT: Change OTP key to 16 chars as an iPhone is not always able to scan a 32 or 64 char barcode.</li>
 			<li>FEATURE: Show witness address and QR for the witness address.</li>
 			<li>ENHANCEMENT: Updated the manual and added a link to G-DASH in the about section.</li>
+			<li>BUG: Fixed incorrect witness earnings projection.</li>
 		</ul>
     </div>
   </div>
