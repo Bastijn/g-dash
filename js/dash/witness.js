@@ -4,6 +4,7 @@ var waccountlabel = '';
 var loadjsondata = '';
 var totalNetworkWeight = '';
 var nlgwaccountlist = [];
+var nlgwaddresslist = [];
 var nlgaccountlist = [];
 var slidervalue = 1;
 
@@ -16,6 +17,25 @@ function changeWitnessAccount(wuuid) {
 	
 	waccountuuid = wuuid;
 	loadjsondata();
+}
+
+function showWitnessAddress(wuuid) {
+	$('#witnessaddresstext').html("<img src='images/loading.gif' border='0' height='64' width='64'> Loading....");
+	$('#witnessaddresslinkqr').html("");
+	$('#witnessaddressqr').html("");
+	
+	$('#witnessaddresstext').html("<b>"+nlgwaddresslist[wuuid]['label']+": </b>"+nlgwaddresslist[wuuid]['address']);
+	var qrcode = new QRCode("witnessaddressqr", {
+	    text: "Gulden:"+nlgwaddresslist[wuuid]['address']+"?label="+nlgwaddresslist[wuuid]['label'],
+	    width: 128,
+	    height: 128,
+	    colorDark : "#000000",
+	    colorLight : "#ffffff",
+	    correctLevel : QRCode.CorrectLevel.H
+	});
+	
+	$('#witnessaddresslinkqr').html("<a href='Gulden:"+nlgwaddresslist[wuuid]['address']+"?label="+nlgwaddresslist[wuuid]['label']+"' target='_blank'>Gulden:"+
+									 nlgwaddresslist[wuuid]['address']+"?label="+nlgwaddresslist[wuuid]['label']+"</a>");
 }
 
 //Create a new witness account
@@ -233,7 +253,7 @@ function importWitnessAccount() {
 	 .done(function( data ) {
 	 	var data = jQuery.parseJSON(data);
 	 	if(data['message']==undefined || data['message']==null) {
-	 		$('#keyimportmessage').html("<div class='alert alert-info'>Witness account imported</div>");
+	 		$('#keyimportmessage').html("<div class='alert alert-info'>Witness account imported. Gulden will now rescan. See the overview page for the progress.</div>");
 	 		setTimeout(function(){ 
 	 			$('#importwitnessaccount').modal('toggle');
 	 			$('#keyimportmessage').html("");
@@ -321,7 +341,6 @@ function createProjectionGraph(witnessuuid) {
 		global: {
         },
 	    chart: {
-	    	width: 500,
 			renderTo: 'witnessprojection',
 			events: {
 	            
@@ -372,6 +391,15 @@ function createProjectionGraph(witnessuuid) {
 	var earningsdata = [];
 	var expecteddata = [];
 	
+	//Function to format the JS date
+	function formatDate(date) {
+	  var hours = date.getHours();
+	  var minutes = date.getMinutes();
+	  minutes = minutes < 10 ? '0'+minutes : minutes;
+	  var strTime = hours + ':' + minutes;
+	  return date.getDate() + "/" + Number(date.getMonth()+1) + "/" + date.getFullYear() + "  " + strTime;
+	}
+	
 	//Get data from ajax
 	$.getJSON("ajax/witnessearnings.php?uuid="+witnessuuid, function(earningsjson) {
 		
@@ -392,13 +420,24 @@ function createProjectionGraph(witnessuuid) {
 		var earningsEpoch = 0;
 		var earningsAmount = 0;
 		
+		//Create a table to list the earnings underneath the graph
+		$('#tabletransactions > tbody:last-child').html("");
+		var earningstable = "";
+		
 		//Put the data in an array
 		$.each(earningsjson['earnings'], function( index, value ) {
 			earningsEpoch = (index * 1000) + currentTimeZoneOffsetInEpoch;
-			earningsAmount = value;
+			earningsAmount = earningsAmount + value;
 			
 			earningsdata.push([earningsEpoch, earningsAmount]);
+			
+			var earningsFullDate = new Date(earningsEpoch);
+			var formattedDateTime = formatDate(earningsFullDate);
+			earningstable += "<tr><td>" + formattedDateTime + "</td><td>" + value + "</td></tr>";
 		});
+		
+		//Put the table data into the html table
+		$('#tabletransactions > tbody:last-child').html(earningstable);
 	
 		//Create 2 series for the chart
 		var seriesOptions = [];
@@ -495,6 +534,9 @@ $(document).ready(function() {
 		  	  	var witnessaccountsbody = "";
 		  	  	//$('#witnesslistpanel').html("<div class='panel-group' id='allwitnesses'>");
 		  	  	
+		  	  	//Empty the label/address list array
+		  	  	nlgwaddresslist = [];
+		  	  	
 		  	  	$.each(data['accountlist'], function( index, value ) {
 		  	  		if(value['UUID']==waccountuuid) {
 		  	  			$('#selectedwitnessaccount').val(value['label']);
@@ -548,7 +590,8 @@ $(document).ready(function() {
 				  	  			
 				  	  			//Options available only for accounts that are not yet funded
 				  	  			if(data['witnessaccountdetails'][value['label']]['status'] == "Not funded") {
-					  	  			witnesspanelbody += "<li><a data-toggle='modal' href='#fundwitnessaccount' onclick=\"changeWitnessAccount('"+value['UUID']+"')\">Fund witness account</a></li>";
+					  	  			witnesspanelbody += "<li><a data-toggle='modal' href='#fundwitnessaccount' onclick=\"changeWitnessAccount('"+value['UUID']+"')\"><i class='glyphicon glyphicon-import'></i> Fund witness account</a></li>";
+					  	  			witnesspanelbody += "<li><a data-toggle='modal' href='#deleteaccount' onclick=\"changeWitnessAccount('"+value['UUID']+"')\"><i class='glyphicon glyphicon-trash'></i> Delete witness account</a></li>";
 					  	  		} else {
 					  	  			
 					  	  			//Options only available for witness accounts with earnings more than zero
@@ -566,6 +609,7 @@ $(document).ready(function() {
 					  	  			//Options available for all funded accounts
 					  	  			witnesspanelbody += "<li><a data-toggle='modal' href='#renameaccount' onclick=\"changeWitnessAccount('"+value['UUID']+"')\"><i class='glyphicon glyphicon-pencil'></i> Rename witness account</a></li>";
 					  	  			witnesspanelbody += "<li><a data-toggle='modal' href='#witnessearningsgraph' onclick=\"createProjectionGraph('"+value['UUID']+"')\"><i class='glyphicon glyphicon-object-align-bottom'></i> Show witness earnings graph</a></li>";
+					  	  			witnesspanelbody += "<li><a data-toggle='modal' href='#witnessaddress' onclick=\"showWitnessAddress('"+value['UUID']+"')\"><i class='glyphicon glyphicon-qrcode'></i> Show witness address</a></li>";
 					  	  			witnesspanelbody += "<li class='divider'></li>";
 					  	  			witnesspanelbody += "<li><a data-toggle='modal' href='#deleteaccount' onclick=\"changeWitnessAccount('"+value['UUID']+"')\"><i class='glyphicon glyphicon-trash'></i> Delete witness account</a></li>";
 					  	  			
@@ -589,9 +633,13 @@ $(document).ready(function() {
 		  	  		//Witness account panel body
 		  	  		witnesspanelbody += "<div class='panel-body'>";
 		  	  		
-		  	  		
 		  	  		//Witness info (only if funded)
 		  	  		if(data['witnessaccountdetails'][value['label']]['status'] != "Not funded") {
+		  	  			//Push the UUID, address and label to the array
+		  	  			nlgwaddresslist[value['UUID']] = {
+		  	  											  "label": data['witnessaccountdetails'][value['label']]['name'],
+		  	  											  "address": data['witnessaccountdetails'][value['label']]['address']
+		  	  											 };
 		  	  			
 		  	  			//On update, check if the div is already expanded, so it will not close on update
 		  	  			var collapseStateCheck = 'false';
@@ -620,9 +668,10 @@ $(document).ready(function() {
 								witnesspanelbody += "Locked until: " + data['witnessaccountdetails'][value['label']]['lock_until_date'] + "<br>";
 								witnesspanelbody += "Witness cycles: " + data['witnessaccountdetails'][value['label']]['totalcycles'] + "<br>";
 								witnesspanelbody += "Gulden available: " + data['witnessaccountdetails'][value['label']]['earningsavailable'] + " NLG<br>";
-								//witnesspanelbody += "Gulden immature: " + data['witnessaccountdetails'][value['label']]['earningsimmature'] + " NLG<br>";
+								witnesspanelbody += "Gulden immature: " + data['witnessaccountdetails'][value['label']]['earningsimmature'] + " NLG<br>";
 								witnesspanelbody += "Current Weight: " + data['witnessaccountdetails'][value['label']]['raw_weight'] + " (" + data['witnessaccountdetails'][value['label']]['weight_percentage_raw'] + ")<br>";
 								witnesspanelbody += "Adjusted Weight: " + data['witnessaccountdetails'][value['label']]['adjusted_weight'] + " (" + data['witnessaccountdetails'][value['label']]['weight_percentage_adj'] + ")<br>";
+								witnesspanelbody += "Estimated witness period: " + data['witnessaccountdetails'][value['label']]['estimated_witness_period'] + " days<br>";
 								witnesspanelbody += "Expected earnings: " + data['witnessaccountdetails'][value['label']]['expectedearnings'] + " NLG (" + data['witnessaccountdetails'][value['label']]['expectedearningspercentage'] + "%)<br>";
 							witnesspanelbody += "</div>"; //End secondary info div
 							

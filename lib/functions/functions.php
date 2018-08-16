@@ -192,6 +192,7 @@ function getFilePermissions($file) {
 	return $resultArray;
 }
 
+//Search through a multidimensional array
 function array_search_multidimensional($array, $field, $value)
 {
    foreach($array as $key => $item)
@@ -202,6 +203,7 @@ function array_search_multidimensional($array, $field, $value)
    return false;
 }
 
+//Return an array that contains a specific element value
 function selectElementWithValue($array, $field, $value){
 	$newArray = array();
 	
@@ -211,6 +213,13 @@ function selectElementWithValue($array, $field, $value){
 		}
 	}
 	return $newArray;
+}
+
+//Define an usort function to sort by a subkey
+function mdarraysorter($key) {
+    return function ($a, $b) use ($key) {
+        return strnatcmp($a[$key], $b[$key]);
+    };
 }
 
 
@@ -441,7 +450,7 @@ function getTransactionDetails($accounttransactions, $numoftransactionstoshow, $
 			//Put the limit in a stream context
 			$context  = stream_context_create($opts);
 			
-			//Get the raw transaction details from the Gulden blockchain Insight API
+			//Get the raw transaction details from the Gulden blockchain Insight API (blockchain.gulden.com)
 			$txrawdetails = @json_decode(file_get_contents("https://blockchain.gulden.com/api/tx/".$transactiontxid, false, $context));
 			
 			$txfromaddress = $txrawdetails->vin[0]->addr;

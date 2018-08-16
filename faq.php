@@ -4,6 +4,7 @@
    
     <ul class="nav nav-sidebar">
       <li><a href="?page=about">About</a></li>
+      <li><a href="manual/G-DASH_manual.pdf" target="_blank">Manual</a></li>
       <li class="active"><a href="?page=faq">FAQ</a></li>
     </ul>
  </div><!--/span-->
@@ -34,6 +35,8 @@
 	  	<li><a href="#faq8">I want to see my Recovery Phrase, but I get the error the password is wrong, but I did not set a password.</a></li>
 	  	<li><a href="#faq9">I want to get a notification when my computer or internet connection is down, but how can I do that?</a></li>
 	  	<li><a href="#faq10">I'm 100 percent sure I set up my full node correctly, but I still don't get any incoming connections. What's wrong?</a></li>
+	  	<li><a href="#faq11">G-DASH can't connect to Gulden, but the config check says username and password match.</a></li>
+	  	<li><a href="#faq12">The witness statistics of my imported account are different in G-DASH and on the desktop app.</a></li>
   	</ul>
   	
   	<hr>
@@ -131,6 +134,23 @@
 	    	<code>noderequest</code> function in the debug console (within G-DASH --> settings) that adds your node to a database. This database is then checked
 	    	automatically by other G-DASH users and these instances (max 10) then make a connection with you for 24 hours, which makes you more discoverable to other
 	    	nodes and seeds. When 10 nodes have connected to your node, you are removed from the database.
+	    </div>
+	</div>
+	
+	<div class="panel panel-default">
+	    <div class="panel-heading" id="faq11" name="faq11"><b>G-DASH can't connect to Gulden, but the config check says username and password match.</b></div>
+	    <div class="panel-body">
+	    	The RPC server can't handle passwords that contain some special characters, such as "#" and "$". If you have entered a password in Gulden.conf and 
+	    	the "Gulden" settings tab in G-DASH, create a new password without these symbols.
+	    </div>
+	</div>
+	
+	<div class="panel panel-default">
+	    <div class="panel-heading" id="faq12" name="faq12"><b>The witness statistics of my imported account are different in G-DASH and on the desktop app.</b></div>
+	    <div class="panel-body">
+	    	Statistics can be different in G-DASH and on the desktop. The key imported in G-DASH is a read-only key, so if a witness action is performed on the 
+	    	desktop this is not visible on G-DASH and there might be a difference in the number of earnings and the total amount of Gulden available compared to 
+	    	the statistics on the desktop app. The desktop app can read the information from both instances (local and witness key).
 	    </div>
 	</div>
     	

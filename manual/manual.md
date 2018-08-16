@@ -1,8 +1,8 @@
 # G-DASH USER MANUAL
 
-Version 1
+G-DASH Version 1.03
 
-July 15 2018
+August 16 2018
 
 
 
@@ -84,8 +84,8 @@ Download the latest version from [G-DASH.nl](https://g-dash.nl) and upload this 
 
 The versions used for this guide are currently:
 
-- G-DASH: `1.02`
-- Gulden: `2.0.0.6`
+- G-DASH: `1.03`
+- Gulden: `2.0.0.10`
 
  
 
@@ -134,6 +134,8 @@ The versions used for this guide are currently:
 
   `rpcpassword=yyy`
 
+  `minimallogging=1`
+
   (xxx and yyy are securely generated settings of your own that you have chosen.)
 
 - 20 is the recommended setting for low end machines, for higher system specifications set this to a higher number. The Raspberry Pi can handle at least 60 without problems.
@@ -147,11 +149,11 @@ The versions used for this guide are currently:
 - Go to your /home/pi folder:
   `cd /home/pi`
 - Download the latest version of G-DASH using "wget":
-  `wget https://g-dash.nl/download/G-DASH-1.02.tar.gz`
+  `wget https://g-dash.nl/download/G-DASH-1.03.tar.gz`
 - If not done already. Create the folder where you want to install G-DASH:
   `sudo mkdir /var/www/g-dash`
 - Extract the file in the web folder of your Pi (note: typically /var/www/ but you can change this to whichever directory inside the "www" folder):
-  `sudo tar -xvf G-DASH-1.02.tar.gz --directory /var/www/g-dash`
+  `sudo tar -xvf G-DASH-1.03.tar.gz --directory /var/www/g-dash`
 - Copy the sample config to create an actual config file:
   `cp /var/www/g-dash/config/config_sample.php /var/www/g-dash/config/config.php`
 - Make www-data the owner of the web folder:
@@ -164,6 +166,8 @@ The versions used for this guide are currently:
 
 
 ### Start GuldenD and optionally use a startup script for GuldenD
+
+- The scripts below are included in the Raspbian repository, so you only need to add these files if you have done a manual installation.
 
 - When installing Gulden from the Raspbian repository the file `guldenstart.sh` is already created in the `/opt/gulden/` directory. If not, you can create this file yourself.
 
@@ -276,7 +280,7 @@ This script has only been tested on a freshly installed Raspberry Pi 3B with Ras
 
 - Login to your Pi using SSH (for example on Windows use [Putty](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html))
 - Run this command to download, extract and start the auto installer:
-  `wget https://g-dash.nl/download/autoinstall-G2.0.0.6-D1.02.tar.gz && tar -xvf autoinstall-G2.0.0.6-D1.02.tar.gz && chmod -R a+rwx autoinstall.sh && source autoinstall.sh`
+  `wget https://g-dash.nl/download/autoinstall-G2.0.0.10-D1.03.tar.gz && tar -xvf autoinstall-G2.0.0.10-D1.03.tar.gz && chmod -R a+rwx autoinstall.sh && source autoinstall.sh`
 - Login to G-DASH (as displayed on the screen after installation).
 
 
@@ -419,7 +423,39 @@ The transaction history shows the 30 most recent transactions made with this acc
 
 ## Witness
 
-The witness screen holds all the information about the general witness network activity, as well as the witness accounts on this wallet. More information about the witness screen will be added to this manual later on.
+The witness screen holds all the information about the general witness network activity, as well as the witness accounts on this wallet. 
+
+
+
+### The witness network overview
+
+The overview shows several details about the witness network. The current phase (information on the different phases can be found on Gulden.com), the number of witness accounts, the number of NLG locked and the network weight. 
+
+
+
+### How to create a witness account
+
+There are 2 options to create a witness account. The first one can be done by clicking on "Create account", which will create a local account and can only be funded from within the wallet G-DASH is running on. The second option is importing a witness key from another Gulden wallet. This is the most used option and allows to create a witness account on the primary Gulden wallet (for example a PC) and use the witness key to be imported in G-DASH. With the latter option the witness account can be managed by the desktop application, as well as by G-DASH.
+
+
+
+### Create a local witness account
+
+Click on the "Create account" link in the witness actions list and give the account a name. It will then appear in the list and by clicking on the cog in the top right corner of the witness account the option appears to fund the account. The pop-up screen will ask where the funds should be gathered from (from which local account) and for how long the funds should be locked. The wallet password is the same password as used for the wallet functionality in G-DASH and if this is not changed from the default the password is "changeme". After funding the account, the statistics will reload and the account is ready to witness after 100 confirmations.
+
+
+
+### Importing a witness account
+
+To import a witness key from another app, the link "Import witness key" can be used. The pop-up will ask for an account name (this doesn't have to be the same name as where the account was created from). The witness key can then be copied from the desktop app and inserted in G-DASH. Note that the whole key should be imported starting from "gulden://" and ending the a number after a "#".
+
+**Note** that statistics can be different in G-DASH and on the desktop. The key imported in G-DASH is a read-only key, so if a witness action is performed on the desktop this is not visible on G-DASH and there might be a difference in the number of earnings and the total amount of Gulden available compared to the statistics on the desktop app (which can read the information from both instances).
+
+
+
+### Withdraw earnings
+
+The cog on the right side of the witness account has the option to withdraw the earnings to any NLG address.
 
 
 
@@ -589,4 +625,10 @@ First of all. Your system is not broken or anything if you have no incoming conn
 ## G-DASH can't connect to Gulden, but the config check says username and password match.
 
 The RPC server can't handle passwords that contain some special characters, such as "#" and "$". If you have entered a password in Gulden.conf and the "Gulden" settings tab in G-DASH, create a new password without these symbols.
+
+
+
+## The witness statistics of my imported account are different in G-DASH and on the desktop app.
+
+Statistics can be different in G-DASH and on the desktop. The key imported in G-DASH is a read-only key, so if a witness action is performed on the desktop this is not visible on G-DASH and there might be a difference in the number of earnings and the total amount of Gulden available compared to the statistics on the desktop app. The desktop app can read the information from both instances (local and witness key).
 

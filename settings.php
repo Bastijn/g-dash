@@ -361,6 +361,7 @@
 				if($CONFIG['otpkey']=="") {
 					$randomkeyforotp = hash("sha1", rand(999,999999), false);
 					$otpkey = Base32Static::encode($randomkeyforotp);
+					$otpkey = substr($otpkey, 0, 16);
 					echo "<input type='hidden' name='otpkey' id='otpkey' value='".$otpkey."'>";
 				} else {
 					$otpkey = $CONFIG['otpkey'];

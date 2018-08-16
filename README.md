@@ -13,7 +13,7 @@ possible, so even people who are not very good with computers or don't
 understand how to set up a witness account can use this functionality 
 of Gulden. Of course, new ideas and comments are always welcome. You 
 can find me on the Gulden slack (@bastijn) at 
-[guldencommunity.slack.com](https://guldencommunity.slack.com). I'm 
+[guldencom.slack.com](https://guldencom.slack.com). I'm 
 happy to talk to you, to answer any questions and to listen to any 
 feedback. 
 

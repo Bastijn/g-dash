@@ -119,6 +119,10 @@ body {
   background-color: #92BFE6;
 }
 
+.nav > li > a > img {
+  max-width: 100%;
+}
+
 /*
  * Main content
  */

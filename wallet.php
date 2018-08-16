@@ -39,7 +39,6 @@
 	      </div>
 	      
 	      <div class="modal-body">
-	      	<p><b>Note: This will overwrite your current wallet.</b></p>
 	      	<div class="form-group">
 		      <label for="newaccountname"><small>Account name (Normal letters only and no &#42; allowed)</small></label><br>
 		      <input id="newaccountname" name="newaccountname" type="text" class="form-control">

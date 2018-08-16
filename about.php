@@ -4,6 +4,7 @@
    
     <ul class="nav nav-sidebar">
       <li class="active"><a href="?page=about">About</a></li>
+      <li><a href="manual/G-DASH_manual.pdf" target="_blank">Manual</a></li>
       <li><a href="?page=faq">FAQ</a></li>
     </ul>
  </div><!--/span-->
@@ -55,6 +56,10 @@
   	
   	<br>
   	<img src="images/donations.png" border="0" width="175" height="175">
+  	<br>
+  	
+  	<p class="lead">Sponsors</p>
+  	<a href="https://nocks.com/trade?utm_source=gdash" target="_blank"><img class="img-responsive" src="https://g-dash.nl/images/nocks.jpg" border="0"></a>
   	
   	<p class="lead">License and Copyright</p>
   	GNU General Public License v3.0<br>

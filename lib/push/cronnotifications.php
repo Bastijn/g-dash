@@ -110,7 +110,7 @@ if (php_sapi_name() == "cli") {
 	if($CONFIG['pushbullettx']['active']=="1") {
 		
 		//Create a list of addresses belonging to this wallet
-		$addresslistrpc = $gulden->listreceivedbyaddress(0, true);
+		$addresslistrpc = $gulden->listreceivedbyaddress();
 		$addresslist = array_column($addresslistrpc, "address");
 		
 		//Get the latest transaction for all accounts
@@ -118,38 +118,55 @@ if (php_sapi_name() == "cli") {
 		$numoftransactionstoshow = 1;
 		$accounttransactions = $gulden->listtransactions($accounttoshowtx, $numoftransactionstoshow);
 		
-		//Get the raw transaction details
-		$transactiondetails = getTransactionDetails($accounttransactions, $numoftransactionstoshow, $addresslist);
+		//List all non-deleted accounts
+		$accountlistrpc = $gulden->listaccounts("*", "Normal");
 		
-		//Get only the first item from the function as there is only one to possibly push
-		$transactiondetailsitem = $transactiondetails[0];
+		//Get the account name of the last transaction
+		$accountname = $accounttransactions[0]['accountlabel'];
 		
-		//Get the amount of Gulden sent/received
-		$transactionamount = $transactiondetailsitem['transactionamount'];
+		//Only get this account from the accountlist array
+		$accountlist_thisaccount = selectElementWithValue($accountlistrpc, "label", $accountname);
 		
-		//Get the senders address
-		$txfromaddress = $transactiondetailsitem['txfromaddress'];
+		//Get the type of this account
+		$accounttype = $accountlist_thisaccount[0]['type'];
 		
-		//Get the date and time of the transaction
-		$transactiondate = $transactiondetailsitem['transactiondate'];
+		//Check if this is not a witness account
+		if($accounttype != "Witness" && $accounttype != "Witness-only witness") 
+		{
 		
-		//Only push a message if it is an incoming transaction
-		if($transactionamount > 0) {
-			//Get the info (last message and current message)
-			$lastmessage = $CONFIG['pushbullettx']['lastmes'];
-			$currentmessage = $transactiondate.": $transactionamount Gulden received from $txfromaddress";
+			//Get the raw transaction details
+			$transactiondetails = getTransactionDetails($accounttransactions, $numoftransactionstoshow, $addresslist);
 			
-			//Check the last message that was pushed to prevent multiple pushes of the same message
-			if($lastmessage!=$currentmessage) {
+			//Get only the first item from the function as there is only one to possibly push
+			$transactiondetailsitem = $transactiondetails[0];
+			
+			//Get the amount of Gulden sent/received
+			$transactionamount = $transactiondetailsitem['transactionamount'];
+			
+			//Get the senders address
+			$txfromaddress = $transactiondetailsitem['txfromaddress'];
+			
+			//Get the date and time of the transaction
+			$transactiondate = $transactiondetailsitem['transactiondate'];
+			
+			//Only push a message if it is an incoming transaction
+			if($transactionamount > 0) {
+				//Get the info (last message and current message)
+				$lastmessage = $CONFIG['pushbullettx']['lastmes'];
+				$currentmessage = $transactiondate.": $transactionamount Gulden received from $txfromaddress";
 				
-				//The message is different, send a push notification
-				$sendpush = shell_exec("curl --header 'Authorization: Bearer ".$CONFIG['pushbullet']."' -X POST https://api.pushbullet.com/v2/pushes --header 'Content-Type: application/json' --data-binary '{\"type\": \"note\", \"title\": \"Gulden Transaction\", \"body\": \"".$currentmessage."\"}'");
-				
-				//Set the current message as the last message in the config file
-				$CONFIG['pushbullettx']['lastmes'] = $currentmessage;
-				
-				//Update the config file
-				file_put_contents(__DIR__.'/../../config/config.php', '<?php $CONFIG = '.var_export($CONFIG, true).'; ?>');
+				//Check the last message that was pushed to prevent multiple pushes of the same message
+				if($lastmessage!=$currentmessage) {
+					
+					//The message is different, send a push notification
+					$sendpush = shell_exec("curl --header 'Authorization: Bearer ".$CONFIG['pushbullet']."' -X POST https://api.pushbullet.com/v2/pushes --header 'Content-Type: application/json' --data-binary '{\"type\": \"note\", \"title\": \"Gulden Transaction\", \"body\": \"".$currentmessage."\"}'");
+					
+					//Set the current message as the last message in the config file
+					$CONFIG['pushbullettx']['lastmes'] = $currentmessage;
+					
+					//Update the config file
+					file_put_contents(__DIR__.'/../../config/config.php', '<?php $CONFIG = '.var_export($CONFIG, true).'; ?>');
+				}
 			}
 		}
 	}

@@ -327,6 +327,20 @@
 	      
 	      <div class="modal-body">
 	      	<div id="witnessprojection" name="witnessprojection"></div>
+	      	<br><br>
+	      	<div id="witnesstxlist" name="witnesstxlist">
+	      		<table class="table table-striped" id="tabletransactions">
+			      <thead>
+			        <tr>
+			          <th>Date</th>
+			          <th>Amount</th>
+			        </tr>
+			      </thead>
+			      <tbody>
+			        <tr><td colspan="2"><img src='images/loading.gif' border='0' height='64' width='64'> Loading....</td></tr>
+			      </tbody>
+			    </table>
+	      	</div>
 	      </div>
 	      <div class="modal-footer">
 	        
@@ -335,6 +349,30 @@
 	  </div>
 	</div>
 	<!-- End witness earnings projection modal content-->
+	
+	<!-- Witness address modal content-->
+  	<div id="witnessaddress" class="modal fade" role="dialog">
+	  <div class="modal-dialog">
+	    <div class="modal-content" name="witnessaddressmodal" id="witnessaddressmodal">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        <div id="witnessaddresstitle"><h4 class="modal-title">Witness address</h4></div>
+	      </div>
+	      
+	      <div class="modal-body">
+	      	<div id="witnessaddresstext" name="witnessaddresstext"></div>
+	      	<br><br>
+	      	<div id="witnessaddressqr" name="witnessaddressqr"></div>
+	      	<br>
+	      	<div id="witnessaddresslinkqr" name="witnessaddresslinkqr"></div>
+	      </div>
+	      <div class="modal-footer">
+	        
+	      </div>
+	    </div>	
+	  </div>
+	</div>
+	<!-- End witness address modal content-->
   
   <div class="row">
   	<div class="col-md-12">

@@ -24,6 +24,30 @@
   </h1>
   
   <div class="panel panel-default">
+    <div class="panel-heading"><b>1.03</b></div>
+    <div class="panel-body">
+		<ul>
+			<li>ENHANCEMENT: GitHub issue #6: Config check page shows info for IPv4 and IPv6.</li>
+			<li>BUG: Witness projection chart too large for mobile view.</li>
+			<li>ENHANCEMENT: Using block info for exact block times in witness statistics.</li>
+			<li>ENHANCEMENT: Updated formula to calculate projected witness earnings.</li>
+			<li>ENHANCEMENT: Not funded accounts can be deleted.</li>
+			<li>FEATURE: New 3D graph in witness network showing time, weight and amount locked for all witness accounts.</li>
+			<li>FEATURE: GitHub issue #11: Witness accounts transactions can be found underneath the earnings graph.</li>
+			<li>BUG: Exclude witness rewards from pushbullet transaction push message.</li>
+			<li>ENHANCEMENT: Updated the FAQ.</li>
+			<li>BUG: Fixed the immature balance.</li>
+			<li>ENHANCEMENT: Added estimated witness period to witness account details.</li>
+			<li>BUG: Wallet transaction list did not filter for witness accounts.</li>
+			<li>BUG: Witness status (cooldown/initial funding) was incorrectly displayed when public key is not used yet.</li>
+			<li>ENHANCEMENT: Change OTP key to 16 chars as an iPhone is not always able to scan a 32 or 64 char barcode.</li>
+			<li>FEATURE: Show witness address and QR for the witness address.</li>
+			<li>ENHANCEMENT: Updated the manual and added a link to G-DASH in the about section.</li>
+		</ul>
+    </div>
+  </div>
+  
+  <div class="panel panel-default">
     <div class="panel-heading"><b>1.02</b></div>
     <div class="panel-body">
 		<ul>

@@ -24,8 +24,14 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 	//No need to check for transactions if the wallet is disabled
 	if($nodeconfig['disablewallet']!="1") {
 		
-		//List all accounts
-		$accountlist = $gulden->listaccounts();
+		//List all accounts, don't show deleted accounts 
+		$accountlist = $gulden->listaccounts("*", "Normal");
+		
+		//List all accounts, including deleted accounts (comment above, uncomment this one)
+		//$accountlist = $gulden->listaccounts();
+		
+		//Only list wallet accounts
+		$accountlist = selectElementWithValue($accountlist, "type", "Desktop");
 		
 		//If the users selected an account from the menu
 		if(isset($_GET['account'])) { $selectedaccount = $_GET['account']; } else { $selectedaccount = ""; }

@@ -15,6 +15,9 @@ $guldenCPU = GetProgCpuUsage($guldenD);
 $guldenMEM = GetProgMemUsage($guldenD);
 $returnarray = array();
 
+$localdate = new DateTime();
+$localtz = $localdate->getTimezone();
+
 session_write_close();
 
 if($guldenCPU > 0 && $guldenMEM > 0) {
@@ -134,11 +137,29 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 				$witnessdetailsarray['weight_percentage_raw'] = round(($witnessdata['raw_weight'] / $totalNetworkWeight) * 100, 2)."%";
 				$witnessdetailsarray['weight_percentage_adj'] = round(($witnessdata['adjusted_weight'] / $totalNetworkWeight) * 100, 2)."%";
 				$witnessdetailsarray['expected_witness_period'] = $witnessdata['expected_witness_period'];
-				$witnessdetailsarray['estimated_witness_period'] = $witnessdata['estimated_witness_period'];
+				$witnessdetailsarray['estimated_witness_period'] = round($witnessdata['estimated_witness_period'] / 576, 2);
 				$witnessdetailsarray['last_active_block'] = $witnessdata['last_active_block'];
-				$witnessdetailsarray['last_active_date'] = date("d/m/Y H:i:s", time() - (($currentblock - $witnessdata['last_active_block']) / (576 / (24 * 60 * 60))));
+				
+				$lastactive_blockhash = $gulden->getblockhash($witnessdata['last_active_block']);
+				$lastactive_getblock = $gulden->getblock($lastactive_blockhash);
+				$lastactive_blocktime = $lastactive_getblock['time'];
+				$lastactive_dt = new DateTime("@$lastactive_blocktime", new DateTimeZone('GMT'));
+				$lastactive_dt->setTimezone(new DateTimeZone($localtz->getName()));
+				$last_active_date = $lastactive_dt->format('d/m/Y H:i:s');
+				$witnessdetailsarray['last_active_date'] = $last_active_date;
+				
+				//$witnessdetailsarray['last_active_date'] = date("d/m/Y H:i:s", time() - (($currentblock - $witnessdata['last_active_block']) / (576 / (24 * 60 * 60))));
 				$witnessdetailsarray['lock_from_block'] = $witnessdata['lock_from_block'];
-				$witnessdetailsarray['lock_from_date'] = date("d/m/Y H:i:s", time() - (($currentblock - $witnessdata['lock_from_block']) / (576 / (24 * 60 * 60))));
+				
+				$lockfrom_blockhash = $gulden->getblockhash($witnessdata['lock_from_block']);
+				$lockfrom_getblock = $gulden->getblock($lockfrom_blockhash);
+				$lockfrom_blocktime = $lockfrom_getblock['time'];
+				$lockfrom_dt = new DateTime("@$lockfrom_blocktime", new DateTimeZone('GMT'));
+				$lockfrom_dt->setTimezone(new DateTimeZone($localtz->getName()));
+				$lock_from_date = $lockfrom_dt->format('d/m/Y H:i:s');
+				$witnessdetailsarray['lock_from_date'] = $lock_from_date;
+				
+				//$witnessdetailsarray['lock_from_date'] = date("d/m/Y H:i:s", time() - (($currentblock - $witnessdata['lock_from_block']) / (576 / (24 * 60 * 60))));
 				$witnessdetailsarray['lock_until_block'] = $witnessdata['lock_until_block'];
 				$witnessdetailsarray['lock_until_date'] = date("d/m/Y H:i:s", time() + (($witnessdata['lock_until_block'] - $currentblock) / (576 / (24 * 60 * 60))));
 				$witnessdetailsarray['lock_period'] = $witnessdata['lock_period'];
@@ -155,7 +176,11 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 				$witnesstransactions = $gulden->listtransactions($currentwitnessaccountname, 999999);
 				
 				//Get the witness transactions details
-				$witnesstransactions = getWitnessTransactions($witnesstransactions);			
+				//$witnesstransactions = getWitnessTransactions($witnesstransactions);
+				$witnesstransactions = selectElementWithValue($witnesstransactions, "category", "generate");
+				
+				//Immature witness transactions
+				$witnesstransactions_immature = selectElementWithValue($witnesstransactions, "category", "immature");
 				
 				//Sum the earnings
 				$totalwitnessearnings = 0;
@@ -167,13 +192,18 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 				$countwitnessearnings = count($witnesstransactions);
 				
 				//Calculate the expected earnings
-				$expectedearnings = round(((($witnessdata['lock_until_block'] - $currentblock) / $witnessdata['estimated_witness_period']) * 20) + $totalwitnessearnings);
+				//$expectedearnings = round(((($witnessdata['lock_until_block'] - $currentblock) / $witnessdata['estimated_witness_period']) * 20) + $totalwitnessearnings);
+				$expectedearnings_prop = (((576/(1/($witnessdata['adjusted_weight']/$totalNetworkWeightAdjusted) +100))*365)*20)/$witnessdata['amount'];
+				$expectedearnings = round($witnessdata['amount'] * $expectedearnings_prop);
 				
 				//Put the earnings in the return array
 				$witnessdetailsarray['totalearnings'] = $totalwitnessearnings;
 				$witnessdetailsarray['totalcycles'] = $countwitnessearnings;
 				$witnessdetailsarray['expectedearnings'] = $expectedearnings;
-				$witnessdetailsarray['expectedearningspercentage'] = round(($expectedearnings / $witnessdata['amount']) * 100, 2);
+				$witnessdetailsarray['expectedearningspercentage'] = round($expectedearnings_prop * 100, 2);
+				
+				//Calculate the total age in blocks of the witness account
+				$totalWitnessAge = $currentblock - $witnessdata['lock_from_block'];
 				
 				//Check the status of the current witness account (Finished/Expired/Witnessing)
 				if($witnessdata['lock_period_expired']==true) {
@@ -185,7 +215,7 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 				} elseif($witnessdata['eligible_to_witness']==true) {
 					$witnessdetailsarray['status'] = "<i class='glyphicon glyphicon-hourglass'></i> Ready to witness";
 					$witnessdetailsarray['status_long'] = "Waiting to be picked to witness a block.";
-				} elseif($witnessdata['eligible_to_witness']==false && $countwitnessearnings == 0) {
+				} elseif($witnessdata['eligible_to_witness']==false && $totalWitnessAge <= 101) {
 					//TODO: Can be removed after Phase 3 activated
 					if($currentPhase == "2") {
 						$witnessdetailsarray['status'] = "<i class='glyphicon glyphicon-link'></i> Waiting for Phase 3";

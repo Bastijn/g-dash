@@ -38,8 +38,8 @@ if($CONFIG['otp']=="1" && $CONFIG['disablelogin'] != "1" && isset($_POST['login'
   <base target="_self">
   <meta name="google" value="notranslate">
 
-  <link rel="stylesheet" href="js/bootstrap/css/bootstrap.min.css" />
-  <link rel="stylesheet" type="text/css" href="style/style.css">
+  <link rel="stylesheet" href="js/bootstrap/css/bootstrap.min.css?<?php echo $CONFIG['dashversion']; ?>" />
+  <link rel="stylesheet" type="text/css" href="style/style.css?<?php echo $CONFIG['dashversion']; ?>">
 </head>
 <body>
   <script src="js/jquery/js/jquery.min.js?<?php echo $CONFIG['dashversion']; ?>"></script>
@@ -49,6 +49,8 @@ if($CONFIG['otp']=="1" && $CONFIG['disablelogin'] != "1" && isset($_POST['login'
   <script src="js/jquery/js/jquery.validate.min.js?<?php echo $CONFIG['dashversion']; ?>"></script>
   <script src="js/qrcodejs/qrcode.min.js?<?php echo $CONFIG['dashversion']; ?>"></script>
   <script src="https://code.highcharts.com/highcharts.js?<?php echo $CONFIG['dashversion']; ?>"></script>
+  <script src="https://code.highcharts.com/highcharts-3d.js?<?php echo $CONFIG['dashversion']; ?>"></script>
+  <script src="js/dash/index.js?<?php echo $CONFIG['dashversion']; ?>"></script>
   
   <script>
   $(document).ready(function() {
