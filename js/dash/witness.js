@@ -650,7 +650,7 @@ $(document).ready(function() {
 		  	  			}
 		  	  			*/
 		  	  			
-		  	  			witnesspanelbody += "<div class='col-lg-12 col-md-12 alert alert-info' data-toggle='collapse' aria-expanded='" + collapseStateCheck + "' aria-controls='" + moreinfocollapsename + "' href='#" + moreinfocollapsename + "moreinfo'>"; //Alert-info div
+		  	  			witnesspanelbody += "<div class='col-lg-12 col-md-12 alert alert-info gdashdivpointer' data-toggle='collapse' aria-expanded='" + collapseStateCheck + "' aria-controls='" + moreinfocollapsename + "' href='#" + moreinfocollapsename + "moreinfo'>"; //Alert-info div
 							witnesspanelbody += "<div class='col-lg-12 col-md-12'>"; //Status div
 								witnesspanelbody += "<b>Status</b>: " + data['witnessaccountdetails'][value['label']]['status_long'];
 							witnesspanelbody += "</div><br><br>"; //End status div
