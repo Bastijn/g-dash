@@ -46,6 +46,58 @@ if(isset($_GET['action'])) {
 		
 		echo json_encode($returnarray);
 	}
+
+	//Withdraw initial funding of a witness account
+	elseif($_GET['action']=="withdrawif") {
+		if(isset($_POST['fromlabel'])!="" && isset($_POST['tolabel'])!="" && isset($_POST['pass'])!="") {
+			$fromaccount = trim($_POST['fromlabel']);
+			$sendtoaccount = trim($_POST['tolabel']);
+			$sendtopass = trim($_POST['pass']);
+			
+			//Get the locked balance from the witness account
+			$totalbalance = $gulden->getbalance($fromaccount, 0);
+			
+			//Check if there is any balance on the witness account
+			if($totalbalance <= 0) {
+				$returnarray = "-6";
+			} else {
+				//Check the passphrase and unlock the wallet for 10 seconds if password is not empty
+				$guldenresponse = "0";
+				if($sendtopass!="") {
+					$gulden->walletpassphrase($sendtopass, 10);
+					$guldenresponse = $gulden->response['error']['code'];
+					$guldenresponsemessage = $gulden->response['error']['message'];
+				}
+				
+				//Send funds from witness account to specified wallet account
+				$gulden->move($fromaccount, $sendtoaccount, $totalbalance);
+				$witnessresponse = $gulden->response['error']['code'];
+				$witnessresponsemessage = $gulden->response['error']['message'];
+				
+				if($guldenresponse!="-14") {
+					if($guldenresponse!="-4") {
+						if($witnessresponse) {
+							if($witnessresponse == "-4") {
+								$returnarray = "-6";
+							} else {
+								$returnarray = $guldenresponse." - ".$guldenresponsemessage."; ".$witnessresponse. " - ".$witnessresponsemessage;
+							}
+						} else {
+							$returnarray = "1";
+						}
+					} else {
+						//Signing transaction failed
+						$returnarray = "-4";
+					}
+				} else {
+					//Passphrase incorrect
+					$returnarray = "-1";
+				}
+			}
+			
+			echo json_encode($returnarray);
+		}
+	}
 	
 	//Fund a witness account
 	elseif($_GET['action']=="fundaccount") {

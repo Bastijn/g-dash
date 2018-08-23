@@ -14,6 +14,7 @@ function changeWitnessAccount(wuuid) {
 	$('#selectedwitnessaccount').val("Loading...");
 	$('#selectedwitnessaccountkey').val("Loading...");
 	$('#selectedwitnessaccountdelete').val("Loading...");
+	$('#wifselectedwitnessaccount').val("Loading...");
 	
 	waccountuuid = wuuid;
 	loadjsondata();
@@ -96,6 +97,42 @@ function createWitnessDetails() {
 	}
 	
 	$('#lockamount').val("");
+}
+
+function withdrawWitnessFunds() {
+	var wifFromAccount = $('#wifselectedwitnessaccount').val();
+	var wifToAccount = $('#wifselectedguldenaccount').val();
+	var wifWalletPassword = $('#wifwalletpass').val();	
+	
+	$.post( "ajax/witnessactions.php?action=withdrawif", { fromlabel: wifFromAccount, tolabel: wifToAccount, pass: wifWalletPassword })
+		 .done(function( data ) {
+		 	var data = jQuery.parseJSON(data);
+		 	
+		 	if(data=="1") {
+		 		$('#wiftransactionmessage').html("<div class='alert alert-success'>Withdrawing initial funding from witness account. It can take a while before this is visible.</div>");
+		 		
+				$('#wifwalletpass').val("");
+				setTimeout(function(){ 
+					$('#wiftransactionmessage').html("");
+					$('#withdrawfundingwitnessaccount').modal('toggle');
+					loadjsondata();
+					}, 5000);
+				
+		 	} else if(data=="-1") {
+		 		$('#wiftransactionmessage').html("<div class='alert alert-warning'>Wallet password incorrect.</div>");
+		 		$('#wifwalletpass').val("");
+		 	} else if(data=="-4") {
+		 		$('#wiftransactionmessage').html("<div class='alert alert-warning'>Signing transaction failed.</div>");
+		 		$('#wifwalletpass').val("");
+		 	} else if(data=="-6") {
+		 		$('#wiftransactionmessage').html("<div class='alert alert-warning'>Insufficient funds.</div>");
+		 		$('#wifwalletpass').val("");
+		 	} else {
+		 		console.log(data);
+		 		$('#wiftransactionmessage').html("<div class='alert alert-warning'>Unknown error creating transaction. See console log.</div>");
+		 		$('#wifwalletpass').val("");
+		 	}
+		});
 }
 
 //Confirm locking the witness account
@@ -236,6 +273,7 @@ function calculateWeight(sliderval) {
 function populateAccountList() {
 	nlgaccountlist.forEach(function(item, index, array) {
 		$("#selectedguldenaccount").append('<option value="' + item + '">' + item + '</option>');
+		$("#wifselectedguldenaccount").append('<option value="' + item + '">' + item + '</option>');
 		//console.log(item);
 	});
 }
@@ -602,6 +640,7 @@ $(document).ready(function() {
 					  	  			//Options only available for non-imported accounts
 					  	  			if(data['witnessaccountdetails'][value['label']]['witnessonly'] == false) {
 						  	  			witnesspanelbody += "<li><a data-toggle='modal' href='#exportwitnesskey' onclick=\"changeWitnessAccount('"+value['UUID']+"')\"><i class='glyphicon glyphicon-share'></i> Get witness keys</a></li>";
+						  	  			witnesspanelbody += "<li><a data-toggle='modal' href='#withdrawfundingwitnessaccount' onclick=\"changeWitnessAccount('"+value['UUID']+"')\"><i class='glyphicon glyphicon-piggy-bank'></i> Withdraw initial funding</a></li>";
 						  	  			//TODO: Will make this available at a later stage (Phase 3+)
 						  	  			//witnesspanelbody += "<li><a href='#'>Extend locking time and amount of witness account</a></li>";
 					  	  			}

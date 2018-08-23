@@ -294,6 +294,39 @@
 	</div>
 	<!-- End delete account modal content-->
 	
+	<!-- Fund witness account modal content-->
+  	<div id="withdrawfundingwitnessaccount" class="modal fade" role="dialog">
+	  <div class="modal-dialog">
+	    <div class="modal-content" name="withdrawfundingwitnessaccountmodal" id="withdrawfundingwitnessaccountmodal">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        <h4 class="modal-title">Withdraw initial funding</h4>
+	      </div>
+	      
+	      <div class="modal-body">
+	        <div class="form-group">
+		      <label for="wifselectedwitnessaccount"><small>Selected witness account</small></label><br>
+		      <input id="wifselectedwitnessaccount" name="wifselectedwitnessaccount" type="text" class="form-control" readonly>
+		    </div>
+		    <div class="form-group">
+		      <label for="wifselectedguldenaccount"><small>To Gulden account</small></label><br>
+		      <select name="wifselectedguldenaccount" id="wifselectedguldenaccount"></select>
+		    </div>
+		    <div class="form-group">
+		      <label for="wifwalletpass"><small>Wallet password</small></label><br>
+		      <input id="wifwalletpass" name="wifwalletpass" type="password" class="form-control">
+		    </div>
+		    <div id="wiftransactionmessage" name="wiftransactionmessage"></div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-success" id="wifbutton" onclick="withdrawWitnessFunds();">Withdraw initial funding</button>
+	      </div>
+	      
+	    </div>	
+	  </div>
+	</div>
+	<!-- End fund witness account modal content-->
+	
 	<!-- Witness network charts modal content-->
   	<div id="witnessnetwork" class="modal fade" role="dialog">
 	  <div class="modal-dialog">
