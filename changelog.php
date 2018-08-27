@@ -24,6 +24,18 @@
   </h1>
   
   <div class="panel panel-default">
+    <div class="panel-heading"><b>1.05</b></div>
+    <div class="panel-body">
+		<ul>
+			<li>BUG: iPhone Safari users can now expand the witness details box.</li>
+			<li>FEATURE: Withdraw locked funds when witness account has expired.</li>
+			<li>TEXTUAL: Show a warning message in the GuldenD settings screen these settings are for advanced users.</li>
+			<li>FEATURE: Added a GDCLI command for resetting the blockchain forcing a full resync. Usage: <code>php /var/www/html/gdcli reset_blockchain</code></li>
+		</ul>
+    </div>
+  </div>
+  
+  <div class="panel panel-default">
     <div class="panel-heading"><b>1.03 and 1.04</b></div>
     <div class="panel-body">
 		<ul>

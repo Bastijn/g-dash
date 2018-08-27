@@ -53,6 +53,7 @@ if(isset($_GET['action'])) {
 			$fromaccount = trim($_POST['fromlabel']);
 			$sendtoaccount = trim($_POST['tolabel']);
 			$sendtopass = trim($_POST['pass']);
+			$amounttowithdraw = -1;
 			
 			//Get the locked balance from the witness account
 			$totalbalance = $gulden->getbalance($fromaccount, 0);
@@ -70,7 +71,7 @@ if(isset($_GET['action'])) {
 				}
 				
 				//Send funds from witness account to specified wallet account
-				$gulden->move($fromaccount, $sendtoaccount, $totalbalance);
+				$gulden->move($fromaccount, $sendtoaccount, $amounttowithdraw);
 				$witnessresponse = $gulden->response['error']['code'];
 				$witnessresponsemessage = $gulden->response['error']['message'];
 				
