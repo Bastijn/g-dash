@@ -508,7 +508,9 @@
 	    <div class="panel panel-default">
 		    <div class="panel-heading"><b>Gulden settings</b></div>
 		    <div class="panel-body" id="guldensettings">
-		  
+		  	  <div><p class="text-danger">Do not change any of these settings if you don't know what you are doing! Please read the manual first.<br>
+				By changing these settings incorrectly G-DASH might not be able to communicate with GuldenD.</p>
+		  	  </div>
 			  <div class="form-group">
 			    <label for="glocation">GuldenD location</label>
 			    <input type="text" class="form-control" id="glocation" name="glocation" aria-describedby="glocationhelp" placeholder="Enter path to GuldenD" <?php if($CONFIG['guldenlocation']!='') { echo "value='".$CONFIG['guldenlocation']."'"; } ?>>

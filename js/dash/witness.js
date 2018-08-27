@@ -640,7 +640,7 @@ $(document).ready(function() {
 					  	  			//Options only available for non-imported accounts
 					  	  			if(data['witnessaccountdetails'][value['label']]['witnessonly'] == false) {
 						  	  			witnesspanelbody += "<li><a data-toggle='modal' href='#exportwitnesskey' onclick=\"changeWitnessAccount('"+value['UUID']+"')\"><i class='glyphicon glyphicon-share'></i> Get witness keys</a></li>";
-						  	  			witnesspanelbody += "<li><a data-toggle='modal' href='#withdrawfundingwitnessaccount' onclick=\"changeWitnessAccount('"+value['UUID']+"')\"><i class='glyphicon glyphicon-piggy-bank'></i> Withdraw initial funding</a></li>";
+						  	  			witnesspanelbody += "<li><a data-toggle='modal' href='#withdrawfundingwitnessaccount' onclick=\"changeWitnessAccount('"+value['UUID']+"')\"><i class='glyphicon glyphicon-piggy-bank'></i> Withdraw locked funding</a></li>";
 						  	  			//TODO: Will make this available at a later stage (Phase 3+)
 						  	  			//witnesspanelbody += "<li><a href='#'>Extend locking time and amount of witness account</a></li>";
 					  	  			}
