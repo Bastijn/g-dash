@@ -9,12 +9,13 @@ var nlgaccountlist = [];
 var slidervalue = 1;
 
 function changeWitnessAccount(wuuid) {
+	$('#wifselectedwitnessaccount').val("Loading...");
 	$('#witnesswithdrawbutton').prop("disabled", true);
 	$('#selectedwitnessaccountwithdraw').val("Loading...");
 	$('#selectedwitnessaccount').val("Loading...");
 	$('#selectedwitnessaccountkey').val("Loading...");
 	$('#selectedwitnessaccountdelete').val("Loading...");
-	$('#wifselectedwitnessaccount').val("Loading...");
+	$('#wifselectedwitnessaccount').val(nlgwaddresslist[wuuid]['label']);
 	
 	waccountuuid = wuuid;
 	loadjsondata();
@@ -726,7 +727,7 @@ $(document).ready(function() {
 		  	  		//Close witness account panel
 		  	  		witnesspanelbody += "</div>";
 		  	  		
-		  	  		nlgwaccountlist.push(value['label']);
+		  	  		//nlgwaccountlist.push(value['label']);
 		  	  	});
 		  	  	
 		  	  	$.each(data['regaccountlist'], function( index, value ) {
