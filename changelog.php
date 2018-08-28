@@ -24,7 +24,7 @@
   </h1>
   
   <div class="panel panel-default">
-    <div class="panel-heading"><b>1.05</b></div>
+    <div class="panel-heading"><b>1.05 (Beta release)</b></div>
     <div class="panel-body">
 		<ul>
 			<li>BUG: iPhone Safari users can now expand the witness details box.</li>
