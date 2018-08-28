@@ -16,6 +16,7 @@ function changeWitnessAccount(wuuid) {
 	$('#selectedwitnessaccountkey').val("Loading...");
 	$('#selectedwitnessaccountdelete').val("Loading...");
 	$('#wifselectedwitnessaccount').val(nlgwaddresslist[wuuid]['label']);
+	$('#selectedwitnessaccountdelete').val(nlgwaddresslist[wuuid]['label']);
 	
 	waccountuuid = wuuid;
 	loadjsondata();
@@ -581,7 +582,6 @@ $(document).ready(function() {
 		  	  			$('#selectedwitnessaccount').val(value['label']);
 		  	  			$('#selectedwitnessaccountwithdraw').val(value['label']);
 		  	  			$('#selectedwitnessaccountkey').val(value['label']);
-		  	  			$('#selectedwitnessaccountdelete').val(value['label']);
 		  	  			$('#witnesswithdrawbutton').prop("disabled", false);
 		  	  		}
 		  	  		
