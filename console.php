@@ -4,6 +4,7 @@ if (php_sapi_name() == "cli") {
 	require_once(__DIR__.'/config/config.php');
 	require_once(__DIR__.'/lib/settings/settings.php');
 	require_once(__DIR__.'/lib/EasyGulden/easygulden.php');
+	require_once(__DIR__.'/lib/functions/functions.php');
 	
 	$gdv = $GDASH['currentversion'];
 	
@@ -61,7 +62,7 @@ if (php_sapi_name() == "cli") {
 				
 				//Delete the blocks directory if exists
 				if(is_dir($datadir."blocks")) {
-					if(rmdir($datadir."blocks")) {
+					if(rrmdir($datadir."blocks")) {
 						echo "Deleted blocks folder." . PHP_EOL;
 					} else {
 						echo "Could not delete blocks folder." . PHP_EOL;
@@ -70,7 +71,7 @@ if (php_sapi_name() == "cli") {
 				
 				//Delete the chainstate directory if exists
 				if(is_dir($datadir."chainstate")) {
-					if(rmdir($datadir."chainstate")) {
+					if(rrmdir($datadir."chainstate")) {
 						echo "Deleted chainstate folder." . PHP_EOL;
 					} else {
 						echo "Could not delete chainstate folder." . PHP_EOL;
@@ -79,7 +80,7 @@ if (php_sapi_name() == "cli") {
 				
 				//Delete the witstate directory if exists
 				if(is_dir($datadir."witstate")) {
-					if(rmdir($datadir."witstate")) {
+					if(rrmdir($datadir."witstate")) {
 						echo "Deleted witstate folder." . PHP_EOL;
 					} else {
 						echo "Could not delete witstate folder." . PHP_EOL;
