@@ -34,7 +34,7 @@ if($CONFIG['otp']=="1" && $CONFIG['disablelogin'] != "1" && isset($_POST['login'
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>G-DASH: Gulden Witness Node Dashboard</title>
-  <link rel="icon" type="image/png" href="images/gblue128x128.png" />
+  <link rel="icon" type="image/png" href="images/gdblue128x128.png" />
   <base target="_self">
   <meta name="google" value="notranslate">
 

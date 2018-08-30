@@ -71,6 +71,20 @@ body {
 	cursor: pointer;
 }
 
+.cloudbody {
+  height: 100px;
+  background-image: url("../images/bg-cloud.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.cloudlink {
+	display: block;
+	width:100%;
+	height:100%;
+}
+
 
 /*
  * Off Canvas
