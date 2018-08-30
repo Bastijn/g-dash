@@ -260,20 +260,27 @@ function fullNodeCheck() {
 
 //Recursive delete dirs
 function rrmdir($src) {
-    $dir = opendir($src);
-    while(false !== ( $file = readdir($dir)) ) {
-        if (( $file != '.' ) && ( $file != '..' )) {
-            $full = $src . '/' . $file;
-            if ( is_dir($full) ) {
-                rrmdir($full);
-            }
-            else {
-                unlink($full);
-            }
-        }
-    }
-    closedir($dir);
-    rmdir($src);
+	$returnval = false;
+	if($src != "") {
+	    $dir = opendir($src);
+	    while(false !== ( $file = readdir($dir)) ) {
+	        if (( $file != '.' ) && ( $file != '..' )) {
+	            $full = $src . '/' . $file;
+	            if ( is_dir($full) ) {
+	                rrmdir($full);
+	            }
+	            else {
+	                unlink($full);
+	            }
+	        }
+	    }
+	    closedir($dir);
+		
+		if(rmdir($src)) {
+			$returnval = true;
+		}
+	}
+	return $returnval;
 }
 
 /* Gulden specific functions */

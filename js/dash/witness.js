@@ -585,6 +585,12 @@ $(document).ready(function() {
 		  	  			$('#witnesswithdrawbutton').prop("disabled", false);
 		  	  		}
 		  	  		
+		  	  		//Push the UUID, address and label to the array
+	  	  			nlgwaddresslist[value['UUID']] = {
+	  	  											  "label": data['witnessaccountdetails'][value['label']]['name'],
+	  	  											  "address": data['witnessaccountdetails'][value['label']]['address']
+	  	  											 };
+		  	  		
 		  	  		//Remove spaces from the div IDs
 	  	  			var moreinfocollapsename = value['label'];
 	  	  			moreinfocollapsename = moreinfocollapsename.split(' ').join('');
@@ -675,12 +681,6 @@ $(document).ready(function() {
 		  	  		
 		  	  		//Witness info (only if funded)
 		  	  		if(data['witnessaccountdetails'][value['label']]['status'] != "Not funded") {
-		  	  			//Push the UUID, address and label to the array
-		  	  			nlgwaddresslist[value['UUID']] = {
-		  	  											  "label": data['witnessaccountdetails'][value['label']]['name'],
-		  	  											  "address": data['witnessaccountdetails'][value['label']]['address']
-		  	  											 };
-		  	  			
 		  	  			//On update, check if the div is already expanded, so it will not close on update
 		  	  			var collapseStateCheck = 'false';
 		  	  			//TODO: Does not work yet
