@@ -509,7 +509,7 @@
   		</div>
   		
   		<div class="panel panel-default">
-  			<div class="panel-heading" id="cloudheader">G-DASH Cloud</div>
+  			<div class="panel-heading" id="cloudheader">Discover G-DASH Cloud</div>
 		    <div class="panel-body cloudbody text-center text-white" id="cloudpanel">
 		    	<a href="https://cloud.g-dash.nl" target="_blank" class="cloudlink"></a>
 		    </div>

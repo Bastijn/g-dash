@@ -12,7 +12,7 @@ if (php_sapi_name() == "cli") {
 	//Get the latest version info for G-DASH and Gulden
 	$latestversionsarray = array();
 	$internalip = trim(shell_exec("ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1 -d'/'"));
-	$latestversionsarray = @json_decode(file_get_contents($GDASH['updatecheck']."?ip=".$internalip));
+	$latestversionsarray = @json_decode(file_get_contents($GDASH['updatecheck']."?ip=".$internalip."&cv=".$CONFIG['dashversion']));
 	
 	//Write the current Gulden status to the log file
 	//GetSystemMemUsage();

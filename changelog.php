@@ -32,6 +32,9 @@
 			<li>TEXTUAL: Show a warning message in the GuldenD settings screen these settings are for advanced users.</li>
 			<li>FEATURE: Added a GDCLI command for resetting the blockchain forcing a full resync. Usage: <code>php /var/www/html/gdcli reset_blockchain</code></li>
 			<li>BUG: Witness account list was not populated when not funded.</li>
+			<li>TEXTUAL: New G-DASH favicon.</li>
+			<li>TEXTUAL: G-DASH Cloud link in witness screen.</li>
+			<li>FEATURE: Check if GDCLI script runs as root.</li>
 		</ul>
     </div>
   </div>
