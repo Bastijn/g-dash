@@ -7,21 +7,21 @@ if (php_sapi_name() == "cli") {
 	require_once(__DIR__.'/../../lib/EasyGulden/easygulden.php');
 	
 	//Connect to Gulden
-	$gulden = new Gulden($CONFIG['rpcuser'],$CONFIG['rpcpass'],$CONFIG['rpchost'],$CONFIG['rpcport']);
+	$gulden = new Gulden(KeyGet($CONFIG, '', 'rpcuser'),KeyGet($CONFIG, '', 'rpcpass'),KeyGet($CONFIG, '127.0.0.1', 'rpchost'),KeyGet($CONFIG, '9232', 'rpcport'));
 	
 	//Get the latest version info for G-DASH and Gulden
 	$latestversionsarray = array();
 	$internalip = trim(shell_exec("ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1 -d'/'"));
-	$latestversionsarray = @json_decode(file_get_contents($GDASH['updatecheck']."?ip=".$internalip."&cv=".$CONFIG['dashversion']));
+	$latestversionsarray = @json_decode(file_get_contents($GDASH['updatecheck']."?ip=".$internalip."&cv=".KeyGet($CONFIG, '0.0', 'dashversion')));
 	
 	//Write the current Gulden status to the log file
 	//GetSystemMemUsage();
 	
 	//Check if Gulden server is running
-	if($CONFIG['pushbulletgulden']['active']=="1") {
+	if(KeyGet($CONFIG, '0', 'pushbulletgulden', 'active')=="1") {
 		
 		//Get the info (last message and current message)
-		$lastmessage = $CONFIG['pushbulletgulden']['lastmes'];
+		$lastmessage =KeyGet($CONFIG, '', 'pushbulletgulden', 'lastmess');
 		$currentmessage = "";
 		if($gulden->getinfo()=="") {
 			$currentmessage = "Gulden server is not running!";
@@ -33,10 +33,10 @@ if (php_sapi_name() == "cli") {
 		if($lastmessage!=$currentmessage) {
 			
 			//The message is different, send a push notification
-			$sendpush = shell_exec("curl --header 'Authorization: Bearer ".$CONFIG['pushbullet']."' -X POST https://api.pushbullet.com/v2/pushes --header 'Content-Type: application/json' --data-binary '{\"type\": \"note\", \"title\": \"Gulden Server\", \"body\": \"".$currentmessage."\"}'");
+			$sendpush = shell_exec("curl --header 'Authorization: Bearer ".KeyGet($CONFIG, '', 'pushbullet')."' -X POST https://api.pushbullet.com/v2/pushes --header 'Content-Type: application/json' --data-binary '{\"type\": \"note\", \"title\": \"Gulden Server\", \"body\": \"".$currentmessage."\"}'");
 			
 			//Set the current message as the last message in the config file
-			$CONFIG['pushbulletgulden']['lastmes'] = $currentmessage;
+			KeySet($CONFIG, $currentmessage, 'pushbulletgulden', 'lastmes');
 			
 			//Update the config file
 			file_put_contents(__DIR__.'/../../config/config.php', '<?php $CONFIG = '.var_export($CONFIG, true).'; ?>');
@@ -44,10 +44,10 @@ if (php_sapi_name() == "cli") {
 	}
 
 	//Check if there is a newer version of Gulden in the repository
-	if($CONFIG['pushbulletguldenupdate']['active']=="1") {
+	if(KeyGet($CONFIG, '0', 'pushbulletguldenupdate', 'active')=="1") {
 		
 		//Get the info (last message and current message)
-		$lastmessage = $CONFIG['pushbulletguldenupdate']['lastmes'];
+		$lastmessage = KeyGet($CONFIG, '', 'pushbulletguldenupdate', 'lastmes');
 		$currentmessage = "";
 		$ginfo = $gulden->getinfo();
 		$guldenversion = $latestversionsarray->gulden;
@@ -60,10 +60,10 @@ if (php_sapi_name() == "cli") {
 				if($lastmessage!=$currentmessage) {
 					
 					//The message is different, send a push notification
-					$sendpush = shell_exec("curl --header 'Authorization: Bearer ".$CONFIG['pushbullet']."' -X POST https://api.pushbullet.com/v2/pushes --header 'Content-Type: application/json' --data-binary '{\"type\": \"note\", \"title\": \"Gulden Update\", \"body\": \"".$currentmessage."\"}'");
+					$sendpush = shell_exec("curl --header 'Authorization: Bearer ".KeyGet($CONFIG, '', 'pushbullet')."' -X POST https://api.pushbullet.com/v2/pushes --header 'Content-Type: application/json' --data-binary '{\"type\": \"note\", \"title\": \"Gulden Update\", \"body\": \"".$currentmessage."\"}'");
 					
 					//Set the current message as the last message in the config file
-					$CONFIG['pushbulletguldenupdate']['lastmes'] = $currentmessage;
+					KeySet($CONFIG, $currentmessage, 'pushbulletguldenupdate', 'lastmes');
 					
 					//Update the config file
 					file_put_contents(__DIR__.'/../../config/config.php', '<?php $CONFIG = '.var_export($CONFIG, true).'; ?>');
@@ -73,17 +73,17 @@ if (php_sapi_name() == "cli") {
 	}
 
 	//Check if there is a new version of G-DASH available
-	if($CONFIG['pushbulletgdash']['active']=="1") {
+	if(KeyGet($CONFIG, '0', 'pushbulletgdash', 'active')=="1") {
 		
 		//Get the info (last message and current message)
-		$lastmessage = $CONFIG['pushbulletgdash']['lastmes'];
+		$lastmessage = KeyGet($CONFIG, '', 'pushbulletgdash', 'lastmes');
 		$currentmessage = "";
 		
 		//What is the current version of G-DASH
 		$currentversion = $GDASH['currentversion'];
 		
 		//Check which version is the latest version of G-DASH	  
-		if($CONFIG['updatechannel']=="1") {
+		if(KeyGet($CONFIG, '0', 'updatechannel')=="1") {
 			$getlatestversion = $latestversionsarray->beta;
 		} else {
 			$getlatestversion = $latestversionsarray->stable;
@@ -96,10 +96,10 @@ if (php_sapi_name() == "cli") {
 		if($getlatestversion > $currentversion && $lastmessage != $currentmessage) {
 			
 			//The message is different, send a push notification
-			$sendpush = shell_exec("curl --header 'Authorization: Bearer ".$CONFIG['pushbullet']."' -X POST https://api.pushbullet.com/v2/pushes --header 'Content-Type: application/json' --data-binary '{\"type\": \"note\", \"title\": \"G-DASH update available\", \"body\": \"".$currentmessage."\"}'");
+			$sendpush = shell_exec("curl --header 'Authorization: Bearer ".KeyGet($CONFIG, '', 'pushbullet')."' -X POST https://api.pushbullet.com/v2/pushes --header 'Content-Type: application/json' --data-binary '{\"type\": \"note\", \"title\": \"G-DASH update available\", \"body\": \"".$currentmessage."\"}'");
 			
 			//Set the current message as the last message in the config file
-			$CONFIG['pushbulletgdash']['lastmes'] = $currentmessage;
+			KeySet($CONFIG, $currentmessage, 'pushbulletgdash', 'lastmes');
 			
 			//Update the config file
 			file_put_contents(__DIR__.'/../../config/config.php', '<?php $CONFIG = '.var_export($CONFIG, true).'; ?>');
@@ -107,7 +107,7 @@ if (php_sapi_name() == "cli") {
 	}
 
 	//Notification if there is a new incoming transaction
-	if($CONFIG['pushbullettx']['active']=="1") {
+	if(KeyGet($CONFIG, '0', 'pushbullettx', 'active')=="1") {
 		
 		//Create a list of addresses belonging to this wallet
 		$addresslistrpc = $gulden->listreceivedbyaddress();
@@ -152,17 +152,17 @@ if (php_sapi_name() == "cli") {
 			//Only push a message if it is an incoming transaction
 			if($transactionamount > 0) {
 				//Get the info (last message and current message)
-				$lastmessage = $CONFIG['pushbullettx']['lastmes'];
+				$lastmessage = KeyGet($CONFIG, '', 'pushbullettx', 'lastmes');
 				$currentmessage = $transactiondate.": $transactionamount Gulden received from $txfromaddress";
 				
 				//Check the last message that was pushed to prevent multiple pushes of the same message
 				if($lastmessage!=$currentmessage) {
 					
 					//The message is different, send a push notification
-					$sendpush = shell_exec("curl --header 'Authorization: Bearer ".$CONFIG['pushbullet']."' -X POST https://api.pushbullet.com/v2/pushes --header 'Content-Type: application/json' --data-binary '{\"type\": \"note\", \"title\": \"Gulden Transaction\", \"body\": \"".$currentmessage."\"}'");
+					$sendpush = shell_exec("curl --header 'Authorization: Bearer ".KeyGet($CONFIG, '', 'pushbullet')."' -X POST https://api.pushbullet.com/v2/pushes --header 'Content-Type: application/json' --data-binary '{\"type\": \"note\", \"title\": \"Gulden Transaction\", \"body\": \"".$currentmessage."\"}'");
 					
 					//Set the current message as the last message in the config file
-					$CONFIG['pushbullettx']['lastmes'] = $currentmessage;
+					KeySet($CONFIG, $currentmessage, 'pushbullettx', 'lastmes');
 					
 					//Update the config file
 					file_put_contents(__DIR__.'/../../config/config.php', '<?php $CONFIG = '.var_export($CONFIG, true).'; ?>');
@@ -172,7 +172,7 @@ if (php_sapi_name() == "cli") {
 	}
 
 	//Notification if there is a new incoming witness transaction
-	if($CONFIG['pushbulletwitness']['active']=="1") {
+	if(KeyGet($CONFIG, '0', 'pushbulletwitness', 'active')=="1") {
 		
 		//Get witness activity
 		$mywitnessaccountsnetwork = $gulden->getwitnessinfo("tip", true, true);
@@ -195,21 +195,21 @@ if (php_sapi_name() == "cli") {
 		}
 		
 		//Get the last block that was active in the config
-		$lastblock = $CONFIG['pushbulletwitness']['lastblock'];
+		$lastblock = KeyGet($CONFIG, '0', 'pushbulletwitness', 'lastblock');
 		
 		//Get the info (last message and current message)
-		$lastmessage = $CONFIG['pushbulletwitness']['lastmes'];
+		$lastmessage = KeyGet($CONFIG, '', 'pushbulletwitness', 'lastmes');
 		$currentmessage = $lastwitnessactiondate.": New witness action for $witnessdetailsname";
 		
 		//Check the last message that was pushed to prevent multiple pushes of the same message
 		if($lastmessage!=$currentmessage && $lastwitnessactionblock != $lastblock && $witnessdetailsname != "") {
 			
 			//The message is different, send a push notification
-			$sendpush = shell_exec("curl --header 'Authorization: Bearer ".$CONFIG['pushbullet']."' -X POST https://api.pushbullet.com/v2/pushes --header 'Content-Type: application/json' --data-binary '{\"type\": \"note\", \"title\": \"Gulden Witness Action\", \"body\": \"".$currentmessage."\"}'");
+			$sendpush = shell_exec("curl --header 'Authorization: Bearer ".KeyGet($CONFIG, '', 'pushbullet')."' -X POST https://api.pushbullet.com/v2/pushes --header 'Content-Type: application/json' --data-binary '{\"type\": \"note\", \"title\": \"Gulden Witness Action\", \"body\": \"".$currentmessage."\"}'");
 			
 			//Set the current message as the last message in the config file
-			$CONFIG['pushbulletwitness']['lastmes'] = $currentmessage;
-			$CONFIG['pushbulletwitness']['lastblock'] = $lastwitnessactionblock;
+			KeySet($CONFIG, $currentmessage, 'pushbulletwitness', 'lastmes');
+			KeySet($CONFIG, $lastwitnessactionblock, 'pushbulletwitness', 'lastblock');
 			
 			//Update the config file
 			file_put_contents(__DIR__.'/../../config/config.php', '<?php $CONFIG = '.var_export($CONFIG, true).'; ?>');

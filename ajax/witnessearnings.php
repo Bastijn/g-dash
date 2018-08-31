@@ -4,11 +4,11 @@ session_start();
 //In case the server is very busy, lower the max execution time to 60 seconds
 set_time_limit(60);
 
-if($_SESSION['G-DASH-loggedin']==TRUE) {
+if(KeyGet($_SESSION, FALSE, 'G-DASH-loggedin')==TRUE) {
 include('../lib/functions/functions.php');
 include('../config/config.php');
 require_once('../lib/EasyGulden/easygulden.php');
-$gulden = new Gulden($CONFIG['rpcuser'],$CONFIG['rpcpass'],$CONFIG['rpchost'],$CONFIG['rpcport']);
+$gulden = new Gulden(KeyGet($CONFIG, '', 'rpcuser'),KeyGet($CONFIG, '', 'rpcpass'),KeyGet($CONFIG, '127.0.0.1', 'rpchost'),KeyGet($CONFIG, '9232', 'rpcport'));
 
 $guldenD = "GuldenD";
 $guldenCPU = GetProgCpuUsage($guldenD);
@@ -27,7 +27,7 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 	$currentblock = $ginfo['blocks'];
 	
 	//Get the witness account
-	$witnessuuid = $_GET['uuid'];
+	$witnessuuid = KeyGet($_GET, '', 'uuid');
 	
 	//List all accounts, don't show deleted accounts 
 	$accountlist = $gulden->listaccounts("*", "Normal");

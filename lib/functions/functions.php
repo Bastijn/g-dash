@@ -352,7 +352,7 @@ function GEOonline($ip) {
 //TODO: This function can be removed at the 1.0 release
 function isPasswordUpdated() {
 	include('config/config.php');
-	if($CONFIG['bcrypt']=="1") {
+	if(KeyGet($CONFIG, '1', 'bcrypt')=="1") {
 		return TRUE;
 	} else {
 		return FALSE;
@@ -365,7 +365,7 @@ function LoginCheck($guldenConf, $out=FALSE, $disabled="0")
 	$returnvalue = FALSE;
 	
 	//If the dashboard hasn't been configured yet, go directly to the settings page
-	if($CONFIG['configured']!="1") {
+	if(KeyGet($CONFIG, '0', 'configured')!="1") {
 		$disabled="1";
 	}
 	
@@ -380,11 +380,11 @@ function LoginCheck($guldenConf, $out=FALSE, $disabled="0")
 		
 		//TODO: Remove this part at the 1.0 release
 		//This method will fetch the username and password from the config.php file
-		if($usernameposted==strtolower($CONFIG['gdashuser']) && $passwordposted==$CONFIG['gdashpassword'] && $CONFIG['bcrypt']!="1") {
-			$_SESSION['G-DASH-loggedin']=TRUE;
+		if($usernameposted==strtolower(KeyGet($CONFIG, '', 'gdashuser')) && $passwordposted==KeyGet($CONFIG, '', 'gdashpassword') && KeyGet($CONFIG, '1', 'bcrypt')!="1") {
+			KeySet($_SESSION, TRUE, 'G-DASH-loggedin');
 			$returnvalue = TRUE;
-		} elseif($usernameposted==strtolower($CONFIG['gdashuser']) && password_verify($passwordposted, $CONFIG['gdashpassword']) && $CONFIG['bcrypt']=="1") {
-			$_SESSION['G-DASH-loggedin']=TRUE;
+		} elseif($usernameposted==strtolower(KeyGet($CONFIG, '', 'gdashuser')) && password_verify($passwordposted, KeyGet($CONFIG, '', 'gdashpassword')) && KeyGet($CONFIG, '1', 'bcrypt')=="1") {
+			KeySet($_SESSION, TRUE, 'G-DASH-loggedin');
 			$returnvalue = TRUE;			
 		} else {
 			echo "<div class='alert alert-danger'>
@@ -394,12 +394,12 @@ function LoginCheck($guldenConf, $out=FALSE, $disabled="0")
 		}
 	} elseif($out==TRUE) {
 		$returnvalue = FALSE;
-		$_SESSION['G-DASH-loggedin']=FALSE;
+		KeySet($_SESSION, FALSE, 'G-DASH-loggedin');
 		session_destroy();
 	} elseif($disabled=="1") {
 		$returnvalue = TRUE;
-		$_SESSION['G-DASH-loggedin'] = TRUE;
-	} elseif($_SESSION['G-DASH-loggedin']==TRUE) {
+		KeySet($_SESSION, TRUE, 'G-DASH-loggedin');
+	} elseif(KeyGet($_SESSION, FALSE, 'G-DASH-loggedin')==TRUE) {
 		$returnvalue = TRUE;
 	}
 	return $returnvalue;
@@ -730,5 +730,47 @@ function getWitnessTransactions($witnesstransactions) {
 	}
 
 	return $tempwitnesstransactions;
+}
+
+//////////////////////////////////////
+// Functions to use on the an array //
+//////////////////////////////////////
+
+// Function to check if a certain key exists
+function KeyExists($arr, ...$keys) {
+	// We must at least have one value to check
+	if (!$keys) return(FALSE);
+
+	// Check each level
+	$helper = $arr;
+	foreach($keys as $key) {
+		if (!isset($helper[$key])) return(FALSE);
+		$helper = $helper[$key];
+	}
+	return(TRUE);
+}
+
+function KeyGet($arr, $val, ...$keys) {
+	// We must at least have one value to get
+	if (!$keys) return($val);
+
+	// Check each level
+	$helper = $arr;
+	foreach($keys as $key) {
+		if (!isset($helper[$key])) return($val);
+		$helper = $helper[$key];
+	}
+	return($helper);
+}
+
+function KeySet(&$arr, $val, ...$keys) {
+	// We must at least have one value to set
+	if ($keys) {
+		$helper = &$arr;
+		foreach($keys as $key) {
+			$helper = &$helper[$key];
+		}
+		$helper = $val;
+	}
 }
 ?>

@@ -1,4 +1,4 @@
-<script src="js/dash/node.js?<?php echo $CONFIG['dashversion']; ?>"></script>
+<script src="js/dash/node.js?<?php echo KeyGet($CONFIG, '0.0', 'dashversion'); ?>"></script>
 
 <div class="row row-offcanvas row-offcanvas-left">
 
@@ -38,7 +38,7 @@
     <div class="panel-heading">Node configuration (Gulden.conf)</div>
     <div class="panel-body" id="nodeconfig">
     	<?php
-    		$nodeconfig = readGuldenConf($CONFIG['datadir']."Gulden.conf");
+    		$nodeconfig = readGuldenConf(KeyGet($CONFIG, '', 'datadir')."Gulden.conf");
 			if($nodeconfig['maxconnections']=="") { $nodeconfig['maxconnections'] = 0; }
 			echo "<div class='table-responsive'><table class='table table-striped'>";
 			echo "<tr><td><b>Max connections:</b></td><td>".$nodeconfig['maxconnections']."</td></tr>";

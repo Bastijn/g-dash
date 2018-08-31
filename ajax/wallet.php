@@ -4,19 +4,19 @@ session_start();
 //In case the server is very busy, lower the max execution time to 60 seconds
 set_time_limit(60);
 
-if($_SESSION['G-DASH-loggedin']==TRUE) {
+if(KeyGet($_SESSION, FALSE, 'G-DASH-loggedin')==TRUE) {
 include('../lib/functions/functions.php');
 include('../lib/settings/settings.php');
 include('../config/config.php');
 require_once('../lib/EasyGulden/easygulden.php');
-$gulden = new Gulden($CONFIG['rpcuser'],$CONFIG['rpcpass'],$CONFIG['rpchost'],$CONFIG['rpcport']);
+$gulden = new Gulden(KeyGet($CONFIG, '', 'rpcuser'),KeyGet($CONFIG, '', 'rpcpass'),KeyGet($CONFIG, '127.0.0.1', 'rpchost'),KeyGet($CONFIG, '9232', 'rpcport'));
 
 $guldenD = "GuldenD";
 $guldenCPU = GetProgCpuUsage($guldenD);
 $guldenMEM = GetProgMemUsage($guldenD);
 $returnarray = array();
 
-$nodeconfig = readGuldenConf($CONFIG['datadir']."/Gulden.conf");
+$nodeconfig = readGuldenConf(KeyGet($CONFIG, '', 'datadir')."/Gulden.conf");
 
 session_write_close();
 
@@ -98,7 +98,7 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 		
 		//Use the user defined exchange to check the conversion rate for NLG
 		$nlgprices = $GDASH['nlgrate'];
-		$currentnlgprovider = $CONFIG['nlgprovider'];
+		$currentnlgprovider = KeyGet($CONFIG, '', 'nlgprovider');
 		if($currentnlgprovider == "") { $currentnlgprovider = "0"; }
 		$fetchURL = $nlgprices[$currentnlgprovider]['market'];
 		$pricesymbol = $nlgprices[$currentnlgprovider]['symbol'];

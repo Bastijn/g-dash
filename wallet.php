@@ -1,5 +1,5 @@
-<script src="js/dash/wallet.js?<?php echo $CONFIG['dashversion']; ?>"></script>
-<script src="js/dash/wallettx.js?<?php echo $CONFIG['dashversion']; ?>"></script>
+<script src="js/dash/wallet.js?<?php echo KeyGet($CONFIG, '0.0', 'dashversion'); ?>"></script>
+<script src="js/dash/wallettx.js?<?php echo KeyGet($CONFIG, '0.0', 'dashversion'); ?>"></script>
 
 <div class="row row-offcanvas row-offcanvas-left">
 

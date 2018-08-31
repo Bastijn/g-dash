@@ -1,5 +1,5 @@
-<script src="js/terminal/js/jquery.terminal.min.js?<?php echo $CONFIG['dashversion']; ?>"></script>
-<script src="js/terminal/js/runterm.js?<?php echo $CONFIG['dashversion']; ?>"></script>
+<script src="js/terminal/js/jquery.terminal.min.js?<?php echo KeyGet($CONFIG, '0.0', 'dashversion'); ?>"></script>
+<script src="js/terminal/js/runterm.js?<?php echo KeyGet($CONFIG, '0.0', 'dashversion'); ?>"></script>
 <link rel="stylesheet" type="text/css" href="js/terminal/css/jquery.terminal.min.css">
 
 <div class="row row-offcanvas row-offcanvas-left">
@@ -24,7 +24,7 @@
   
   <?php
   //Only show this page if a user is logged in
-  if($_SESSION['G-DASH-loggedin']==TRUE) {
+  if(KeyGet($_SESSION, FALSE, 'G-DASH-loggedin')==TRUE) {
   ?>
   
   <h1 class="page-header">
