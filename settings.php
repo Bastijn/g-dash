@@ -143,8 +143,11 @@
 	//Check the crontab for pushbullet notifications
 	$pushbulletcron = exec("crontab -l | grep -q 'cronnotifications.php' && echo '1' || echo '0'");
 	
+	//Random check sleep
+	$randompbchecktime = rand(1,60);
+	
 	//Every two minutes
-	$pushbulletcronentry = "*/2 * * * * php ".__DIR__."/lib/push/cronnotifications.php >/dev/null 2>&1";
+	$pushbulletcronentry = "*/2 * * * * sleep ".$randompbchecktime."; php ".__DIR__."/lib/push/cronnotifications.php >/dev/null 2>&1";
 	$currentcron = explode(PHP_EOL, shell_exec('crontab -l'));
 	
 	if($pushbulletcron=="0" && $CONFIG['pushbullet']!="") {
