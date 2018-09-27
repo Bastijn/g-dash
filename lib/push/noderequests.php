@@ -7,20 +7,20 @@ if (php_sapi_name() == "cli") {
 	require_once(__DIR__.'/../../lib/EasyGulden/easygulden.php');
 	
 	//Connect to Gulden
-	$gulden = new Gulden($CONFIG['rpcuser'],$CONFIG['rpcpass'],$CONFIG['rpchost'],$CONFIG['rpcport']);
+	$gulden = new Gulden(KeyGet($CONFIG, '', 'rpcuser'),KeyGet($CONFIG, '', 'rpcpass'),KeyGet($CONFIG, '127.0.0.1', 'rpchost'),KeyGet($CONFIG, '9232', 'rpcport'));
 	
 	//Get the internal IP address
 	$internalip = trim(shell_exec("ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1 -d'/'"));
 	
 	//Are we currently connected to a requested IP address
-	if($CONFIG['noderequest']['node']!='') {
+	if(KeyGet($CONFIG, '', 'noderequest','node')!='') {
 		//Has the 24 hours passed?
-		$nodereqtime = time() - $CONFIG['noderequest']['time'];
+		$nodereqtime = time() - KeyGet($CONFIG, '', 'noderequest','time');
 		if($nodereqtime > (60*60*24)) {
 			//Yes, remove the IP from the node list and reset the config
-			$ginfo = $gulden->addnode($CONFIG['noderequest']['node'], 'remove');
-			$CONFIG['noderequest']['node'] = "";
-			$CONFIG['noderequest']['time'] = "";
+			$ginfo = $gulden->addnode(KeyGet($CONFIG, '', 'noderequest','node'), 'remove');
+			KeySet($CONFIG, '', 'noderequest','node');
+			KeyGet($CONFIG, '', 'noderequest','time');
 		} //If not, keep connected and do nothing
 	} else {
 		//Check if an IP has requested to be added by other nodes
@@ -35,8 +35,8 @@ if (php_sapi_name() == "cli") {
 				$ginfo = $gulden->addnode($reqiptoadd, 'add');
 				
 				//Set the config variables
-				$CONFIG['noderequest']['node'] = $reqiptoadd;
-				$CONFIG['noderequest']['time'] = time();
+				KeySet($CONFIG, $reqiptoadd, 'noderequest','node');
+				KeySet($CONFIG, time(), 'noderequest','time');
 			}
 		}
 	}

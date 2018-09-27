@@ -17,7 +17,7 @@ if (php_sapi_name() == "cli") {
 		
 			//If argument is to reset 2FA
 			if($argv[1]=="reset_2fa") {
-				$CONFIG['otp']="0";
+				KeySet($CONFIG, '0', 'otp');
 				
 				if(is_writable(__DIR__.'/config/config.php')) {
 					if(file_put_contents(__DIR__.'/config/config.php', '<?php $CONFIG = '.var_export($CONFIG, true).'; ?>')) {
@@ -31,8 +31,8 @@ if (php_sapi_name() == "cli") {
 			
 			//If argument is to reset password
 			} elseif($argv[1]=="reset_login") {
-				$CONFIG['disablelogin']="1";
-				$CONFIG['otp']="0";
+				KeySet($CONFIG, '1', 'disablelogin');
+				KeySet($CONFIG, '0', 'otp');
 				
 				if(is_writable(__DIR__.'/config/config.php')) {
 					if(file_put_contents(__DIR__.'/config/config.php', '<?php $CONFIG = '.var_export($CONFIG, true).'; ?>')) {
@@ -48,7 +48,7 @@ if (php_sapi_name() == "cli") {
 			} elseif($argv[1]=="reset_blockchain") {
 				
 				//Connect to GuldenD
-				$gulden = new Gulden($CONFIG['rpcuser'],$CONFIG['rpcpass'],$CONFIG['rpchost'],$CONFIG['rpcport']);
+				$gulden = new Gulden(KeyGet($CONFIG, '', 'rpcuser'),KeyGet($CONFIG, '', 'rpcpass'),KeyGet($CONFIG, '127.0.0.1', 'rpchost'),KeyGet($CONFIG, '9232', 'rpcport'));
 				
 				//Stop GuldenD
 				$ginfo = $gulden->stop();
@@ -62,7 +62,7 @@ if (php_sapi_name() == "cli") {
 					sleep(10);
 					
 					//Get the datadir from the config
-					$datadir = $CONFIG['datadir'];
+					$datadir = KeyGet($CONFIG, '', 'datadir');
 					
 					//Delete the blocks directory if exists
 					if(is_dir($datadir."blocks")) {

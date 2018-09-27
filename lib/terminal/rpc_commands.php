@@ -6,10 +6,10 @@ class GuldenConsoleRPC {
   //The 'getinfo' command
   public static $getinfo_documentation = "Get GuldenD info";
   public function getinfo() {	
-    if ($_SESSION['G-DASH-loggedin']==TRUE) {
+    if (KeyGet($_SESSION, FALSE, 'G-DASH-loggedin')==TRUE) {
       include('../../config/config.php');
 	  require_once('../../lib/EasyGulden/easygulden.php');
-	  $gulden = new Gulden($CONFIG['rpcuser'],$CONFIG['rpcpass'],$CONFIG['rpchost'],$CONFIG['rpcport']);
+	  $gulden = new Gulden(KeyGet($CONFIG, '', 'rpcuser'),KeyGet($CONFIG, '', 'rpcpass'),KeyGet($CONFIG, '127.0.0.1', 'rpchost'),KeyGet($CONFIG, '9232', 'rpcport'));
       $ginfo = $gulden->getinfo();
 	  $ginfostring = "";
 	  foreach ($ginfo as $key => $value) {
@@ -24,9 +24,9 @@ class GuldenConsoleRPC {
   //Show the last 50 lines of the Gulden debug log
   public static $showlog_documentation = "Show the last 50 lines of the Gulden debug log";
   public function showlog() {
-    if ($_SESSION['G-DASH-loggedin']==TRUE) {
+    if (KeyGet($_SESSION, FALSE, 'G-DASH-loggedin')==TRUE) {
 		include('../../config/config.php');
-		$logfile = $CONFIG['datadir']."debug.log";
+		$logfile = KeyGet($CONFIG, '', 'datadir')."debug.log";
 		
 		//Check if the terminal is allowed to read the file
 		if(is_readable($logfile)) {
@@ -48,10 +48,10 @@ class GuldenConsoleRPC {
   //The 'addnode' command
   public static $addnode_documentation = "Add a node by IP address (usage: addnode IP)";
   public function addnode($ip) {	
-    if ($_SESSION['G-DASH-loggedin']==TRUE) {
+    if (KeyGet($_SESSION, FALSE, 'G-DASH-loggedin')==TRUE) {
       include('../../config/config.php');
 	  require_once('../../lib/EasyGulden/easygulden.php');
-	  $gulden = new Gulden($CONFIG['rpcuser'],$CONFIG['rpcpass'],$CONFIG['rpchost'],$CONFIG['rpcport']);
+	  $gulden = new Gulden(KeyGet($CONFIG, '', 'rpcuser'),KeyGet($CONFIG, '', 'rpcpass'),KeyGet($CONFIG, '127.0.0.1', 'rpchost'),KeyGet($CONFIG, '9232', 'rpcport'));
       $ginfo = $gulden->addnode($ip, 'add');
 	  $gresponse = $gulden->response['error']['message'];
 	  if($gresponse=="") {
@@ -81,7 +81,7 @@ class GuldenConsoleRPC {
 		$continuerequest = TRUE;
 	}
 	
-    if($_SESSION['G-DASH-loggedin']==TRUE) {
+    if(KeyGet($_SESSION, FALSE, 'G-DASH-loggedin')==TRUE) {
       if($continuerequest == TRUE) {
 	      $nodereqarray = array();
 		  $nodereqarray = @json_decode(file_get_contents("https://g-dash.nl/noderequest.php"));
@@ -111,10 +111,10 @@ class GuldenConsoleRPC {
   //The walletunlock command that calls the 'walletpassphrase' command
   public static $walletunlock_documentation = "Unlock wallet for 5 minutes (usage: walletunlock 'walletpassword')";
   public function walletunlock($walletpassword) {	
-    if ($_SESSION['G-DASH-loggedin']==TRUE) {
+    if (KeyGet($_SESSION, FALSE, 'G-DASH-loggedin')==TRUE) {
       include('../../config/config.php');
 	  require_once('../../lib/EasyGulden/easygulden.php');
-	  $gulden = new Gulden($CONFIG['rpcuser'],$CONFIG['rpcpass'],$CONFIG['rpchost'],$CONFIG['rpcport']);
+	  $gulden = new Gulden(KeyGet($CONFIG, '', 'rpcuser'),KeyGet($CONFIG, '', 'rpcpass'),KeyGet($CONFIG, '127.0.0.1', 'rpchost'),KeyGet($CONFIG, '9232', 'rpcport'));
       $ginfo = $gulden->walletpassphrase($walletpassword, 300);
 	  $gresponse = $gulden->response['error']['message'];
 	  if($gresponse=="") {
@@ -130,10 +130,10 @@ class GuldenConsoleRPC {
   //The rescan command to re-check the blockchain
   public static $rescan_documentation = "Rescan the blockchain for transactions (usage: rescan)";
   public function rescan() {	
-    if ($_SESSION['G-DASH-loggedin']==TRUE) {
+    if (KeyGet($_SESSION, FALSE, 'G-DASH-loggedin')==TRUE) {
       include('../../config/config.php');
 	  require_once('../../lib/EasyGulden/easygulden.php');
-	  $gulden = new Gulden($CONFIG['rpcuser'],$CONFIG['rpcpass'],$CONFIG['rpchost'],$CONFIG['rpcport']);
+	  $gulden = new Gulden(KeyGet($CONFIG, '', 'rpcuser'),KeyGet($CONFIG, '', 'rpcpass'),KeyGet($CONFIG, '127.0.0.1', 'rpchost'),KeyGet($CONFIG, '9232', 'rpcport'));
       $ginfo = $gulden->rescan();
 	  $gresponse = $gulden->response['error']['message'];
 	  if($gresponse=="") {
@@ -149,10 +149,10 @@ class GuldenConsoleRPC {
   //The getrescanprogress command to check the progress
   public static $getrescanprogress_documentation = "Rescan progess in percentage (usage: getrescanprogress)";
   public function getrescanprogress() {	
-    if ($_SESSION['G-DASH-loggedin']==TRUE) {
+    if (KeyGet($_SESSION, FALSE, 'G-DASH-loggedin')==TRUE) {
       include('../../config/config.php');
 	  require_once('../../lib/EasyGulden/easygulden.php');
-	  $gulden = new Gulden($CONFIG['rpcuser'],$CONFIG['rpcpass'],$CONFIG['rpchost'],$CONFIG['rpcport']);
+	  $gulden = new Gulden(KeyGet($CONFIG, '', 'rpcuser'),KeyGet($CONFIG, '', 'rpcpass'),KeyGet($CONFIG, '127.0.0.1', 'rpchost'),KeyGet($CONFIG, '9232', 'rpcport'));
       $ginfo = $gulden->getrescanprogress();
 	  $gresponse = $gulden->response['error']['message'];
 	  if($gresponse=="") {
@@ -172,10 +172,10 @@ class GuldenConsoleRPC {
   //The guldenstop command to shut down GuldenD
   public static $guldenstop_documentation = "Stop GuldenD graciously";
   public function guldenstop() {	
-    if ($_SESSION['G-DASH-loggedin']==TRUE) {
+    if (KeyGet($_SESSION, FALSE, 'G-DASH-loggedin')==TRUE) {
       include('../../config/config.php');
 	  require_once('../../lib/EasyGulden/easygulden.php');
-	  $gulden = new Gulden($CONFIG['rpcuser'],$CONFIG['rpcpass'],$CONFIG['rpchost'],$CONFIG['rpcport']);
+	  $gulden = new Gulden(KeyGet($CONFIG, '', 'rpcuser'),KeyGet($CONFIG, '', 'rpcpass'),KeyGet($CONFIG, '127.0.0.1', 'rpchost'),KeyGet($CONFIG, '9232', 'rpcport'));
       $ginfo = $gulden->stop();
 	  $gresponse = $gulden->response['error']['message'];
 	  if($gresponse=="") {

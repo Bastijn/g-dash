@@ -1,6 +1,6 @@
-<script src="js/dash/witness.js?<?php echo $CONFIG['dashversion']; ?>"></script>
-<script src="js/dash/witnessnetwork.js?<?php echo $CONFIG['dashversion']; ?>"></script>
-<script src="js/jquery-ui/js/jquery-ui.min.js?<?php echo $CONFIG['dashversion']; ?>"></script>
+<script src="js/dash/witness.js?<?php echo KeyGet($CONFIG, '0.0', 'dashversion'); ?>"></script>
+<script src="js/dash/witnessnetwork.js?<?php echo KeyGet($CONFIG, '0.0', 'dashversion'); ?>"></script>
+<script src="js/jquery-ui/js/jquery-ui.min.js?<?php echo KeyGet($CONFIG, '0.0', 'dashversion'); ?>"></script>
 <link rel="stylesheet" href="js/jquery-ui/css/jquery-ui.min.css">
 <div class="row row-offcanvas row-offcanvas-left">
 

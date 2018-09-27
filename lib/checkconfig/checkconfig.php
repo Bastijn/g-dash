@@ -8,18 +8,18 @@ if(!is_writable("config/config.php")) {
 }
 
 //Is the dashboard configured?
-if($CONFIG['rpcuser']=="" || $CONFIG['configured']!="1") {
+if(KeyGet($CONFIG, '', 'rpcuser')=="" || KeyGet($CONFIG, '0', 'configured')!="1") {
 	$ERRORS[] = "This dashboard has not been fully configured yet. Go to 'Settings' first.";
 }
 
 //TODO: Remove this function at 1.0 release. Used to show the passwords needs to be updated to the new hashing
-if($CONFIG['bcrypt']!="1") {
+if(KeyGet($CONFIG, '1', 'bcrypt')!="1") {
 	$ERRORS[] = "The G-DASH password uses an outdated hashing. Please update your G-DASH password in the 'Settings' screen. Your 
 				 password must also be updated if you have disabled the login screen.";
 }
 
 //Is the system upgraded and are the settings reviewed?
-if($CONFIG['dashversion'] != $GDASH['currentversion']) {
+if(KeyGet($CONFIG, '0.0', 'dashversion') != $GDASH['currentversion']) {
 	$ERRORS[] = "This dashboard has been upgraded recently. Review and save the settings.";
 }
 

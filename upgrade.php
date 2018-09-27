@@ -28,7 +28,7 @@
   $latestversionsarray = array();
   $latestversionsarray = @json_decode(file_get_contents($GDASH['updatecheck']));
   
-  if($CONFIG['updatechannel']=="1") {
+  if(KeyGet($CONFIG, '0', 'updatechannel')=="1") {
 	$getlatestversion = $latestversionsarray->beta;
 	$releasenotes = $latestversionsarray->betacl;
   } else {
@@ -36,7 +36,7 @@
 	$releasenotes = $latestversionsarray->stablecl;
   }
   
-  if($_GET['upgrade']==$getlatestversion)
+  if(KeyGet($_GET, '', 'upgrade')==$getlatestversion)
   {
   	echo "Upgrading!<br><br>";
 	

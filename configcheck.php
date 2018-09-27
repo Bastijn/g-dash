@@ -34,7 +34,7 @@
     <div class="panel-heading"><b>Gulden</b></div>
     <div class="panel-body" id="guldenconf">
 		<?php
-		$guldenconfperms = getFilePermissions($CONFIG['datadir']."Gulden.conf");
+		$guldenconfperms = getFilePermissions(KeyGet($CONFIG, '', 'datadir')."Gulden.conf");
 		if($guldenconfperms['exists']) {
 			echo "The owner of Gulden.conf is \"".$guldenconfperms['owner']['name']."\"<br>";
 			echo "The permissions of Gulden.conf are \"".$guldenconfperms['permissions']."\"<br>";
@@ -45,7 +45,7 @@
 		
 		echo "<br><br>";
 		
-		$guldendperms = getFilePermissions($CONFIG['guldenlocation']."GuldenD");
+		$guldendperms = getFilePermissions(KeyGet($CONFIG, '', 'guldenlocation')."GuldenD");
 		if($guldendperms['exists']) {
 			echo "The owner of GuldenD is \"".$guldendperms['owner']['name']."\"<br>";
 			echo "The permissions of GuldenD are \"".$guldendperms['permissions']."\"<br>";
@@ -56,7 +56,7 @@
 		
 		echo "<br><br>";
 		
-		$guldencliperms = getFilePermissions($CONFIG['guldenlocation']."Gulden-cli");
+		$guldencliperms = getFilePermissions(KeyGet($CONFIG, '', 'guldenlocation')."Gulden-cli");
 		if($guldencliperms['exists']) {
 			echo "The owner of Gulden-cli is \"".$guldencliperms['owner']['name']."\"<br>";
 			echo "The permissions of Gulden-cli are \"".$guldencliperms['permissions']."\"<br>";
@@ -67,15 +67,15 @@
 		
 		echo "<br><br>";
 		
-		$guldenlogperms = getFilePermissions($CONFIG['datadir']."debug.log");
+		$guldenlogperms = getFilePermissions(KeyGet($CONFIG, '', 'datadir')."debug.log");
 		if($guldenlogperms['exists']) {
 			echo "The owner of debug.log is \"".$guldenlogperms['owner']['name']."\"<br>";
 			echo "The permissions of debug.log are \"".$guldenlogperms['permissions']."\"<br>";
-			echo "The file size of debug.log is \"".round(filesize($CONFIG['datadir']."debug.log") / pow(1024, 2), 2)."\" MB <br>";
+			echo "The file size of debug.log is \"".round(filesize(KeyGet($CONFIG, '', 'datadir')."debug.log") / pow(1024, 2), 2)."\" MB <br>";
 			if($guldenlogperms['readable']) {
 				echo "<font color='green'>debug.log is readable</font>"; 
 			} else {
-				echo "<font color='red'>debug.log is not readable. To make this file readable for G-DASH, use </font><code>chmod 0644 ".$CONFIG['datadir']."debug.log</code>"; }
+				echo "<font color='red'>debug.log is not readable. To make this file readable for G-DASH, use </font><code>chmod 0644 ".KeyGet($CONFIG, '', 'datadir')."debug.log</code>"; }
 		} else {
 			echo "<font color='red'>debug.log does not exist! Define the correct datadir in the settings.</font>";
 		}
@@ -114,13 +114,13 @@
 				 You can set www-data as the owner of the G-DASH folder by using the command 'sudo chown -R www-data:www-data /path/to/g-dash/'.</font><br><br>";
 		}
 		if($guldenconfperms['exists']) {
-			$gconfcontents = readGuldenConf($CONFIG['datadir']."Gulden.conf");
-			if($gconfcontents['rpcuser'] == $CONFIG['rpcuser']) {
+			$gconfcontents = readGuldenConf(KeyGet($CONFIG, '', 'datadir')."Gulden.conf");
+			if($gconfcontents['rpcuser'] == KeyGet($CONFIG, '', 'rpcuser')) {
 				echo "<font color='green'>Username entered in G-DASH matches Gulden username</font><br>"; 
 			} else {
 				echo "<font color='red'>Username entered in G-DASH does not match Gulden username</font><br>"; 
 			}
-			if($gconfcontents['rpcpassword'] == $CONFIG['rpcpass']) {
+			if($gconfcontents['rpcpassword'] == KeyGet($CONFIG, '', 'rpcpass')) {
 				echo "<font color='green'>Password entered in G-DASH matches Gulden password</font><br>"; 
 			} else {
 				echo "<font color='red'>Password entered in G-DASH does not match Gulden password</font><br>"; 

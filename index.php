@@ -14,17 +14,17 @@ if($_GET['logout']=="true") {
 }
 }
 
-if($CONFIG['otp']=="1" && $CONFIG['disablelogin'] != "1" && isset($_POST['login'])) {
+if(KeyGet($CONFIG, '0', 'otp')=="1" && KeyGet($CONFIG, '0', 'disablelogin') != "1" && isset($_POST['login'])) {
 	require_once("lib/phpotp/rfc6238.php");
-	$otpkey = $CONFIG['otpkey'];
+	$otpkey = KeyGet($CONFIG, '', 'otpkey');
 	if (TokenAuth6238::verify($otpkey, $_POST['otppassword']))
 	{
-		$loginchecked = LoginCheck($CONFIG['datadir']."Gulden.conf", FALSE, $CONFIG['disablelogin']);
+		$loginchecked = LoginCheck(KeyGet($CONFIG, '', 'datadir')."Gulden.conf", FALSE, KeyGet($CONFIG, '0', 'disablelogin'));
 	} else {
 		$loginchecked = FALSE;
 	}
 } else {
-	$loginchecked = LoginCheck($CONFIG['datadir']."Gulden.conf", FALSE, $CONFIG['disablelogin']);
+	$loginchecked = LoginCheck(KeyGet($CONFIG, '', 'datadir')."Gulden.conf", FALSE, KeyGet($CONFIG, '0', 'disablelogin'));
 }
 ?>
 
@@ -38,19 +38,19 @@ if($CONFIG['otp']=="1" && $CONFIG['disablelogin'] != "1" && isset($_POST['login'
   <base target="_self">
   <meta name="google" value="notranslate">
 
-  <link rel="stylesheet" href="js/bootstrap/css/bootstrap.min.css?<?php echo $CONFIG['dashversion']; ?>" />
-  <link rel="stylesheet" type="text/css" href="style/style.css?<?php echo $CONFIG['dashversion']; ?>">
+  <link rel="stylesheet" href="js/bootstrap/css/bootstrap.min.css?<?php echo KeyGet($CONFIG, '0.0', 'dashversion'); ?>" />
+  <link rel="stylesheet" type="text/css" href="style/style.css?<?php echo KeyGet($CONFIG, '0.0', 'dashversion'); ?>">
 </head>
 <body>
-  <script src="js/jquery/js/jquery.min.js?<?php echo $CONFIG['dashversion']; ?>"></script>
-  <script src="js/sonic/jquery.sonic-gauge.min.js?<?php echo $CONFIG['dashversion']; ?>"></script>
-  <script src="js/sonic/raphael-min.js?<?php echo $CONFIG['dashversion']; ?>"></script>
-  <script src="js/bootstrap/js/bootstrap.min.js?<?php echo $CONFIG['dashversion']; ?>"></script>
-  <script src="js/jquery/js/jquery.validate.min.js?<?php echo $CONFIG['dashversion']; ?>"></script>
-  <script src="js/qrcodejs/qrcode.min.js?<?php echo $CONFIG['dashversion']; ?>"></script>
-  <script src="https://code.highcharts.com/highcharts.js?<?php echo $CONFIG['dashversion']; ?>"></script>
-  <script src="https://code.highcharts.com/highcharts-3d.js?<?php echo $CONFIG['dashversion']; ?>"></script>
-  <script src="js/dash/index.js?<?php echo $CONFIG['dashversion']; ?>"></script>
+  <script src="js/jquery/js/jquery.min.js?<?php echo KeyGet($CONFIG, '0.0', 'dashversion'); ?>"></script>
+  <script src="js/sonic/jquery.sonic-gauge.min.js?<?php echo KeyGet($CONFIG, '0.0', 'dashversion'); ?>"></script>
+  <script src="js/sonic/raphael-min.js?<?php echo KeyGet($CONFIG, '0.0', 'dashversion'); ?>"></script>
+  <script src="js/bootstrap/js/bootstrap.min.js?<?php echo KeyGet($CONFIG, '0.0', 'dashversion'); ?>"></script>
+  <script src="js/jquery/js/jquery.validate.min.js?<?php echo KeyGet($CONFIG, '0.0', 'dashversion'); ?>"></script>
+  <script src="js/qrcodejs/qrcode.min.js?<?php echo KeyGet($CONFIG, '0.0', 'dashversion'); ?>"></script>
+  <script src="https://code.highcharts.com/highcharts.js?<?php echo KeyGet($CONFIG, '0.0', 'dashversion'); ?>"></script>
+  <script src="https://code.highcharts.com/highcharts-3d.js?<?php echo KeyGet($CONFIG, '0.0', 'dashversion'); ?>"></script>
+  <script src="js/dash/index.js?<?php echo KeyGet($CONFIG, '0.0', 'dashversion'); ?>"></script>
   
   <script>
   $(document).ready(function() {
@@ -62,7 +62,7 @@ if($CONFIG['otp']=="1" && $CONFIG['disablelogin'] != "1" && isset($_POST['login'
   });
   </script>
   <?php
-  if($_SESSION['G-DASH-loggedin']==TRUE) {
+  if(KeyGet($_SESSION, FALSE, 'G-DASH-loggedin')==TRUE) {
   ?>
   <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container-fluid">
@@ -73,7 +73,7 @@ if($CONFIG['otp']=="1" && $CONFIG['disablelogin'] != "1" && isset($_POST['login'
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="<?php echo $CONFIG['weblocation']; ?>"><img src="images/gblue64x64.png" width='20' height='20' border='0' style="display:inline;vertical-align:top;"> - DASH</a>
+          <a class="navbar-brand" href="<?php echo KeyGet($CONFIG, 'http://localhost', 'weblocation'); ?>"><img src="images/gblue64x64.png" width='20' height='20' border='0' style="display:inline;vertical-align:top;"> - DASH</a>
         </div>
         <div class="navbar-collapse collapse" id="mainnavbarcol">
           <ul class="nav navbar-nav navbar-right">
@@ -81,7 +81,7 @@ if($CONFIG['otp']=="1" && $CONFIG['disablelogin'] != "1" && isset($_POST['login'
             <li><a href="?page=settings">Settings</a></li>
             <li><a href="?page=about">About</a></li>
             <?php
-            if($CONFIG['disablelogin']!="1") {
+            if(KeyGet($CONFIG, '0', 'disablelogin')!="1") {
             ?>
             <li><a href="<?php echo "?logout=true"; ?>">Log out</a></li>
             <?php
@@ -97,7 +97,7 @@ if($CONFIG['otp']=="1" && $CONFIG['disablelogin'] != "1" && isset($_POST['login'
 $currentversion = $GDASH['currentversion'];
 $latestversionsarray = array();
 $latestversionsarray = @json_decode(file_get_contents($GDASH['updatecheck']."?cv=$currentversion"));
-if($CONFIG['updatechannel']=="1") {
+if(Keyget($CONFIG, '0', 'updatechannel')=="1") {
 	$getlatestversion = $latestversionsarray->beta;
 } else {
 	$getlatestversion = $latestversionsarray->stable;
@@ -119,7 +119,7 @@ if($getlatestversion > $currentversion) {
 include('lib/checkconfig/checkconfig.php');
 require_once('lib/EasyGulden/easygulden.php');
 
-$gulden = new Gulden($CONFIG['rpcuser'],$CONFIG['rpcpass'],$CONFIG['rpchost'],$CONFIG['rpcport']);
+$gulden = new Gulden(KeyGet($CONFIG, '', 'rpcuser'),KeyGet($CONFIG, '', 'rpcpass'),KeyGet($CONFIG, '127.0.0.1', 'rpchost'),KeyGet($CONFIG, '9232', 'rpcport'));
 	
 if($gulden->getinfo()=="") {
 	$guldenprimaryresponsecode = $gulden->response['error']['code'];
@@ -194,9 +194,9 @@ include($page . ".php"); //include the selected page
 						  </div>
 						  
 						  <?php
-						  if($CONFIG['otp']=="1") {
+						  if(KeyGet($CONFIG, '0', 'otp')=="1") {
 							  require_once("lib/phpotp/rfc6238.php");
-							  $otpkey = $CONFIG['otpkey'];
+							  $otpkey = KeyGet($CONFIG, '', 'otpkey');
 							  echo "<div class='form-group'>
 						        		<label for='otppassword'>Two Factor Authentication code</label>
 						        		<input type='password' class='form-control' id='otppassword' name='otppassword' placeholder='2FA code' autocomplete='off'>

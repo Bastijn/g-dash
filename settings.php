@@ -1,4 +1,4 @@
-<script src="js/dash/settings.js?<?php echo $CONFIG['dashversion']; ?>"></script>
+<script src="js/dash/settings.js?<?php echo KeyGet($CONFIG, '0.0', 'dashversion'); ?>"></script>
 
 <div class="row row-offcanvas row-offcanvas-left">
 
@@ -22,64 +22,66 @@
   
   <?php
   //Only show this page if a user is logged in
-  if($_SESSION['G-DASH-loggedin']==TRUE) {
+  if(KeyGet($_SESSION, FALSE, 'G-DASH-loggedin')==TRUE) {
   
   //If the settings are updated
   if(isset($_POST['weblocation'])) {
 	
-  	$CONFIG['weblocation'] = AddTrailingSlash($_POST['weblocation']);
-	$CONFIG['guldenlocation'] = AddTrailingSlash($_POST['glocation']);
-	$CONFIG['datadir'] = AddTrailingSlash($_POST['datalocation']);
+  KeySet($CONFIG, AddTrailingSlash(KeyGet($_POST, '', 'weblocation')), 'weblocation');
+	KeySet($CONFIG, AddTrailingSlash(KeyGet($_POST, '', 'glocation')), 'guldenlocation');
+	KeySet($CONFIG, AddTrailingSlash(Keyget($_POST, '', 'datalocation')), 'datadir');
 	
-	$CONFIG['rpcuser'] = $_POST['rpcuser'];
-	$CONFIG['rpcpass'] = $_POST['rpcpassword'];
+	KeySet($CONFIG, KeyGet($_POST, '', 'rpcuser'), 'rpcuser');
+	KeySet($CONFIG, KeyGet($_POST, '', 'rpcpassword'), 'rpcpass');
 	
-	$CONFIG['otp'] = $_POST['otp'];
-	if($_POST['otpkey']!="") { $CONFIG['otpkey'] = $_POST['otpkey']; }
+	KeySet($CONFIG, KeyGet($_POST, '', 'otp'), 'otp');
+	if(KeyGet($_POST, '', 'otp')!="") { KeySet($CONFIG, KeyGet($_POST, '', 'otp'), 'otpkey'); }
 	
-	$CONFIG['gdashuser'] = $_POST['gdashuser'];
-	if($_POST['gdashpassword']!="") {
-		 $originalpassworddash = $CONFIG['gdashpassword'];
-		 $newpassworddash = password_hash($_POST['gdashpassword'], PASSWORD_BCRYPT);
+	KeySet($CONFIG, KeyGet($_POST, '', 'gdashuser'), 'gdashuser');
+	$originalpassworddash = '';
+	$newpassworddash = '';
+	if(KeyGet($_POST, '', 'gdashpassword')!="") {
+		 $originalpassworddash = KeyGet($CONFIG, '', 'gdashpassword');
+		 $newpassworddash = password_hash(KeyGet($_POST, '', 'gdashpassword'), PASSWORD_BCRYPT);
 		 
 		 if($originalpassworddash != $newpassworddash) {
 		 	//Disable 2FA if the password has changed.
-			$CONFIG['otp'] = "0";
+			KeySet($CONFIG, '0', 'otp');
 		 }
 		 
-		 $CONFIG['gdashpassword'] = $newpassworddash;
+		 KeySet($CONFIG, $newpassworddash, 'gdashpassword');
 		 
 		 //TODO: This config can be removed at 1.0 release
-		 $CONFIG['bcrypt'] = "1";
+		 KeySet($CONFIG, '1', 'bcrypt');
 	}
-	if($_POST['rpchost']=="") { $CONFIG['rpchost'] = "127.0.0.1"; } else { $CONFIG['rpchost'] = $_POST['rpchost']; }
-	if($_POST['rpcport']=="") { $CONFIG['rpcport'] = "9232"; } else { $CONFIG['rpcport'] = $_POST['rpcport']; }
+	if(KeyGet($_POST, '', 'rpchost')=="") { KeySet($CONFIG, '127.0.0.1', 'rpchost'); } else { KeySet($CONFIG, KeyGet($_POST, '', 'rpchost'), 'rpchost'); }
+	if(KeyGet($_POST, '', 'rpcport')=="") { KeySet($CONFIG, '9232', 'rpcport'); } else { KeySet($CONFIG, KeyGet($_POST, '', 'rpcport'), 'rpcport'); }
 	
-	$CONFIG['configured'] = "1";
-	$CONFIG['dashversion'] = $GDASH['currentversion'];
+	KeySet($CONFIG, '1', 'configured');
+	KeySet($CONFIG, $GDASH['currentversion'], 'dashversion');
 	
-	$CONFIG['disablelogin'] = $_POST['disablelogin'];
-	if($_POST['disablelogin']=="1") { $CONFIG['otp'] = "0"; }
+	KeySet($CONFIG, KeyGet($_POST, '0', 'disablelogin'), 'disablelogin');
+	if(KeyGet($_POST, '0', 'disablelogin')=="1") { KeySet($CONFIG, '0', 'otp'); }
 	
-	$CONFIG['updatechannel'] = $_POST['updatechannel'];
-	$CONFIG['nodeupload'] = $_POST['nodeupload'];
+	KeySet($CONFIG, KeyGet($_POST, '0', 'updatechannel'), 'updatechannel');
+	KeySet($CONFIG, KeyGet($_POST, '0', 'nodeupload'), 'nodeupload');
 	
-	if($_POST['allownoderequests']=="") { $CONFIG['allownoderequests'] = "0"; } else { $CONFIG['allownoderequests'] = "1"; }
+	if(KeyGet($_POST, '', 'allownoderequests')=="") { KeySet($CONFIG, '0', 'allownoderequests'); } else { KeySet($CONFIG, '1', 'allownoderequests'); }
 	
-	$CONFIG['pushbullet'] = $_POST['pushbullet'];
-	$CONFIG['pushbulletgulden']['active'] = $_POST['pushbulletgulden'];
-	if($CONFIG['pushbulletgulden']['lastmes']=="") { $CONFIG['pushbulletgulden']['lastmes'] = ""; }
-	$CONFIG['pushbulletgdash']['active'] = $_POST['pushbulletgdash'];
-	if($CONFIG['pushbulletgdash']['lastmes']=="") { $CONFIG['pushbulletgdash']['lastmes'] = ""; }
-	$CONFIG['pushbullettx']['active'] = $_POST['pushbullettx'];
-	if($CONFIG['pushbullettx']['lastmes']=="") { $CONFIG['pushbullettx']['lastmes'] = ""; }
-	$CONFIG['pushbulletguldenupdate']['active'] = $_POST['pushbulletguldenupdate'];
-	if($CONFIG['pushbulletguldenupdate']['lastmes']=="") { $CONFIG['pushbulletguldenupdate']['lastmes'] = ""; }
-	$CONFIG['pushbulletwitness']['active'] = $_POST['pushbulletwitness'];
-	if($CONFIG['pushbulletwitness']['lastmes']=="") { $CONFIG['pushbulletwitness']['lastmes'] = ""; }
-	if($CONFIG['pushbulletwitness']['lastblock']=="") { $CONFIG['pushbulletwitness']['lastblock'] = ""; }
+	KeySet($CONFIG, KeyGet($_POST, '0', 'pushbullet'), 'pushbullet');
+	KeySet($CONFIG, KeyGet($_POST, '0', 'pushbulletgulden'), 'pushbulletgulden', 'active');
+	if(KeyGet($CONFIG, '', 'pushbulletgulden', 'lastmes')=="") { KeySet($CONFIG, '', 'pushbulletgulden', 'lastmes');; }
+	KeySet($CONFIG, KeyGet($_POST, '0', 'pushbulletgdash'), 'pushbulletgdash', 'active');
+	if(KeyGet($CONFIG, '', 'pushbulletgdash', 'lastmes')=="") { KeySet($CONFIG, '', 'pushbulletgdash', 'lastmes'); }
+	KeySet($CONFIG, KeyGet($_POST, '0', 'pushbullettx'), 'pushbullettx', 'active');
+	if(KeyGet($CONFIG, '', 'pushbullettx', 'lastmes')=="") { KeySet($CONFIG, '', 'pushbullettx', 'lastmes'); }
+	KeySet($CONFIG, KeyGet($_POST, '0', 'pushbulletguldenupdate'), 'pushbulletguldenupdate', 'active');
+	if(KeyGet($CONFIG, '', 'pushbulletguldenupdate', 'lastmes')=="") { KeySet($CONFIG, '', 'pushbulletguldenupdate', 'lastmes'); }
+	KeySet($CONFIG, KeyGet($_POST, '0', 'pushbulletwitness'), 'pushbulletwitness', 'active');
+	if(KeyGet($CONFIG, '', 'pushbulletwitness', 'lastmes')=="") { KeySet($CONFIG, '', 'pushbulletwitness', 'lastmes'); }
+	if(KeyGet($CONFIG, '', 'pushbulletwitness', 'lastblock')=="") { KeySet($CONFIG, '', 'pushbulletwitness', 'lastblock'); }
 	
-	$CONFIG['nlgprovider'] = $_POST['nlgprice'];
+	KeySet($CONFIG, KeyGet($_POST, '', 'nlgprice'), 'nlgprovider');
 	
 	//******************//
 	//**CRON FOR STATS**//
@@ -90,15 +92,15 @@
 	
 	//Twice per hour, random between 1-600 seconds
 	$randomstatstime = rand(1,600);
-	$nodestatscronentry = "*/10 * * * * sleep ".$randomstatstime."; ".$CONFIG['guldenlocation']."Gulden-cli -datadir=".$CONFIG['datadir']." getpeerinfo | curl -X POST -H \"Content-Type:application/json\" -d @- https://guldennodes.com/endpoint/ >/dev/null 2>&1";
+	$nodestatscronentry = "*/10 * * * * sleep ".$randomstatstime."; ".KeyGet($CONFIG, '', 'guldenlocation')."Gulden-cli -datadir=".KeyGet($CONFIG, '', 'datadir')." getpeerinfo | curl -X POST -H \"Content-Type:application/json\" -d @- https://guldennodes.com/endpoint/ >/dev/null 2>&1";
 	$currentcron = explode(PHP_EOL, shell_exec('crontab -l'));
 	
-	if($nodestatscron=="0" && $CONFIG['nodeupload']=="1") {
+	if($nodestatscron=="0" && KeyGet($CONFIG, '0', 'nodeupload')=="1") {
 		
 		//If not available and user wants to upload stats
 		$currentcron[] = $nodestatscronentry;
 	
-	} elseif($nodestatscron=="1" && $CONFIG['nodeupload']=="1") {
+	} elseif($nodestatscron=="1" && KeyGet($CONFIG, '0', 'nodeupload')=="1") {
 		
 		//If available and user wants to upload stats
 		for($i=0; $i < count($currentcron); $i++) { //Update current entry in case anything changed (path, ...)
@@ -107,7 +109,7 @@
 			}
 		}
 		
-	} elseif($nodestatscron=="1" && $CONFIG['nodeupload']=="0") {
+	} elseif($nodestatscron=="1" && KeyGet($CONFIG, '0', 'nodeupload')=="0") {
 		
 		//If available and user doesn't want to upload stats
 		//Find entry and remove it
@@ -150,12 +152,12 @@
 	$pushbulletcronentry = "*/2 * * * * sleep ".$randompbchecktime."; php ".__DIR__."/lib/push/cronnotifications.php >/dev/null 2>&1";
 	$currentcron = explode(PHP_EOL, shell_exec('crontab -l'));
 	
-	if($pushbulletcron=="0" && $CONFIG['pushbullet']!="") {
+	if($pushbulletcron=="0" && KeyGet($CONFIG, '', 'pushbullet')!="") {
 		
 		//If not available and user wants to receive notifications
 		$currentcron[] = $pushbulletcronentry;
 	
-	} elseif($pushbulletcron=="1" && $CONFIG['pushbullet']!="") {
+	} elseif($pushbulletcron=="1" && KeyGet($CONFIG, '', 'pushbullet')!="") {
 		
 		//If available and user wants to receive notifications
 		for($i=0; $i < count($currentcron); $i++) { //Update current entry in case anything changed (path, ...)
@@ -164,7 +166,7 @@
 			}
 		}
 		
-	} elseif($pushbulletcron=="1" && $CONFIG['pushbullet']=="") {
+	} elseif($pushbulletcron=="1" && KeyGet($CONFIG, '', 'pushbullet')=="") {
 		
 		//If available and user doesn't want to receive notifications
 		//Find entry and remove it
@@ -207,12 +209,12 @@
 	$noderequestcronentry = "*/30 * * * * sleep ".$randomrequesttime."; php ".__DIR__."/lib/push/noderequests.php >/dev/null 2>&1";
 	$currentcron = explode(PHP_EOL, shell_exec('crontab -l'));
 	
-	if($noderequestcron=="0" && $CONFIG['allownoderequests']!="") {
+	if($noderequestcron=="0" && KeyGet($CONFIG, '', 'allownoderequests')!="") {
 		
 		//If not available and user wants to allow requests
 		$currentcron[] = $noderequestcronentry;
 	
-	} elseif($noderequestcron=="1" && $CONFIG['allownoderequests']!="") {
+	} elseif($noderequestcron=="1" && KeyGet($CONFIG, '', 'allownoderequests')!="") {
 		
 		//If available and user wants to allow requests
 		for($i=0; $i < count($currentcron); $i++) { //Update current entry in case anything changed (path, ...)
@@ -221,7 +223,7 @@
 			}
 		}
 		
-	} elseif($noderequestcron=="1" && $CONFIG['allownoderequests']=="") {
+	} elseif($noderequestcron=="1" && KeyGet($CONFIG, '', 'allownoderequests')=="") {
 		
 		//If available and user doesn't want to allow requests
 		//Find entry and remove it
@@ -232,8 +234,8 @@
 		}
 		
 		//Empty the config parameters
-		$CONFIG['noderequest']['node'] = "";
-		$CONFIG['noderequest']['time'] = "";
+		KeySet($CONFIG, '', 'noderequest', 'node');
+		KeySet($CONFIG, '', 'noderequest', 'time');
 		
 	}
 	
@@ -304,7 +306,7 @@
   
   <h1 class="page-header">
     Settings
-    <p class="lead">G-DASH settings (Version <?php echo $CONFIG['dashversion']; ?>)</p>
+    <p class="lead">G-DASH settings (Version <?php echo KeyGet($CONFIG, '0.0', 'dashversion'); ?>)</p>
   </h1>
   
   <form method="POST" action="?page=settings" id="settingsform">
@@ -324,7 +326,7 @@
 		    <div class="panel-body" id="dashboardsettings">
 		      <div class="form-group">
 			    <label for="gdashuser">G-DASH username</label>
-			    <input type="text" class="form-control" id="gdashuser" name="gdashuser" autocomplete='off' placeholder="Username" <?php if($CONFIG['gdashuser']!='') { echo "value='".$CONFIG['gdashuser']."'"; } ?>>
+			    <input type="text" class="form-control" id="gdashuser" name="gdashuser" autocomplete='off' placeholder="Username" <?php if(KeyGet($CONFIG, '', 'gdashuser')!='') { echo "value='".KeyGet($CONFIG, '', 'gdashuser')."'"; } ?>>
 			  </div>
 			  
 			  <div class="form-group">
@@ -342,37 +344,37 @@
 		    	
 		      <div class="form-group">
 			    <label for="weblocation">Dashboard web address</label>
-			    <input type="text" class="form-control" id="weblocation" name="weblocation" aria-describedby="weblocationhelp" placeholder="Enter web address" <?php if($CONFIG['weblocation']!='') { echo "value='".$CONFIG['weblocation']."'"; } ?>>
+			    <input type="text" class="form-control" id="weblocation" name="weblocation" aria-describedby="weblocationhelp" placeholder="Enter web address" <?php if(KeyGet($CONFIG, '', 'weblocation')!='') { echo "value='".KeyGet($CONFIG, '', 'weblocation')."'"; } ?>>
 			    <small id="weblocationhelp" class="form-text text-muted">For example: http://192.168.2.1/gulden/</small>
 			  </div>
 			  
 			  <div class="checkbox">
 			    <label>
-			    <input type="checkbox" id="disablelogin" name="disablelogin" aria-describedby="disableloginhelp" value="1" <?php if($CONFIG['disablelogin']=="1") { echo "checked='checked'"; } ?>>Disable login screen</label><br>
+			    <input type="checkbox" id="disablelogin" name="disablelogin" aria-describedby="disableloginhelp" value="1" <?php if(KeyGet($CONFIG, '0', 'disablelogin')=="1") { echo "checked='checked'"; } ?>>Disable login screen</label><br>
 			    <small id="disableloginhelp" class="form-text text-muted">Note: By disabling the login screen, everyone on your network (or if your server can be reached 
 			                                                              from the internet --> EVERYONE) can access this dashboard</small>
 			  </div>
 			  
 			  <div class="checkbox">
 			    <label>
-			    <input type="checkbox" id="updatechannel" name="updatechannel" aria-describedby="updatechannelhelp" value="1" <?php if($CONFIG['updatechannel']=="1") { echo "checked='checked'"; } ?>>Use the Beta update channel</label><br>
+			    <input type="checkbox" id="updatechannel" name="updatechannel" aria-describedby="updatechannelhelp" value="1" <?php if(KeyGet($CONFIG, '0', 'updatechannel')=="1") { echo "checked='checked'"; } ?>>Use the Beta update channel</label><br>
 			    <small id="updatechannelhelp" class="form-text text-muted">The Beta updates may contain bugs. Use this option only if you want to help testing!</small>
 			  </div>
 			  
-			  <?php if($CONFIG['disablelogin']!="1") {
+			  <?php if(KeyGet($CONFIG, '0', 'disablelogin')!="1") {
 				require_once("lib/phpotp/rfc6238.php");
-				if($CONFIG['otpkey']=="") {
+				if(KeyGet($CONFIG, '', 'otpkey')=="") {
 					$randomkeyforotp = hash("sha1", rand(999,999999), false);
 					$otpkey = Base32Static::encode($randomkeyforotp);
 					$otpkey = substr($otpkey, 0, 16);
 					echo "<input type='hidden' name='otpkey' id='otpkey' value='".$otpkey."'>";
 				} else {
-					$otpkey = $CONFIG['otpkey'];
+					$otpkey = KeyGet($CONFIG, '', 'otpkey');
 				}
 			  ?>
 			  <div class="checkbox">
 			    <label>
-			    <input type="checkbox" id="otp" name="otp" aria-describedby="otphelp" value="1" <?php if($CONFIG['otp']=="1") { echo "checked='checked'"; } ?>>Use 2-factor authentication</label><br>
+			    <input type="checkbox" id="otp" name="otp" aria-describedby="otphelp" value="1" <?php if(KeyGet($CONFIG, '0', 'otp')=="1") { echo "checked='checked'"; } ?>>Use 2-factor authentication</label><br>
 			    <small id="otphelp" class="form-text text-muted">With 2-factor authentication your dashboard is better protected as you will need your smartphone to log in.<br>
 			    												 Note: You will not be able to log in without your smartphone. If you lost your phone (or broke it), you will have
 			    												 to manually remove 2FA from the G-DASH settings file (OTP).</small>
@@ -396,7 +398,7 @@
 		    	
 		      <div class="form-group">
 			    <label for="pushbullet">PushBullet access token</label>
-			    <input type="text" class="form-control" id="pushbullet" name="pushbullet" aria-describedby="pushbullethelp" placeholder="Enter access token" <?php if($CONFIG['pushbullet']!='') { echo "value='".$CONFIG['pushbullet']."'"; } ?>>
+			    <input type="text" class="form-control" id="pushbullet" name="pushbullet" aria-describedby="pushbullethelp" placeholder="Enter access token" <?php if(KeyGet($CONFIG, '', 'pushbullet')!='') { echo "value='".KeyGet($CONFIG, '', 'pushbullet')."'"; } ?>>
 			    <small id="pushbullethelp" class="form-text text-muted">Using PushBullet (free), you can send notifications to your phone, tablet, smartwatch and computer when one of the actions below
 			    														are triggered. Check <a href='https://www.pushbullet.com' target='_blank'>pushbullet.com</a> for more details
 			    														and to set up an account. If you have an account, you can create an access token in the 
@@ -407,41 +409,41 @@
 			  
 			  <div class="checkbox">
 			      <label>
-			      <input type="checkbox" id="pushbulletgulden" name="pushbulletgulden" aria-describedby="pushbulletguldenhelp" value="1" <?php if($CONFIG['pushbulletgulden']['active']=="1") { echo "checked='checked'"; } ?>>Send a notification if the Gulden server is down.</label><br>
+			      <input type="checkbox" id="pushbulletgulden" name="pushbulletgulden" aria-describedby="pushbulletguldenhelp" value="1" <?php if(KeyGet($CONFIG, '0', 'pushbulletgulden', 'active')=="1") { echo "checked='checked'"; } ?>>Send a notification if the Gulden server is down.</label><br>
 			      <small id="pushbulletguldenhelp" class="form-text text-muted">A notification will be sent to pushbullet if the Gulden server is not responding.<br>
-			      																Last message pushed: <?php echo $CONFIG['pushbulletgulden']['lastmes']; ?>
+			      																Last message pushed: <?php echo KeyGet($CONFIG, '', 'pushbulletgulden', 'lastmes'); ?>
 			      </small>
 			  </div>
 			  
 			  <div class="checkbox">
 			      <label>
-			      <input type="checkbox" id="pushbulletgdash" name="pushbulletgdash" aria-describedby="pushbulletgdashhelp" value="1" <?php if($CONFIG['pushbulletgdash']['active']=="1") { echo "checked='checked'"; } ?>>Send a notification if an update of G-DASH is available.</label><br>
+			      <input type="checkbox" id="pushbulletgdash" name="pushbulletgdash" aria-describedby="pushbulletgdashhelp" value="1" <?php if(KeyGet($CONFIG, '0', 'pushbulletgdash', 'active')=="1") { echo "checked='checked'"; } ?>>Send a notification if an update of G-DASH is available.</label><br>
 			      <small id="pushbulletgdashhelp" class="form-text text-muted">A notification will be sent to pushbullet if an update is available for G-DASH.<br>
-			      																Last message pushed: <?php echo $CONFIG['pushbulletgdash']['lastmes']; ?>
+			      																Last message pushed: <?php echo KeyGet($CONFIG, '', 'pushbulletgdash', 'lastmes'); ?>
 			      </small>
 			  </div>
 			  
 			  <div class="checkbox">
 			      <label>
-			      <input type="checkbox" id="pushbulletguldenupdate" name="pushbulletguldenupdate" aria-describedby="pushbulletguldenupdatehelp" value="1" <?php if($CONFIG['pushbulletguldenupdate']['active']=="1") { echo "checked='checked'"; } ?>>Send a notification when there is an update for Gulden.</label><br>
+			      <input type="checkbox" id="pushbulletguldenupdate" name="pushbulletguldenupdate" aria-describedby="pushbulletguldenupdatehelp" value="1" <?php if(KeyGet($CONFIG, '0', 'pushbulletguldenupdate', 'active')=="1") { echo "checked='checked'"; } ?>>Send a notification when there is an update for Gulden.</label><br>
 			      <small id="pushbulletguldenupdatehelp" class="form-text text-muted">A notification will be sent to pushbullet when an update for Gulden is available in the Raspbian repository.<br>
-			      																		Last message pushed: <?php echo $CONFIG['pushbulletguldenupdate']['lastmes']; ?>
+			      																		Last message pushed: <?php echo KeyGet($CONFIG, '', 'pushbulletguldenupdate', 'lastmes'); ?>
 			      </small>
 			  </div>
 			  
 			  <div class="checkbox">
 			      <label>
-			      <input type="checkbox" id="pushbullettx" name="pushbullettx" aria-describedby="pushbullettxhelp" value="1" <?php if($CONFIG['pushbullettx']['active']=="1") { echo "checked='checked'"; } ?>>Send a notification when Guldens are received.</label><br>
+			      <input type="checkbox" id="pushbullettx" name="pushbullettx" aria-describedby="pushbullettxhelp" value="1" <?php if(KeyGet($CONFIG, '0', 'pushbullettx', 'active')=="1") { echo "checked='checked'"; } ?>>Send a notification when Guldens are received.</label><br>
 			      <small id="pushbullettxhelp" class="form-text text-muted">A notification will be sent to pushbullet when you receive Guldens in your wallet.<br>
-			      																Last message pushed: <?php echo $CONFIG['pushbullettx']['lastmes']; ?>
+			      																Last message pushed: <?php echo KeyGet($CONFIG, '', 'pushbullettx', 'lastmes'); ?>
 			      </small>
 			  </div>
 			  
 			  <div class="checkbox">
 			      <label>
-			      <input type="checkbox" id="pushbulletwitness" name="pushbulletwitness" aria-describedby="pushbulletwitnesshelp" value="1" <?php if($CONFIG['pushbulletwitness']['active']=="1") { echo "checked='checked'"; } ?>>Send a notification on witness activity.</label><br>
+			      <input type="checkbox" id="pushbulletwitness" name="pushbulletwitness" aria-describedby="pushbulletwitnesshelp" value="1" <?php if(KeyGet($CONFIG ,'0', 'pushbulletwitness', 'active')=="1") { echo "checked='checked'"; } ?>>Send a notification on witness activity.</label><br>
 			      <small id="pushbullettxhelp" class="form-text text-muted">A notification will be sent to pushbullet when there was any activity with your witness account.<br>
-			      																Last message pushed: <?php echo $CONFIG['pushbulletwitness']['lastmes']; ?>
+			      																Last message pushed: <?php echo KeyGet($CONFIG, '', 'pushbulletwitness', 'lastmes'); ?>
 			      </small>
 			  </div>
 		    </div>
@@ -454,7 +456,7 @@
 		    <div class="panel-body" id="nodesettings">
 		      <div id='nodeuploaddiv' class="checkbox">
 			    <label>
-			    <input type="checkbox" id="nodeupload" name="nodeupload" aria-describedby="nodeuploadhelp" value="1" <?php if($CONFIG['nodeupload']=="1") { echo "checked='checked'"; } ?>>Upload node statistics</label><br>
+			    <input type="checkbox" id="nodeupload" name="nodeupload" aria-describedby="nodeuploadhelp" value="1" <?php if(KeyGet($CONFIG, '0', 'nodeupload')=="1") { echo "checked='checked'"; } ?>>Upload node statistics</label><br>
 			    <small id="nodeuploadhelp" class="form-text text-muted">Help the Gulden network by uploading your node statistics. You can see the stats
 			    														of your node and a spider web showing all your connections on 
 			    														<a href="https://guldennodes.com/?crawler" target="_blank">
@@ -464,7 +466,7 @@
 			  
 			  <div class="checkbox">
 			    <label>
-			    <input type="checkbox" id="allownoderequests" name="allownoderequests" aria-describedby="allownoderequestshelp" value="1" <?php if($CONFIG['allownoderequests']=="1") { echo "checked='checked'"; } ?>>Allow Node Requests</label><br>
+			    <input type="checkbox" id="allownoderequests" name="allownoderequests" aria-describedby="allownoderequestshelp" value="1" <?php if(KeyGet($CONFIG, '', 'allownoderequests')=="1") { echo "checked='checked'"; } ?>>Allow Node Requests</label><br>
 			    <small id="allownoderequestshelp" class="form-text text-muted">Help the Gulden network by temporarily (24 hours) connecting to a G-DASH node that requested
 			    															   inbound connections. You will only connect to 1 node from the list and it will automatically
 			    															   be removed after 24 hours and the next node in line will be added for the next 24 hours. This
@@ -481,7 +483,7 @@
 		    <div class="panel-body" id="walletsettings">
 		  	  <?php
 		  		$nlgprices = $GDASH['nlgrate'];
-				$currentnlgprovider = $CONFIG['nlgprovider'];
+				$currentnlgprovider = KeyGet($CONFIG, '', 'nlgprovider');
 				if($currentnlgprovider == "") { $currentnlgprovider = 0; }
 		  	  ?>
 		  	
@@ -516,31 +518,31 @@
 		  	  </div>
 			  <div class="form-group">
 			    <label for="glocation">GuldenD location</label>
-			    <input type="text" class="form-control" id="glocation" name="glocation" aria-describedby="glocationhelp" placeholder="Enter path to GuldenD" <?php if($CONFIG['guldenlocation']!='') { echo "value='".$CONFIG['guldenlocation']."'"; } ?>>
+			    <input type="text" class="form-control" id="glocation" name="glocation" aria-describedby="glocationhelp" placeholder="Enter path to GuldenD" <?php if(KeyGet($CONFIG, '', 'guldenlocation')!='') { echo "value='".KeyGet($CONFIG, '', 'guldenlocation')."'"; } ?>>
 			    <small id="glocationhelp" class="form-text text-muted">The folder containing the GuldenD. For example: /opt/Gulden/Gulden-1.6.4/</small>
 			  </div>
 			  <div class="form-group">
 			    <label for="datalocation">Data location</label>
-			    <input type="text" class="form-control" id="datalocation" name="datalocation" aria-describedby="datalocationhelp" placeholder="Enter path to Gulden.conf" <?php if($CONFIG['datadir']!='') { echo "value='".$CONFIG['datadir']."'"; } ?>>
+			    <input type="text" class="form-control" id="datalocation" name="datalocation" aria-describedby="datalocationhelp" placeholder="Enter path to Gulden.conf" <?php if(KeyGet($CONFIG, '', 'datadir')!='') { echo "value='".KeyGet($CONFIG, '', 'datadir')."'"; } ?>>
 			    <small id="datalocationhelp" class="form-text text-muted">The folder containing Gulden.conf. For example: /opt/Gulden/datadir/</small>
 			  </div>
 			  <div class="form-group">
 			    <label for="rpcuser">RPC username</label>
-			    <input type="text" class="form-control" id="rpcuser" name="rpcuser" placeholder="Username" autocomplete='off' <?php if($CONFIG['rpcuser']!='') { echo "value='".$CONFIG['rpcuser']."'"; } ?>>
+			    <input type="text" class="form-control" id="rpcuser" name="rpcuser" placeholder="Username" autocomplete='off' <?php if(KeyGet($CONFIG, '', 'rpcuser')!='') { echo "value='".KeyGet($CONFIG, '', 'rpcuser')."'"; } ?>>
 			  </div>
 			  <div class="form-group">
 			    <label for="rpcpassword">RPC password</label>
-			    <input type="password" class="form-control" id="rpcpassword" name="rpcpassword" placeholder="Password" autocomplete='off' <?php if($CONFIG['rpcpass']!='') { echo "value='".$CONFIG['rpcpass']."'"; } ?>>
+			    <input type="password" class="form-control" id="rpcpassword" name="rpcpassword" placeholder="Password" autocomplete='off' <?php if(KeyGet($CONFIG, '', 'rpcpass')!='') { echo "value='".KeyGet($CONFIG, '', 'rpcpass')."'"; } ?>>
 			    <small id="rpcpasswordrepeathelp" class="form-text text-muted">Note: The username and password must match the username and password used in the Gulden.conf file</small>
 			  </div>
 			  <div class="form-group">
 			    <label for="rpchost">Host address</label>
-			    <input type="text" class="form-control" id="rpchost" name="rpchost" aria-describedby="rpchosthelp" placeholder="RPC Host" <?php if($CONFIG['rpchost']!='') { echo "value='".$CONFIG['rpchost']."'"; } ?>>
+			    <input type="text" class="form-control" id="rpchost" name="rpchost" aria-describedby="rpchosthelp" placeholder="RPC Host" <?php if(KeyGet($CONFIG, '', 'rpchost')!='') { echo "value='".KeyGet($CONFIG, '', 'rpchost')."'"; } ?>>
 			    <small id="rpchosthelp" class="form-text text-muted">The RPC host address of the GuldenD. Default: 127.0.0.1</small>
 			  </div>
 			  <div class="form-group">
 			    <label for="rpcport">Host port</label>
-			    <input type="text" class="form-control" id="rpcport" name="rpcport" aria-describedby="rpcporthelp" placeholder="RPC Port" <?php if($CONFIG['rpcport']!='') { echo "value='".$CONFIG['rpcport']."'"; } ?>>
+			    <input type="text" class="form-control" id="rpcport" name="rpcport" aria-describedby="rpcporthelp" placeholder="RPC Port" <?php if(KeyGet($CONFIG, '', 'rpcport')!='') { echo "value='".KeyGet($CONFIG, '', 'rpcport')."'"; } ?>>
 			    <small id="rpcporthelp" class="form-text text-muted">The RPC port number of GuldenD. Default: 9232</small>
 			  </div>
 		  
