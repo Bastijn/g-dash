@@ -88,7 +88,6 @@ class Gulden
      * @param string $password
      * @param string $host
      * @param int $port
-     * @param string $proto
      * @param string $url
      */
     function __construct($username, $password, $host = 'localhost', $port = 9232, $url = null)

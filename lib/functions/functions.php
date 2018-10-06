@@ -80,6 +80,9 @@ function AddTrailingSlash($string)
 /**
  * Log function with log file rotation
  * and loglevel restrictions
+ * @param $level
+ * @param $event
+ * @param null $text
  */
 function logger($level, $event, $text = null)
 {
@@ -588,7 +591,6 @@ function getTransactionDetails($accounttransactions, $numoftransactionstoshow, $
 
             if ($txtime == "") {
                 return "offline";
-                exit;
             }
         }
     }
@@ -635,7 +637,6 @@ function getLiveTransactionDetails($accounttransactions, $numoftransactionstosho
 
                 $txconnecterror = "APIoffline";
                 return $txconnecterror;
-                exit;
             }
 
             $returntx[] = $singletxdata[0];

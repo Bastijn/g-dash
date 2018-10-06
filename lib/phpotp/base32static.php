@@ -85,9 +85,11 @@ class Base32Static
     /**
      * Use padding false when encoding for urls
      *
+     * @param $input
+     * @param bool $padding
      * @return base32 encoded string
      * @author Bryan Ruiz
-     **/
+     */
     public static function encode($input, $padding = true)
     {
         if (empty($input)) {

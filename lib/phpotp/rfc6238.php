@@ -9,6 +9,8 @@ class TokenAuth6238
      * verify
      *
      * @param string $secretkey Secret clue (base 32).
+     * @param $code
+     * @param int $rangein30s
      * @return bool True if success, false if failure
      */
     public static function verify($secretkey, $code, $rangein30s = 3)
