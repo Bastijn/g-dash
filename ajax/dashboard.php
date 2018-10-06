@@ -5,8 +5,8 @@ session_start();
 set_time_limit(10);
 
 if ($_SESSION['G-DASH-loggedin'] == true) {
-    include('../lib/functions/functions.php');
     include('../config/config.php');
+    include('../lib/functions/functions.php');
     require_once('../lib/EasyGulden/easygulden.php');
     $gulden = new Gulden($CONFIG['rpcuser'], $CONFIG['rpcpass'], $CONFIG['rpchost'], $CONFIG['rpcport']);
 
@@ -125,7 +125,7 @@ if ($_SESSION['G-DASH-loggedin'] == true) {
             for ($i = $gallblocks; $i > $gallblocks - 10; $i--) {
                 $blockinfo = $gulden->getblock($gulden->getblockhash($i));
                 $age = GetTimeAnno(time() - $blockinfo['time']);
-                $transactions = count($blockinfo['tx']);
+                $transactions = count($blockinfo['tx'] ?? []);
                 $difficulty = round($blockinfo['difficulty'], 3);
 
                 $tablerows .= "
@@ -142,10 +142,11 @@ if ($_SESSION['G-DASH-loggedin'] == true) {
             $mywitnessaccountsnetwork = $gulden->getwitnessinfo("tip", true, true);
 
             //Get all witness accounts
-            $mywitnessaccountsnetwork = $mywitnessaccountsnetwork[0]['witness_address_list'];
+            $mywitnessaccountsnetwork = $mywitnessaccountsnetwork[0]['witness_address_list'] ?? [];
 
             //Loop through the witness accounts and find the most recent action
             $lastwitnessactionblock = 0;
+            $lastwitnessactiondate = null;
             foreach ($mywitnessaccountsnetwork as $witnessdata) {
                 if ($witnessdata['last_active_block'] > $lastwitnessactionblock) {
                     $witnessdetailsname = $witnessdata['ismine_accountname'];

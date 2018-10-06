@@ -36,12 +36,21 @@ function GetProgUpTime($program)
     $c_pid = exec("ps -eo pid,comm,etimes | grep $program | awk {'print $3'}");
     //logger(5, "GuldenUptime", $c_pid);
 
+    if (empty($c_pid)) {
+        return 0;
+    }
+
     return trim($c_pid);
 }
 
 function GetLinuxTemp()
 {
     $l_temp = exec("cat /sys/class/thermal/thermal_zone0/temp");
+
+    if (empty($l_temp)) {
+        return 0;
+    }
+
     $l_temp = round(trim($l_temp) / 1000, 0);
     //logger(5, "TempCheck", $l_temp);
 
