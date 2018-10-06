@@ -28,6 +28,13 @@
             //If the settings are updated
         if (isset($_POST['weblocation'])) {
 
+            if ($CONFIG instanceof EasyArrayAccess) {
+                // remove the overloader to allow configuration saving
+                $CONFIG = $CONFIG->getAll();
+            }
+
+            $_POST = new EasyArrayAccess($_POST);
+
             $CONFIG['weblocation'] = AddTrailingSlash($_POST['weblocation']);
             $CONFIG['guldenlocation'] = AddTrailingSlash($_POST['glocation']);
             $CONFIG['datadir'] = AddTrailingSlash($_POST['datalocation']);
@@ -41,6 +48,7 @@
             }
 
             $CONFIG['gdashuser'] = $_POST['gdashuser'];
+            $originalpassworddash = $newpassworddash = null;
             if ($_POST['gdashpassword'] != "") {
                 $originalpassworddash = $CONFIG['gdashpassword'];
                 $newpassworddash = password_hash($_POST['gdashpassword'], PASSWORD_BCRYPT);

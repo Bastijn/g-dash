@@ -1,4 +1,7 @@
 <?php
+
+require 'EasyArrayAccess.php';
+
 /* System functions */
 
 function GetProgCpuUsage($program)
@@ -772,5 +775,3 @@ function getWitnessTransactions($witnesstransactions)
 
     return $tempwitnesstransactions;
 }
-
-?>
