@@ -65,22 +65,22 @@ echo $gulden->status;
 
 */
 
-class Gulden {
+class Gulden
+{
     // Configuration options
-    private $username;
-    private $password;
-    private $proto;
-    private $host;
-    private $port;
-    private $url;
-    private $CACertificate;
-
-    // Information and debugging
     public $status;
     public $error;
     public $raw_response;
     public $response;
+    private $username;
+    private $password;
+    private $proto;
 
+    // Information and debugging
+    private $host;
+    private $port;
+    private $url;
+    private $CACertificate;
     private $id = 0;
 
     /**
@@ -91,31 +91,34 @@ class Gulden {
      * @param string $proto
      * @param string $url
      */
-    function __construct($username, $password, $host = 'localhost', $port = 9232, $url = null) {
-        $this->username      = $username;
-        $this->password      = $password;
-        $this->host          = $host;
-        $this->port          = $port;
-        $this->url           = $url;
+    function __construct($username, $password, $host = 'localhost', $port = 9232, $url = null)
+    {
+        $this->username = $username;
+        $this->password = $password;
+        $this->host = $host;
+        $this->port = $port;
+        $this->url = $url;
 
         // Set some defaults
-        $this->proto         = 'http';
+        $this->proto = 'http';
         $this->CACertificate = null;
     }
 
     /**
      * @param string|null $certificate
      */
-    function setSSL($certificate = null) {
-        $this->proto         = 'https'; // force HTTPS
+    function setSSL($certificate = null)
+    {
+        $this->proto = 'https'; // force HTTPS
         $this->CACertificate = $certificate;
     }
 
-    function __call($method, $params) {
-        $this->status       = null;
-        $this->error        = null;
+    function __call($method, $params)
+    {
+        $this->status = null;
+        $this->error = null;
         $this->raw_response = null;
-        $this->response     = null;
+        $this->response = null;
 
         // If no parameters are passed, this will be an empty array
         $params = array_values($params);
@@ -127,20 +130,20 @@ class Gulden {
         $request = json_encode(array(
             'method' => $method,
             'params' => $params,
-            'id'     => $this->id
+            'id' => $this->id
         ));
 
         // Build the cURL session
-        $curl    = curl_init("{$this->proto}://{$this->host}:{$this->port}/{$this->url}");
+        $curl = curl_init("{$this->proto}://{$this->host}:{$this->port}/{$this->url}");
         $options = array(
-            CURLOPT_HTTPAUTH       => CURLAUTH_BASIC,
-            CURLOPT_USERPWD        => $this->username . ':' . $this->password,
-            CURLOPT_RETURNTRANSFER => TRUE,
-            CURLOPT_FOLLOWLOCATION => TRUE,
-            CURLOPT_MAXREDIRS      => 10,
-            CURLOPT_HTTPHEADER     => array('Content-type: application/json'),
-            CURLOPT_POST           => TRUE,
-            CURLOPT_POSTFIELDS     => $request
+            CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
+            CURLOPT_USERPWD => $this->username . ':' . $this->password,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_HTTPHEADER => array('Content-type: application/json'),
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => $request
         );
 
         // This prevents users from getting the following warning when open_basedir is set:
@@ -154,10 +157,9 @@ class Gulden {
             if ($this->CACertificate != null) {
                 $options[CURLOPT_CAINFO] = $this->CACertificate;
                 $options[CURLOPT_CAPATH] = DIRNAME($this->CACertificate);
-            }
-            else {
+            } else {
                 // If not we need to assume the SSL cannot be verified so we set this flag to FALSE to allow the connection
-                $options[CURLOPT_SSL_VERIFYPEER] = FALSE;
+                $options[CURLOPT_SSL_VERIFYPEER] = false;
             }
         }
 
@@ -165,7 +167,7 @@ class Gulden {
 
         // Execute the request and decode to an array
         $this->raw_response = curl_exec($curl);
-        $this->response     = json_decode($this->raw_response, TRUE);
+        $this->response = json_decode($this->raw_response, true);
 
         // If the status is not 200, something is wrong
         $this->status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
@@ -182,8 +184,7 @@ class Gulden {
         if ($this->response['error']) {
             // If guldend returned an error, put that in $this->error
             $this->error = $this->response['error']['message'];
-        }
-        elseif ($this->status != 200) {
+        } elseif ($this->status != 200) {
             // If guldend didn't return a nice error message, we need to make our own
             switch ($this->status) {
                 case 400:
@@ -202,7 +203,7 @@ class Gulden {
         }
 
         if ($this->error) {
-            return FALSE;
+            return false;
         }
 
         return $this->response['result'];
