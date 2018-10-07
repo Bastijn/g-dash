@@ -5,8 +5,8 @@ session_start();
 set_time_limit(60);
 
 if ($_SESSION['G-DASH-loggedin'] == true) {
-    include('../lib/functions/functions.php');
     include('../config/config.php');
+    include('../lib/functions/functions.php');
     require_once('../lib/EasyGulden/easygulden.php');
     $gulden = new Gulden($CONFIG['rpcuser'], $CONFIG['rpcpass'], $CONFIG['rpchost'], $CONFIG['rpcport']);
 
