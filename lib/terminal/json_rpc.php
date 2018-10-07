@@ -53,15 +53,15 @@ function error_handler($err, $message, $file, $line)
     header('Content-Type: application/json');
     $id = extract_id(); // don't need to parse
     $error = array(
-        "code" => 100,
-        "message" => "Server error",
-        "error" => array(
-            "name" => "PHPErorr",
-            "code" => $err,
-            "message" => $message,
-            "file" => $file,
-            "at" => $line,
-            "line" => $content[$line - 1]
+        'code' => 100,
+        'message' => 'Server error',
+        'error' => array(
+            'name' => 'PHPErorr',
+            'code' => $err,
+            'message' => $message,
+            'file' => $file,
+            'at' => $line,
+            'line' => $content[$line - 1]
         )
     );
     ob_end_clean();
@@ -73,13 +73,13 @@ function error_handler($err, $message, $file, $line)
 
 class JsonRpcExeption extends Exception
 {
-    function __construct($code, $message)
+    public function __construct($code, $message)
     {
         $this->code = $code;
         Exception::__construct($message);
     }
 
-    function code()
+    public function code()
     {
         return $this->code;
     }
@@ -107,9 +107,9 @@ function get_raw_post_data()
 {
     if (isset($GLOBALS['HTTP_RAW_POST_DATA'])) {
         return $GLOBALS['HTTP_RAW_POST_DATA'];
-    } else {
-        return file_get_contents('php://input');
     }
+
+    return file_get_contents('php://input');
 }
 
 // ----------------------------------------------------------------------------
@@ -127,9 +127,9 @@ function get_field($object, $field, $default)
     $array = get_object_vars($object);
     if (isset($array[$field])) {
         return $array[$field];
-    } else {
-        return $default;
     }
+
+    return $default;
 }
 
 
@@ -141,7 +141,7 @@ function response($result, $id, $error)
         $error['name'] = 'JSONRPCError';
     }
     return json_encode(array(
-        "jsonrpc" => "2.0",
+        'jsonrpc' => '2.0',
         'result' => $result,
         'id' => $id,
         'error' => $error
@@ -155,24 +155,24 @@ function extract_id()
     $regex = '/[\'"]id[\'"] *: *([0-9]*)/';
     $raw_data = get_raw_post_data();
     if (preg_match($regex, $raw_data, $m)) {
-        return intval($m[1]);
-    } else {
-        return null;
+        return (int)$m[1];
     }
+
+    return null;
 }
 
 // ----------------------------------------------------------------------------
 function currentURL()
 {
     $pageURL = 'http';
-    if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") {
-        $pageURL .= "s";
+    if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
+        $pageURL .= 's';
     }
-    $pageURL .= "://";
-    if ($_SERVER["SERVER_PORT"] != "80") {
-        $pageURL .= $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"] . $_SERVER["REQUEST_URI"];
+    $pageURL .= '://';
+    if ($_SERVER['SERVER_PORT'] != '80') {
+        $pageURL .= $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . $_SERVER['REQUEST_URI'];
     } else {
-        $pageURL .= $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
+        $pageURL .= $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
     }
     return $pageURL;
 }
@@ -183,21 +183,21 @@ function service_description($object)
     $class_name = get_class($object);
     $methods = get_class_methods($class_name);
     $service = array(
-        "sdversion" => "1.0",
-        "name" => "G-DASH Service",
-        "address" => currentURL(),
-        "id" => "urn:md5:" . md5(currentURL())
+        'sdversion' => '1.0',
+        'name' => 'G-DASH Service',
+        'address' => currentURL(),
+        'id' => 'urn:md5:' . md5(currentURL())
     );
     $static = get_class_vars($class_name);
     foreach ($methods as $method_name) {
-        $proc = array("name" => $method_name);
+        $proc = array('name' => $method_name);
         $method = new ReflectionMethod($class_name, $method_name);
         $params = array();
         foreach ($method->getParameters() as $param) {
             $params[] = $param->name;
         }
         $proc['params'] = $params;
-        $help_str_name = $method_name . "_documentation";
+        $help_str_name = $method_name . '_documentation';
         if (array_key_exists($help_str_name, $static)) {
             $proc['help'] = $static[$help_str_name];
         }
@@ -210,8 +210,8 @@ function service_description($object)
 function get_json_request()
 {
     $request = get_raw_post_data();
-    if ($request == "") {
-        throw new JsonRpcExeption(101, "Parse Error: no data");
+    if ($request == '') {
+        throw new JsonRpcExeption(101, 'Parse Error: no data');
     }
 
     //The mb_detect_encoding is not installed by default.
@@ -246,7 +246,7 @@ function handle_json_rpc($object)
 
         $method = get_field($input, 'method', null);
         $params = get_field($input, 'params', null);
-        $id = intval(get_field($input, 'id', null));
+        $id = (int)get_field($input, 'id', null);
 
         // json rpc error
         if (!($method && $id)) {
@@ -254,13 +254,11 @@ function handle_json_rpc($object)
                 $id = extract_id();
             }
             if (!$method) {
-                $error = "no method";
+                $error = 'no method';
+            } elseif (!$id) {
+                $error = "no id";
             } else {
-                if (!$id) {
-                    $error = "no id";
-                } else {
-                    $error = "unknown reason";
-                }
+                $error = "unknown reason";
             }
             throw new JsonRpcExeption(103, "Invalid Request: $error");
             //": " . $GLOBALS['HTTP_RAW_POST_DATA']));
@@ -282,32 +280,28 @@ function handle_json_rpc($object)
         // call Service Method
         $class = get_class($object);
         $methods = get_class_methods($class);
-        if (strcmp($method, "system.describe") == 0) {
+        if (strcmp($method, 'system.describe') == 0) {
             echo json_encode(service_description($object));
-        } else {
-            if (!in_array($method, $methods) && !in_array("__call", $methods)) {
-                // __call will be called for any method that's missing
-                $msg = "Procedure `" . $method . "' not found";
-                throw new JsonRpcExeption(104, $msg);
+        } elseif (!in_array($method, $methods) && !in_array("__call", $methods)) {
+            // __call will be called for any method that's missing
+            $msg = "Procedure `" . $method . "' not found";
+            throw new JsonRpcExeption(104, $msg);
+        } elseif (in_array("__call", $methods) && !in_array($method, $methods)) {
+                $result = call_user_func_array(array($object, $method), $params);
+                echo response($result, $id, null);
             } else {
-                if (in_array("__call", $methods) && !in_array($method, $methods)) {
+                $method_object = new ReflectionMethod($class, $method);
+                $num_got = count($params);
+                $num_expect = $method_object->getNumberOfParameters();
+                if ($num_got != $num_expect) {
+                    $msg = "Wrong number of parameters. Got $num_got expect $num_expect";
+                    throw new JsonRpcExeption(105, $msg);
+                } else {
+                    //throw new Exception('x -> ' . json_encode($params));
                     $result = call_user_func_array(array($object, $method), $params);
                     echo response($result, $id, null);
-                } else {
-                    $method_object = new ReflectionMethod($class, $method);
-                    $num_got = count($params);
-                    $num_expect = $method_object->getNumberOfParameters();
-                    if ($num_got != $num_expect) {
-                        $msg = "Wrong number of parameters. Got $num_got expect $num_expect";
-                        throw new JsonRpcExeption(105, $msg);
-                    } else {
-                        //throw new Exception('x -> ' . json_encode($params));
-                        $result = call_user_func_array(array($object, $method), $params);
-                        echo response($result, $id, null);
-                    }
                 }
             }
-        }
     } catch (JsonRpcExeption $e) {
         // exteption with error code
         $msg = $e->getMessage();
@@ -315,11 +309,11 @@ function handle_json_rpc($object)
         if ($code = 101) { // parse error;
             $id = extract_id();
         }
-        echo response(null, $id, array("code" => $code, "message" => $msg));
+        echo response(null, $id, array('code' => $code, 'message' => $msg));
     } catch (Exception $e) {
         //catch all exeption from user code
         $msg = $e->getMessage();
-        echo response(null, $id, array("code" => 200, "message" => $msg));
+        echo response(null, $id, array('code' => 200, 'message' => $msg));
     }
     ob_end_flush();
 }

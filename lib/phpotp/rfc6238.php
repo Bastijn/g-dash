@@ -1,6 +1,6 @@
 <?php
 // http://www.faqs.org/rfcs/rfc6238.html
-require_once(dirname(__FILE__) . '/base32static.php');
+require_once dirname(__FILE__) . '/base32static.php';
 
 class TokenAuth6238
 {
@@ -13,12 +13,12 @@ class TokenAuth6238
      * @param int $rangein30s
      * @return bool True if success, false if failure
      */
-    public static function verify($secretkey, $code, $rangein30s = 3)
+    public static function verify($secretkey, $code, $rangein30s = 3): bool
     {
         $key = base32static::decode($secretkey);
         $unixtimestamp = time() / 30;
 
-        for ($i = -($rangein30s); $i <= $rangein30s; $i++) {
+        for ($i = -$rangein30s; $i <= $rangein30s; $i++) {
             $checktime = (int)($unixtimestamp + $i);
             $thiskey = self::oath_hotp($key, $checktime);
 
@@ -30,32 +30,32 @@ class TokenAuth6238
         return false;
     }
 
-    private static function oath_hotp($key, $counter, $debug = false)
+    private static function oath_hotp($key, $counter, $debug = false): string
     {
-        $result = "";
+        $result = '';
         $orgcounter = $counter;
         $cur_counter = array(0, 0, 0, 0, 0, 0, 0, 0);
 
         if ($debug) {
-            print "Packing counter $counter (" . dechex($counter) . ")into binary string - pay attention to hex representation of key and binary representation<br/>";
+            print "Packing counter $counter (" . dechex($counter) . ')into binary string - pay attention to hex representation of key and binary representation<br/>';
         }
 
         for ($i = 7; $i >= 0; $i--) { // C for unsigned char, * for  repeating to the end of the input data
             $cur_counter[$i] = pack('C*', $counter);
 
             if ($debug) {
-                print $cur_counter[$i] . "(" . dechex(ord($cur_counter[$i])) . ")" . " from $counter <br/>";
+                print $cur_counter[$i] . '(' . dechex(ord($cur_counter[$i])) . ')' . " from $counter <br/>";
             }
 
-            $counter = $counter >> 8;
+            $counter >>= 8;
         }
 
         if ($debug) {
             foreach ($cur_counter as $char) {
-                print ord($char) . " ";
+                print ord($char) . ' ';
             }
 
-            print "<br/>";
+            print '<br/>';
         }
 
         $binary = implode($cur_counter);
@@ -64,8 +64,8 @@ class TokenAuth6238
         str_pad($binary, 8, chr(0), STR_PAD_LEFT);
 
         if ($debug) {
-            print "Prior to HMAC calculation pad with zero on the left until 8 characters.<br/>";
-            print "Calculate sha1 HMAC(Hash-based Message Authentication Code http://en.wikipedia.org/wiki/HMAC).<br/>";
+            print 'Prior to HMAC calculation pad with zero on the left until 8 characters.<br/>';
+            print 'Calculate sha1 HMAC(Hash-based Message Authentication Code http://en.wikipedia.org/wiki/HMAC).<br/>';
             print "hash_hmac ('sha1', $binary, $key)<br/>";
         }
 
@@ -80,21 +80,21 @@ class TokenAuth6238
 
     private static function oath_truncate($hash, $length = 6, $debug = false)
     {
-        $result = "";
+        $result = '';
 
         // Convert to dec
         if ($debug) {
-            print "converting hex hash into characters<br/>";
+            print 'converting hex hash into characters<br/>';
         }
 
         $hashcharacters = str_split($hash, 2);
 
         if ($debug) {
             print_r($hashcharacters);
-            print "<br/>and convert to decimals:<br/>";
+            print '<br/>and convert to decimals:<br/>';
         }
 
-        for ($j = 0; $j < count($hashcharacters); $j++) {
+        for ($j = 0, $jMax = count($hashcharacters); $j < $jMax; $j++) {
             $hmac_result[] = hexdec($hashcharacters[$j]);
         }
 
@@ -108,8 +108,8 @@ class TokenAuth6238
         $offset = $hmac_result[19] & 0xf;
 
         if ($debug) {
-            print "Calculating offset as 19th element of hmac:" . $hmac_result[19] . "<br/>";
-            print "offset:" . $offset;
+            print 'Calculating offset as 19th element of hmac:' . $hmac_result[19] . '<br/>';
+            print 'offset:' . $offset;
         }
 
         $result = (
@@ -117,29 +117,29 @@ class TokenAuth6238
                 (($hmac_result[$offset + 1] & 0xff) << 16) |
                 (($hmac_result[$offset + 2] & 0xff) << 8) |
                 ($hmac_result[$offset + 3] & 0xff)
-            ) % pow(10, $length);
+            ) % (10 ** $length);
 
         return $result;
     }
 
-    public static function getTokenCode($secretkey, $rangein30s = 3)
+    public static function getTokenCode($secretkey, $rangein30s = 3): string
     {
-        $result = "";
+        $result = '';
         $key = base32static::decode($secretkey);
         $unixtimestamp = time() / 30;
 
-        for ($i = -($rangein30s); $i <= $rangein30s; $i++) {
+        for ($i = -$rangein30s; $i <= $rangein30s; $i++) {
             $checktime = (int)($unixtimestamp + $i);
             $thiskey = self::oath_hotp($key, $checktime);
-            $result = $result . " # " . self::oath_truncate($thiskey, 6);
+            $result = $result . ' # ' . self::oath_truncate($thiskey, 6);
         }
 
         return $result;
     }
 
-    public static function getTokenCodeDebug($secretkey, $rangein30s = 3)
+    public static function getTokenCodeDebug($secretkey, $rangein30s = 3): string
     {
-        $result = "";
+        $result = '';
         print "<br/>SecretKey: $secretkey <br/>";
 
         $key = base32static::decode($secretkey);
@@ -148,36 +148,36 @@ class TokenAuth6238
         $unixtimestamp = time() / 30;
         print "UnixTimeStamp (time()/30): $unixtimestamp <br/>";
 
-        for ($i = -($rangein30s); $i <= $rangein30s; $i++) {
+        for ($i = -$rangein30s; $i <= $rangein30s; $i++) {
             $checktime = (int)($unixtimestamp + $i);
             print "Calculating oath_hotp from (int)(unixtimestamp +- 30sec offset): $checktime basing on secret key<br/>";
 
             $thiskey = self::oath_hotp($key, $checktime, true);
-            print "======================================================<br/>";
-            print "CheckTime: $checktime oath_hotp:" . $thiskey . "<br/>";
+            print '======================================================<br/>';
+            print "CheckTime: $checktime oath_hotp:" . $thiskey . '<br/>';
 
-            $result = $result . " # " . self::oath_truncate($thiskey, 6, true);
+            $result = $result . ' # ' . self::oath_truncate($thiskey, 6, true);
         }
 
         return $result;
     }
 
-    public static function getBarCodeUrl($username, $domain, $secretkey, $issuer)
+    public static function getBarCodeUrl($username, $domain, $secretkey, $issuer): string
     {
-        $url = "http://chart.apis.google.com/chart";
-        $url = $url . "?chs=200x200&chld=M|0&cht=qr&chl=otpauth://totp/";
-        $url = $url . $username . "@" . $domain . "%3Fsecret%3D" . $secretkey . '%26issuer%3D' . rawurlencode($issuer);
+        $url = 'http://chart.apis.google.com/chart';
+        $url .= '?chs=200x200&chld=M|0&cht=qr&chl=otpauth://totp/';
+        $url = $url . $username . '@' . $domain . '%3Fsecret%3D' . $secretkey . '%26issuer%3D' . rawurlencode($issuer);
 
         return $url;
     }
 
-    public static function generateRandomClue($length = 16)
+    public static function generateRandomClue($length = 16): string
     {
-        $b32 = "234567QWERTYUIOPASDFGHJKLZXCVBNM";
-        $s = "";
+        $b32 = '234567QWERTYUIOPASDFGHJKLZXCVBNM';
+        $s = '';
 
         for ($i = 0; $i < $length; $i++) {
-            $s .= $b32[rand(0, 31)];
+            $s .= $b32[random_int(0, 31)];
         }
 
         return $s;
@@ -187,11 +187,11 @@ class TokenAuth6238
     {
         $result = array();
         $last = strlen($key);
-        for ($i = 0; $i < $last; $i = $i + 2) {
+        for ($i = 0; $i < $last; $i += 2) {
             $x = $key[$i] + $key[$i + 1];
             $x = strtoupper($x);
             $x = hexdec($x);
-            $result = $result . chr($x);
+            $result .= chr($x);
         }
 
         return $result;

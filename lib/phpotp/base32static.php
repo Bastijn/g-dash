@@ -90,21 +90,21 @@ class Base32Static
      * @return base32 encoded string
      * @author Bryan Ruiz
      */
-    public static function encode($input, $padding = true)
+    public static function encode($input, $padding = true): \base32
     {
         if (empty($input)) {
-            return "";
+            return '';
         }
 
         $input = str_split($input);
-        $binaryString = "";
+        $binaryString = '';
 
-        for ($i = 0; $i < count($input); $i++) {
+        for ($i = 0, $iMax = count($input); $i < $iMax; $i++) {
             $binaryString .= str_pad(base_convert(ord($input[$i]), 10, 2), 8, '0', STR_PAD_LEFT);
         }
 
         $fiveBitBinaryArray = str_split($binaryString, 5);
-        $base32 = "";
+        $base32 = '';
         $i = 0;
 
         while ($i < count($fiveBitBinaryArray)) {
@@ -115,19 +115,13 @@ class Base32Static
         if ($padding && ($x = strlen($binaryString) % 40) != 0) {
             if ($x == 8) {
                 $base32 .= str_repeat(self::$map[32], 6);
-            } else {
-                if ($x == 16) {
-                    $base32 .= str_repeat(self::$map[32], 4);
-                } else {
-                    if ($x == 24) {
-                        $base32 .= str_repeat(self::$map[32], 3);
-                    } else {
-                        if ($x == 32) {
-                            $base32 .= self::$map[32];
-                        }
+            } elseif ($x == 16) {
+                $base32 .= str_repeat(self::$map[32], 4);
+            } elseif ($x == 24) {
+                    $base32 .= str_repeat(self::$map[32], 3);
+                } elseif ($x == 32) {
+                        $base32 .= self::$map[32];
                     }
-                }
-            }
         }
 
         return $base32;
@@ -148,17 +142,17 @@ class Base32Static
 
         for ($i = 0; $i < 4; $i++) {
             if ($paddingCharCount == $allowedValues[$i] &&
-                substr($input, -($allowedValues[$i])) != str_repeat(self::$map[32], $allowedValues[$i])) {
+                substr($input, -$allowedValues[$i]) != str_repeat(self::$map[32], $allowedValues[$i])) {
                 return false;
             }
         }
 
         $input = str_replace('=', '', $input);
         $input = str_split($input);
-        $binaryString = "";
+        $binaryString = '';
 
-        for ($i = 0; $i < count($input); $i = $i + 8) {
-            $x = "";
+        for ($i = 0; $i < count($input); $i += 8) {
+            $x = '';
 
             if (!in_array($input[$i], self::$map)) {
                 return false;
@@ -171,7 +165,7 @@ class Base32Static
             $eightBits = str_split($x, 8);
 
             for ($z = 0; $z < count($eightBits); $z++) {
-                $binaryString .= (($y = chr(base_convert($eightBits[$z], 2, 10))) || ord($y) == 48) ? $y : "";
+                $binaryString .= (($y = chr(base_convert($eightBits[$z], 2, 10))) || ord($y) == 48) ? $y : '';
             }
         }
 

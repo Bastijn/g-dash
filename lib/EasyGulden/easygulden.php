@@ -90,7 +90,7 @@ class Gulden
      * @param int $port
      * @param string $url
      */
-    function __construct($username, $password, $host = 'localhost', $port = 9232, $url = null)
+    public function __construct($username, $password, $host = 'localhost', $port = 9232, $url = null)
     {
         $this->username = $username;
         $this->password = $password;
@@ -106,13 +106,13 @@ class Gulden
     /**
      * @param string|null $certificate
      */
-    function setSSL($certificate = null)
+    public function setSSL($certificate = null)
     {
         $this->proto = 'https'; // force HTTPS
         $this->CACertificate = $certificate;
     }
 
-    function __call($method, $params)
+    public function __call($method, $params)
     {
         $this->status = null;
         $this->error = null;
@@ -155,7 +155,7 @@ class Gulden
             // If the CA Certificate was specified we change CURL to look for it
             if ($this->CACertificate != null) {
                 $options[CURLOPT_CAINFO] = $this->CACertificate;
-                $options[CURLOPT_CAPATH] = DIRNAME($this->CACertificate);
+                $options[CURLOPT_CAPATH] = dirname($this->CACertificate);
             } else {
                 // If not we need to assume the SSL cannot be verified so we set this flag to FALSE to allow the connection
                 $options[CURLOPT_SSL_VERIFYPEER] = false;

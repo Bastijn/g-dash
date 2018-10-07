@@ -1,10 +1,10 @@
 <?php
 //Only allow this script to run from PHP CLI, not from HTTP
-if (php_sapi_name() == "cli") {
-    require_once(__DIR__ . '/../../config/config.php');
-    require_once(__DIR__ . '/../../lib/settings/settings.php');
-    require_once(__DIR__ . '/../../lib/functions/functions.php');
-    require_once(__DIR__ . '/../../lib/EasyGulden/easygulden.php');
+if (PHP_SAPI == 'cli') {
+    require_once __DIR__ . '/../../config/config.php';
+    require_once __DIR__ . '/../../lib/settings/settings.php';
+    require_once __DIR__ . '/../../lib/functions/functions.php';
+    require_once __DIR__ . '/../../lib/EasyGulden/easygulden.php';
 
     //Connect to Gulden
     $gulden = new Gulden($CONFIG['rpcuser'], $CONFIG['rpcpass'], $CONFIG['rpchost'], $CONFIG['rpcport']);
@@ -12,21 +12,21 @@ if (php_sapi_name() == "cli") {
     //Get the latest version info for G-DASH and Gulden
     $latestversionsarray = array();
     $internalip = trim(shell_exec("ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1 -d'/'"));
-    $latestversionsarray = @json_decode(file_get_contents($GDASH['updatecheck'] . "?ip=" . $internalip . "&cv=" . $CONFIG['dashversion']));
+    $latestversionsarray = @json_decode(file_get_contents($GDASH['updatecheck'] . '?ip=' . $internalip . '&cv=' . $CONFIG['dashversion']));
 
     //Write the current Gulden status to the log file
     //GetSystemMemUsage();
 
     //Check if Gulden server is running
-    if ($CONFIG['pushbulletgulden']['active'] == "1") {
+    if ($CONFIG['pushbulletgulden']['active'] == '1') {
 
         //Get the info (last message and current message)
         $lastmessage = $CONFIG['pushbulletgulden']['lastmes'];
-        $currentmessage = "";
-        if ($gulden->getinfo() == "") {
-            $currentmessage = "Gulden server is not running!";
+        $currentmessage = '';
+        if ($gulden->getinfo() == '') {
+            $currentmessage = 'Gulden server is not running!';
         } else {
-            $currentmessage = "Gulden server is up and running!";
+            $currentmessage = 'Gulden server is up and running!';
         }
 
         //Check the last message that was pushed to prevent multiple pushes of the same message
@@ -45,14 +45,14 @@ if (php_sapi_name() == "cli") {
     }
 
     //Check if there is a newer version of Gulden in the repository
-    if ($CONFIG['pushbulletguldenupdate']['active'] == "1") {
+    if ($CONFIG['pushbulletguldenupdate']['active'] == '1') {
 
         //Get the info (last message and current message)
         $lastmessage = $CONFIG['pushbulletguldenupdate']['lastmes'];
-        $currentmessage = "";
+        $currentmessage = '';
         $ginfo = $gulden->getinfo();
         $guldenversion = $latestversionsarray->gulden;
-        if ($ginfo != "") {
+        if ($ginfo != '') {
             $currentguldenversion = $ginfo['version'];
             if ($currentguldenversion < $guldenversion) {
                 $currentmessage = "A new version of Gulden is available ($guldenversion).";
@@ -75,24 +75,24 @@ if (php_sapi_name() == "cli") {
     }
 
     //Check if there is a new version of G-DASH available
-    if ($CONFIG['pushbulletgdash']['active'] == "1") {
+    if ($CONFIG['pushbulletgdash']['active'] == '1') {
 
         //Get the info (last message and current message)
         $lastmessage = $CONFIG['pushbulletgdash']['lastmes'];
-        $currentmessage = "";
+        $currentmessage = '';
 
         //What is the current version of G-DASH
         $currentversion = $GDASH['currentversion'];
 
         //Check which version is the latest version of G-DASH
-        if ($CONFIG['updatechannel'] == "1") {
+        if ($CONFIG['updatechannel'] == '1') {
             $getlatestversion = $latestversionsarray->beta;
         } else {
             $getlatestversion = $latestversionsarray->stable;
         }
 
         //Set the message
-        $currentmessage = "Latest version is " . $getlatestversion . ". You are currently running " . $currentversion;
+        $currentmessage = 'Latest version is ' . $getlatestversion . '. You are currently running ' . $currentversion;
 
         //Check the last message that was pushed to prevent multiple pushes of the same message
         if ($getlatestversion > $currentversion && $lastmessage != $currentmessage) {
@@ -110,31 +110,31 @@ if (php_sapi_name() == "cli") {
     }
 
     //Notification if there is a new incoming transaction
-    if ($CONFIG['pushbullettx']['active'] == "1") {
+    if ($CONFIG['pushbullettx']['active'] == '1') {
 
         //Create a list of addresses belonging to this wallet
         $addresslistrpc = $gulden->listreceivedbyaddress();
-        $addresslist = array_column($addresslistrpc, "address");
+        $addresslist = array_column($addresslistrpc, 'address');
 
         //Get the latest transaction for all accounts
-        $accounttoshowtx = "*";
+        $accounttoshowtx = '*';
         $numoftransactionstoshow = 1;
         $accounttransactions = $gulden->listtransactions($accounttoshowtx, $numoftransactionstoshow);
 
         //List all non-deleted accounts
-        $accountlistrpc = $gulden->listaccounts("*", "Normal");
+        $accountlistrpc = $gulden->listaccounts('*', 'Normal');
 
         //Get the account name of the last transaction
         $accountname = $accounttransactions[0]['accountlabel'];
 
         //Only get this account from the accountlist array
-        $accountlist_thisaccount = selectElementWithValue($accountlistrpc, "label", $accountname);
+        $accountlist_thisaccount = selectElementWithValue($accountlistrpc, 'label', $accountname);
 
         //Get the type of this account
         $accounttype = $accountlist_thisaccount[0]['type'];
 
         //Check if this is not a witness account
-        if ($accounttype != "Witness" && $accounttype != "Witness-only witness") {
+        if ($accounttype != 'Witness' && $accounttype != 'Witness-only witness') {
 
             //Get the raw transaction details
             $transactiondetails = getTransactionDetails($accounttransactions, $numoftransactionstoshow, $addresslist);
@@ -175,10 +175,10 @@ if (php_sapi_name() == "cli") {
     }
 
     //Notification if there is a new incoming witness transaction
-    if ($CONFIG['pushbulletwitness']['active'] == "1") {
+    if ($CONFIG['pushbulletwitness']['active'] == '1') {
 
         //Get witness activity
-        $mywitnessaccountsnetwork = $gulden->getwitnessinfo("tip", true, true);
+        $mywitnessaccountsnetwork = $gulden->getwitnessinfo('tip', true, true);
 
         //Get all witness accounts
         $mywitnessaccountsnetwork = $mywitnessaccountsnetwork[0]['witness_address_list'];
@@ -193,7 +193,7 @@ if (php_sapi_name() == "cli") {
             if ($witnessdata['last_active_block'] > $lastwitnessactionblock) {
                 $witnessdetailsname = $witnessdata['ismine_accountname'];
                 $lastwitnessactionblock = $witnessdata['last_active_block'];
-                $lastwitnessactiondate = date("d/m/Y H:i:s",
+                $lastwitnessactiondate = date('d/m/Y H:i:s',
                     time() - (($currentblock - $lastwitnessactionblock) / (576 / (24 * 60 * 60))));
             }
         }
@@ -206,7 +206,7 @@ if (php_sapi_name() == "cli") {
         $currentmessage = $lastwitnessactiondate . ": New witness action for $witnessdetailsname";
 
         //Check the last message that was pushed to prevent multiple pushes of the same message
-        if ($lastmessage != $currentmessage && $lastwitnessactionblock != $lastblock && $witnessdetailsname != "") {
+        if ($lastmessage != $currentmessage && $lastwitnessactionblock != $lastblock && $witnessdetailsname != '') {
 
             //The message is different, send a push notification
             $sendpush = shell_exec("curl --header 'Authorization: Bearer " . $CONFIG['pushbullet'] . "' -X POST https://api.pushbullet.com/v2/pushes --header 'Content-Type: application/json' --data-binary '{\"type\": \"note\", \"title\": \"Gulden Witness Action\", \"body\": \"" . $currentmessage . "\"}'");

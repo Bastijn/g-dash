@@ -10,7 +10,7 @@ function GetProgCpuUsage($program)
         return -1;
     }
 
-    $c_pid = exec("ps aux | grep " . $program . " | grep -v grep | grep -v su | awk {'print $3'}");
+    $c_pid = exec('ps aux | grep ' . $program . " | grep -v grep | grep -v su | awk {'print $3'}");
     //logger(5, "GuldenCpuUsage", $c_pid);
 
     return trim($c_pid);
@@ -22,7 +22,7 @@ function GetProgMemUsage($program)
         return -1;
     }
 
-    $c_pid = exec("ps aux | grep " . $program . " | grep -v grep | grep -v su | awk {'print $4'}");
+    $c_pid = exec('ps aux | grep ' . $program . " | grep -v grep | grep -v su | awk {'print $4'}");
     //logger(5, "GuldenMemUsage", $c_pid);
 
     return trim($c_pid);
@@ -45,7 +45,7 @@ function GetProgUpTime($program)
 
 function GetLinuxTemp()
 {
-    $l_temp = exec("cat /sys/class/thermal/thermal_zone0/temp");
+    $l_temp = exec('cat /sys/class/thermal/thermal_zone0/temp');
 
     if (empty($l_temp)) {
         return 0;
@@ -59,16 +59,15 @@ function GetLinuxTemp()
 
 function GetSystemMemUsage()
 {
-    exec("free", $free);
+    exec('free', $free);
     $free = implode(' ', $free);
     preg_match_all("/(?<=\s)\d+/", $free, $match);
     list($total_mem, $used_mem, $free_mem, $shared_mem, $buffered_mem, $available_mem) = $match[0];
 
-    $used_mem -= ($buffered_mem);
-    $percent_used = (int)(($used_mem * 100) / $total_mem);
+    $used_mem -= $buffered_mem;
     //logger(5, "MemCheck", $percent_used);
 
-    return $percent_used;
+    return (int)(($used_mem * 100) / $total_mem);
 }
 
 function AddTrailingSlash($string)
@@ -94,16 +93,16 @@ function logger($level, $event, $text = null)
     //5: General (system) stats
 
     $maxsize = 5242880; //Max filesize in bytes (e.q. 5MB)
-    $dir = __DIR__ . "/../../log/";
-    $filename = "gdash.log";
+    $dir = __DIR__ . '/../../log/';
+    $filename = 'gdash.log';
     $loglevel = 5;
     $maxlogs = 5;
 
     //Check if file exists and if the filesize exceeds the maxsize
     if (file_exists($dir . $filename) && filesize($dir . $filename) > $maxsize) {
         $nb = 1;
-        $logfiles = scandir($dir);
-        $oldestlog = "";
+        $logfiles = scandir($dir, SCANDIR_SORT_NONE);
+        $oldestlog = '';
 
         //Find the last file name for renaming
         foreach ($logfiles as $file) {
@@ -128,8 +127,8 @@ function logger($level, $event, $text = null)
 
     //Check if the level of this error is less than the restriced error level
     if ($level <= $loglevel && file_exists($dir . $filename)) {
-        $data = date('Y-m-d H:i:s') . ";LEVEL: " . $level . ";";
-        $data .= "EVENT: " . $event . ";" . $text . PHP_EOL;
+        $data = date('Y-m-d H:i:s') . ';LEVEL: ' . $level . ';';
+        $data .= 'EVENT: ' . $event . ';' . $text . PHP_EOL;
         file_put_contents($dir . $filename, $data, FILE_APPEND);
     }
 }
@@ -256,12 +255,12 @@ function fullNodeCheck()
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_DNS_CACHE_TIMEOUT, 0);
-    curl_setopt($ch, CURLOPT_URL, "https://guldennodes.com/portcheck/?json");
+    curl_setopt($ch, CURLOPT_URL, 'https://guldennodes.com/portcheck/?json');
     $openportcheck = curl_exec($ch);
 
 
     if ($openportcheck && $openportreturn = json_decode($openportcheck, true)) {
-        $checks[] = $openportreturn['success'] ? $openportreturn['success'] : $openportreturn['error'];
+        $checks[] = $openportreturn['success'] ?: $openportreturn['error'];
         $info = curl_getinfo($ch);
         curl_close($ch);
 
@@ -270,11 +269,11 @@ function fullNodeCheck()
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_DNS_CACHE_TIMEOUT, 0);
-            curl_setopt($ch, CURLOPT_URL, "https://guldennodes.com/portcheck/?json");
+            curl_setopt($ch, CURLOPT_URL, 'https://guldennodes.com/portcheck/?json');
             curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
             $openportcheck = curl_exec($ch);
             if ($openportcheck && $openportreturn = json_decode($openportcheck, true)) {
-                $checks[] = $openportreturn['success'] ? $openportreturn['success'] : $openportreturn['error'];
+                $checks[] = $openportreturn['success'] ?: $openportreturn['error'];
             }
             curl_close($ch);
         }
@@ -289,7 +288,7 @@ function fullNodeCheck()
 function rrmdir($src)
 {
     $returnval = false;
-    if ($src != "") {
+    if ($src != '') {
         $dir = opendir($src);
         while (false !== ($file = readdir($dir))) {
             if (($file != '.') && ($file != '..')) {
@@ -317,9 +316,9 @@ function checkOpenPort($address, $port)
     $connection = @fsockopen($address, $port);
     if (is_resource($connection)) {
         return true;
-    } else {
-        return false;
     }
+
+    return false;
 }
 
 function GetTimeAnno($timestamp)
@@ -329,39 +328,35 @@ function GetTimeAnno($timestamp)
     $minutes = (int)($seconds / 60);
     $hours = (int)($minutes / 60);
     $days = (int)($hours / 24);
-    $daysplushours = (int)($hours - ($days * 24));
+    $daysplushours = ($hours - ($days * 24));
 
     if ($days >= 1) {
         $how_long_ago = $days . ' day' . ($days != 1 ? 's' : '');
-        $how_long_ago .= " and " . $daysplushours . ' hour' . ($daysplushours != 1 ? 's' : '');
-    } else {
-        if ($hours >= 1) {
-            $how_long_ago = $hours . ' hour' . ($hours != 1 ? 's' : '');
+        $how_long_ago .= ' and ' . $daysplushours . ' hour' . ($daysplushours != 1 ? 's' : '');
+    } elseif ($hours >= 1) {
+        $how_long_ago = $hours . ' hour' . ($hours != 1 ? 's' : '');
+    } elseif ($minutes >= 1) {
+            $how_long_ago = $minutes . ' minute' . ($minutes != 1 ? 's' : '');
         } else {
-            if ($minutes >= 1) {
-                $how_long_ago = $minutes . ' minute' . ($minutes != 1 ? 's' : '');
-            } else {
-                $how_long_ago = $seconds . ' second' . ($seconds != 1 ? 's' : '');
-            }
+            $how_long_ago = $seconds . ' second' . ($seconds != 1 ? 's' : '');
         }
-    }
     return $how_long_ago;
 }
 
 function readGuldenConf($file)
 {
     $contentarray = array();
-    $handle = fopen($file, "r");
+    $handle = fopen($file, 'rb');
     if ($handle) {
         while (($line = fgets($handle)) !== false) {
-            $splittedline = explode("=", $line);
+            $splittedline = explode('=', $line);
             $var = trim($splittedline[0]);
             $val = trim($splittedline[1]);
             $contentarray[$var] = $val;
         }
         fclose($handle);
     } else {
-        $contentarray['error'] = "error";
+        $contentarray['error'] = 'error';
     }
 
     return $contentarray;
@@ -371,17 +366,17 @@ function GEOonline($ip)
 {
     $result = array();
 
-    $ip_data = @json_decode(file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $ip));
+    $ip_data = @json_decode(file_get_contents('http://www.geoplugin.net/json.gp?ip=' . $ip));
     if ($ip_data && $ip_data->geoplugin_countryName != null) {
         $result['country'] = $ip_data->geoplugin_countryName;
     } elseif ($ip_data->geoplugin_countryName == null) {
-        $result['country'] = "unknown";
+        $result['country'] = 'unknown';
     }
 
     if ($ip_data && $ip_data->geoplugin_city != null) {
         $result['city'] = $ip_data->geoplugin_city;
     } elseif ($ip_data->geoplugin_city == null) {
-        $result['city'] = "unknown";
+        $result['city'] = 'unknown';
     }
 
     return $result;
@@ -390,22 +385,18 @@ function GEOonline($ip)
 //TODO: This function can be removed at the 1.0 release
 function isPasswordUpdated()
 {
-    include('config/config.php');
-    if ($CONFIG['bcrypt'] == "1") {
-        return true;
-    } else {
-        return false;
-    }
+    include 'config/config.php';
+    return $CONFIG['bcrypt'] == "1";
 }
 
-function LoginCheck($guldenConf, $out = false, $disabled = "0")
+function LoginCheck($guldenConf, $out = false, $disabled = '0')
 {
-    include('config/config.php');
+    include 'config/config.php';
     $returnvalue = false;
 
     //If the dashboard hasn't been configured yet, go directly to the settings page
-    if ($CONFIG['configured'] != "1") {
-        $disabled = "1";
+    if ($CONFIG['configured'] != '1') {
+        $disabled = '1';
     }
 
     if (isset($_POST['login'])) {
@@ -419,11 +410,11 @@ function LoginCheck($guldenConf, $out = false, $disabled = "0")
 
         //TODO: Remove this part at the 1.0 release
         //This method will fetch the username and password from the config.php file
-        if ($usernameposted == strtolower($CONFIG['gdashuser']) && $passwordposted == $CONFIG['gdashpassword'] && $CONFIG['bcrypt'] != "1") {
+        if ($usernameposted == strtolower($CONFIG['gdashuser']) && $passwordposted == $CONFIG['gdashpassword'] && $CONFIG['bcrypt'] != '1') {
             $_SESSION['G-DASH-loggedin'] = true;
             $returnvalue = true;
         } elseif ($usernameposted == strtolower($CONFIG['gdashuser']) && password_verify($passwordposted,
-                $CONFIG['gdashpassword']) && $CONFIG['bcrypt'] == "1") {
+                $CONFIG['gdashpassword']) && $CONFIG['bcrypt'] == '1') {
             $_SESSION['G-DASH-loggedin'] = true;
             $returnvalue = true;
         } else {
@@ -436,7 +427,7 @@ function LoginCheck($guldenConf, $out = false, $disabled = "0")
         $returnvalue = false;
         $_SESSION['G-DASH-loggedin'] = false;
         session_destroy();
-    } elseif ($disabled == "1") {
+    } elseif ($disabled == '1') {
         $returnvalue = true;
         $_SESSION['G-DASH-loggedin'] = true;
     } elseif ($_SESSION['G-DASH-loggedin'] == true) {
@@ -448,12 +439,11 @@ function LoginCheck($guldenConf, $out = false, $disabled = "0")
 function checkRequiredPackages()
 {
     //Are all required packages installed?
-    $installedPackages = array();
     $installedPackages = explode(PHP_EOL, shell_exec("dpkg --get-selections | grep -v deinstall | awk {'print $1'}"));
-    $requiredPackages = array("apache2", "php5", "php5-curl", "curl", "php5-json", "libapache2-mod-php5");
-    $checkInstalled = "";
+    $requiredPackages = array('apache2', 'php5', 'php5-curl', 'curl', 'php5-json', 'libapache2-mod-php5');
+    $checkInstalled = '';
 
-    if (in_array("php5", $installedPackages)) {
+    if (in_array('php7', $installedPackages)) {
 
         foreach ($requiredPackages as $packvalue) {
             if (in_array($packvalue, $installedPackages)) {
@@ -463,9 +453,9 @@ function checkRequiredPackages()
             }
         }
 
-    } elseif (in_array("php7.0", $installedPackages)) {
+    } elseif (in_array('php7.0', $installedPackages)) {
 
-        $requiredPackages = array("apache2", "php7.0", "php7.0-curl", "curl", "php7.0-json", "libapache2-mod-php7.0");
+        $requiredPackages = array('apache2', 'php7.0', 'php7.0-curl', 'curl', 'php7.0-json', 'libapache2-mod-php7.0');
         foreach ($requiredPackages as $packvalue) {
             if (in_array($packvalue, $installedPackages)) {
                 $checkInstalled .= "<font color='green'>$packvalue - Passed</font><br>";
@@ -474,7 +464,7 @@ function checkRequiredPackages()
             }
         }
     } else {
-        $checkInstalled = "Check PHP packages!";
+        $checkInstalled = 'Check PHP packages!';
     }
 
     return $checkInstalled;
@@ -485,10 +475,10 @@ function getGuldenServices()
     //Check the Gulden listening services
     $guldenListeningServices = explode(PHP_EOL,
         shell_exec("netstat -antl | grep LISTEN | grep -v tcp6 | awk {'print $4'}"));
-    $runningService = "";
+    $runningService = '';
 
     foreach ($guldenListeningServices as $service) {
-        $runningService .= $service . "<br>";
+        $runningService .= $service . '<br>';
     }
 
     return $runningService;
@@ -523,7 +513,7 @@ function getTransactionDetails($accounttransactions, $numoftransactionstoshow, $
             $context = stream_context_create($opts);
 
             //Get the raw transaction details from the Gulden blockchain Insight API (blockchain.gulden.com)
-            $txrawdetails = @json_decode(file_get_contents("https://blockchain.gulden.com/api/tx/" . $transactiontxid,
+            $txrawdetails = @json_decode(file_get_contents('https://blockchain.gulden.com/api/tx/' . $transactiontxid,
                 false, $context));
 
             $txfromaddress = $txrawdetails->vin[0]->addr;
@@ -537,7 +527,7 @@ function getTransactionDetails($accounttransactions, $numoftransactionstoshow, $
                 $foundFromMe = false;
             }
 
-            for ($x = 0; $x < count($txrawdetails->vout); $x++) {
+            for ($x = 0, $xMax = count($txrawdetails->vout); $x < $xMax; $x++) {
                 //From other, to me
                 if ($fromme == false && in_array($txrawdetails->vout[$x]->scriptPubKey->addresses[0],
                         $addresslist) == true) {
@@ -554,7 +544,7 @@ function getTransactionDetails($accounttransactions, $numoftransactionstoshow, $
                     if ($foundFromMe == true) {
                         $txtoaddress = $txrawdetails->vout[$x]->scriptPubKey->addresses[0];
                         $txvalue = $txrawdetails->vout[$x]->value;
-                        $transactionamount = $transactionamount + -round($txvalue, 2);
+                        $transactionamount += -round($txvalue, 2);
                     } else {
                         $txtoaddress = $txrawdetails->vout[$x]->scriptPubKey->addresses[0];
                         $txvalue = $txrawdetails->vout[$x]->value;
@@ -566,15 +556,15 @@ function getTransactionDetails($accounttransactions, $numoftransactionstoshow, $
                 }
             }
 
-            if ($txtime == "") {
+            if ($txtime == '') {
                 //IGNORED: Fix the number of confirmations for unconfirmed transactions
                 //$transactiondate = "Unconfirmed ($txconfirmations confirmations)";
-                $transactiondate = "Unconfirmed";
+                $transactiondate = 'Unconfirmed';
             } else {
                 $transactiondate = date('d/m/Y H:i', $txtime);
             }
             $transactionid = "<a href='https://blockchain.gulden.com/tx/" . $transactiontxid . "' target='_blank' title='" . $transactiontxid . "'>" . substr($transactiontxid,
-                    0, 7) . "...</a>";
+                    0, 7) . '...</a>';
 
             $currenttxshown++;
 
@@ -589,8 +579,8 @@ function getTransactionDetails($accounttransactions, $numoftransactionstoshow, $
 
             $returntx[] = $currenttx;
 
-            if ($txtime == "") {
-                return "offline";
+            if ($txtime == '') {
+                return 'offline';
             }
         }
     }
@@ -633,10 +623,9 @@ function getLiveTransactionDetails($accounttransactions, $numoftransactionstosho
             $singletxdata = getTransactionDetails($temptxarray, 1, $addresslist);
 
             //If the Insight API is offline, exit this function as it will keep trying for other transactions
-            if ($singletxdata == "offline") {
+            if ($singletxdata == 'offline') {
 
-                $txconnecterror = "APIoffline";
-                return $txconnecterror;
+                return 'APIoffline';
             }
 
             $returntx[] = $singletxdata[0];
@@ -687,7 +676,7 @@ function getLiveTransactionDetails($accounttransactions, $numoftransactionstosho
                         if ($foundFromMe == true) {
                             $txtoaddress = $txrawdetails['vout'][$x]['scriptPubKey']['addresses'][0];
                             $txvalue = $txrawdetails['vout'][$x]['value'];
-                            $transactionamount = $transactionamount + -round($txvalue, 2);
+                            $transactionamount += -round($txvalue, 2);
                         } else {
                             $txtoaddress = $txrawdetails['vout'][$x]['scriptPubKey']['addresses'][0];
                             $txvalue = $txrawdetails['vout'][$x]['value'];
@@ -708,7 +697,7 @@ function getLiveTransactionDetails($accounttransactions, $numoftransactionstosho
 
                 $transactiondate = date('d/m/Y H:i', $txtime);
                 $transactionid = "<a href='https://blockchain.gulden.com/tx/" . $transactiontxid . "' target='_blank' title='" . $transactiontxid . "'>" . substr($transactiontxid,
-                        0, 7) . "...</a>";
+                        0, 7) . '...</a>';
 
                 $currenttx['txfromaddress'] = $txfromaddress;
                 $currenttx['txtime'] = $txtime;
@@ -735,7 +724,7 @@ function getWitnessTransactions($witnesstransactions)
     //TODO: Ugly, but hey, it works
     $tempwitnesstransactions = array();
     $remembertxid = array();
-    $lowestfound = "";
+    $lowestfound = '';
     foreach ($witnesstransactions as $witnesstx) {
         //Get the txid from the first item encountered
         $txid = $witnesstx['txid'];
@@ -744,10 +733,10 @@ function getWitnessTransactions($witnesstransactions)
         if (!in_array($txid, $remembertxid)) {
 
             //Find others with the same txid
-            $listwithtxid = selectElementWithValue($witnesstransactions, "txid", $txid);
+            $listwithtxid = selectElementWithValue($witnesstransactions, 'txid', $txid);
 
             //Find if any of the elements with this txid has "orphan" blocks
-            $listwithtxidorphans = selectElementWithValue($listwithtxid, "category", "orphan");
+            $listwithtxidorphans = selectElementWithValue($listwithtxid, 'category', 'orphan');
 
             //If this is an orphan block, don't take it along
             if (count($listwithtxidorphans) == 0) {

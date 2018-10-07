@@ -50,7 +50,7 @@ class EasyArrayAccess implements ArrayAccess
     /**
      * @return array
      */
-    public function getAll()
+    public function getAll(): array
     {
         return $this->configuration;
     }
