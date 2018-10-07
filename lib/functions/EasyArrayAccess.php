@@ -3,16 +3,16 @@
 class EasyArrayAccess implements ArrayAccess
 {
     /** @var array */
-    private $configuration;
+    private $data;
 
     /**
-     * AllowingConfigurationAccess constructor.
+     * EasyArrayAccess constructor.
      *
-     * @param array $configuration
+     * @param array $data
      */
-    public function __construct(array $configuration = [])
+    public function __construct(array $data = [])
     {
-        $this->configuration = $configuration;
+        $this->data = $data;
     }
 
     /**
@@ -20,7 +20,7 @@ class EasyArrayAccess implements ArrayAccess
      */
     public function offsetExists($offset)
     {
-        return isset($this->configuration[$offset]);
+        return isset($this->data[$offset]);
     }
 
     /**
@@ -28,7 +28,7 @@ class EasyArrayAccess implements ArrayAccess
      */
     public function offsetGet($offset)
     {
-        return $this->configuration[$offset] ?? null;
+        return $this->data[$offset] ?? null;
     }
 
     /**
@@ -36,7 +36,7 @@ class EasyArrayAccess implements ArrayAccess
      */
     public function offsetSet($offset, $value)
     {
-        $this->configuration[$offset] = $value;
+        $this->data[$offset] = $value;
     }
 
     /**
@@ -44,7 +44,7 @@ class EasyArrayAccess implements ArrayAccess
      */
     public function offsetUnset($offset)
     {
-        unset($this->configuration[$offset]);
+        unset($this->data[$offset]);
     }
 
     /**
@@ -52,7 +52,7 @@ class EasyArrayAccess implements ArrayAccess
      */
     public function getAll(): array
     {
-        return $this->configuration;
+        return $this->data;
     }
 }
 

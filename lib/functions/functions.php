@@ -16,6 +16,11 @@ function GetProgCpuUsage($program)
     return trim($c_pid);
 }
 
+function isRunning($program)
+{
+    return !empty(exec('ps aux | grep ' . $program . ' | grep -v grep | grep -v su'));
+}
+
 function GetProgMemUsage($program)
 {
     if (!$program) {

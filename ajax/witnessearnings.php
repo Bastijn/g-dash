@@ -1,6 +1,6 @@
 <?php
 session_start();
-
+header('Content-Type: application/json');
 //In case the server is very busy, lower the max execution time to 60 seconds
 set_time_limit(60);
 
@@ -15,7 +15,7 @@ if ($_SESSION['G-DASH-loggedin'] == true) {
     $guldenMEM = GetProgMemUsage($guldenD);
     $returnarray = array();
 
-    if ($guldenCPU > 0 && $guldenMEM > 0) {
+    if (isRunning($guldenD)) {
         //Get the local timezone
         $localdate = new DateTime();
         $localtz = $localdate->getTimezone();
@@ -102,4 +102,3 @@ if ($_SESSION['G-DASH-loggedin'] == true) {
     echo json_encode($witnessdetailsarray);
 }
 session_write_close();
-?>

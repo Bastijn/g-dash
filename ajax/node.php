@@ -1,5 +1,8 @@
 <?php
 session_start();
+
+header('Content-Type: application/json');
+
 if ($_SESSION['G-DASH-loggedin'] == true) {
     include('../config/config.php');
     include('../lib/functions/functions.php');
@@ -13,7 +16,7 @@ if ($_SESSION['G-DASH-loggedin'] == true) {
 
     session_write_close();
 
-    if ($guldenCPU > 0 && $guldenMEM > 0) {
+    if (isRunning($guldenD)) {
         //GuldenD info
         $ginfo = $gulden->getinfo();
         $gversion = $ginfo['version'];
@@ -98,4 +101,3 @@ if ($_SESSION['G-DASH-loggedin'] == true) {
 
     echo json_encode($returnarray);
 }
-?>

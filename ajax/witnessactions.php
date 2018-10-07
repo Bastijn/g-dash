@@ -1,5 +1,6 @@
 <?php
 session_start();
+header('Content-Type: application/json');
 if ($_SESSION['G-DASH-loggedin'] == true) {
     include('../config/config.php');
     include('../lib/functions/functions.php');
@@ -12,7 +13,7 @@ if ($_SESSION['G-DASH-loggedin'] == true) {
 
     $returnarray = array();
 
-    if ($guldenCPU > 0 && $guldenMEM > 0) {
+    if (isRunning($guldenD)) {
         if (isset($_GET['action'])) {
 
             //Create a new witness account
@@ -351,4 +352,4 @@ if ($_SESSION['G-DASH-loggedin'] == true) {
     }
 }
 session_write_close();
-?>
+

@@ -3,7 +3,7 @@ session_start();
 
 //In case the server is very busy, lower the max execution time to 60 seconds
 set_time_limit(60);
-
+header('Content-Type: application/json');
 if ($_SESSION['G-DASH-loggedin'] == true) {
     include('../config/config.php');
     include('../lib/functions/functions.php');
@@ -20,7 +20,7 @@ if ($_SESSION['G-DASH-loggedin'] == true) {
 
     session_write_close();
 
-    if ($guldenCPU > 0 && $guldenMEM > 0) {
+    if (isRunning($guldenD)) {
         $ginfo = $gulden->getinfo();
         $gerrors = $ginfo['errors'];
 
@@ -293,4 +293,3 @@ if ($_SESSION['G-DASH-loggedin'] == true) {
 
     echo json_encode($returnarray);
 }
-?>

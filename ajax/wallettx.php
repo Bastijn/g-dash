@@ -1,6 +1,6 @@
 <?php
 session_start();
-
+header('Content-Type: application/json');
 //In case the server is very busy, lower the max execution time to 60 seconds
 set_time_limit(60);
 
@@ -15,12 +15,12 @@ if ($_SESSION['G-DASH-loggedin'] == true) {
     $guldenMEM = GetProgMemUsage($guldenD);
     $returnarray = array();
 
-    $nodeconfig = readGuldenConf($CONFIG['datadir'] . "/Gulden.conf");
+    $nodeconfig = new EasyArrayAccess(readGuldenConf($CONFIG['datadir'] . "/Gulden.conf"));
 
     session_write_close();
 
 //Check if GuldenD is running
-    if ($guldenCPU > 0 && $guldenMEM > 0) {
+    if (isRunning($guldenD)) {
         //No need to check for transactions if the wallet is disabled
         if ($nodeconfig['disablewallet'] != "1") {
 
@@ -82,7 +82,6 @@ if ($_SESSION['G-DASH-loggedin'] == true) {
             $returnarray['accounttransactionsdetails'] = "<tr><td colspan='4'>GuldenD is not running</td></tr>";
             $returnarray['disablewallet'] = "1";
         }
-        $returnarray['errors'] = $gerrors;
         $returnarray['server']['cpu'] = $guldenCPU;
         $returnarray['server']['mem'] = $guldenMEM;
     } else {
@@ -91,4 +90,3 @@ if ($_SESSION['G-DASH-loggedin'] == true) {
 
     echo json_encode($returnarray);
 }
-?>

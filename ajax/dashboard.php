@@ -1,6 +1,8 @@
 <?php
 session_start();
 
+header('Content-Type: application/json');
+
 //In case the server is very busy, lower the max execution time to 60 seconds
 set_time_limit(10);
 
@@ -17,7 +19,7 @@ if ($_SESSION['G-DASH-loggedin'] == true) {
 //GetSystemMemUsage();
     $returnarray = array();
 
-    if ($guldenCPU > 0 && $guldenMEM > 0) {
+    if (isRunning($guldenD)) {
 
         $returnarray['server']['cpu'] = $guldenCPU;
         $returnarray['server']['mem'] = $guldenMEM;
@@ -197,4 +199,3 @@ if ($_SESSION['G-DASH-loggedin'] == true) {
     echo json_encode($returnarray);
 }
 session_write_close();
-?>
