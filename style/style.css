@@ -3,37 +3,37 @@
  * --------------------------------------------------
  */
 html {
-	height: 100%;
+    height: 100%;
 }
 
 body {
-  padding-top: 50px;
-  background-color: #f5f5f5;
-  height: 100%;
+    padding-top: 50px;
+    background-color: #f5f5f5;
+    height: 100%;
 }
 
 .container-cont {
-  min-height: 100%;
-  height: auto;
-  margin: 0 auto -50px;
-  padding: 0 0 75px;
+    min-height: 100%;
+    height: auto;
+    margin: 0 auto -50px;
+    padding: 0 0 75px;
 }
 
 .footer {
-  padding: 1rem;
-  background-color: #fff;
-  height: 50px;
-  overflow: hidden;
+    padding: 1rem;
+    background-color: #fff;
+    height: 50px;
+    overflow: hidden;
 }
 
 .footerspan {
-  text-align: center;
-  font-size: 10px
+    text-align: center;
+    font-size: 10px
 }
 
 .gauge {
-	position: relative;
-	margin: 10px;
+    position: relative;
+    margin: 10px;
     padding: 1px;
     width: 350px;
     height: 400px;
@@ -41,104 +41,108 @@ body {
 }
 
 .panel-green {
-  border-color: #5cb85c;
+    border-color: #5cb85c;
 }
+
 .panel-green > .panel-heading {
-  border-color: #5cb85c;
-  color: white;
-  background-color: #5cb85c;
+    border-color: #5cb85c;
+    color: white;
+    background-color: #5cb85c;
 }
+
 .panel-green > a {
-  color: #5cb85c;
+    color: #5cb85c;
 }
+
 .panel-green > a:hover {
-  color: #3d8b3d;
+    color: #3d8b3d;
 }
+
 .huge {
-  font-size: 24px;
+    font-size: 24px;
 }
 
 #locktime {
-  width: 3em;
-  height: 1.6em;
-  top: 50%;
-  margin-top: -.8em;
-  text-align: center;
-  line-height: 1.6em;
+    width: 3em;
+    height: 1.6em;
+    top: 50%;
+    margin-top: -.8em;
+    text-align: center;
+    line-height: 1.6em;
 }
 
 .gdashdivpointer {
-	cursor: pointer;
+    cursor: pointer;
 }
 
 .cloudbody {
-  height: 100px;
-  background-image: url("../images/bg-cloud.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+    height: 100px;
+    background-image: url("../images/bg-cloud.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .cloudlink {
-	display: block;
-	width:100%;
-	height:100%;
+    display: block;
+    width: 100%;
+    height: 100%;
 }
-
 
 /*
  * Off Canvas
  * --------------------------------------------------
  */
 @media screen and (max-width: 768px) {
-  .row-offcanvas {
-    position: relative;
-    -webkit-transition: all 0.25s ease-out;
-    -moz-transition: all 0.25s ease-out;
-    transition: all 0.25s ease-out;
-  }
+    .row-offcanvas {
+        position: relative;
+        -webkit-transition: all 0.25s ease-out;
+        -moz-transition: all 0.25s ease-out;
+        transition: all 0.25s ease-out;
+    }
 
-  .row-offcanvas-left
-  .sidebar-offcanvas {
-    left: -33%;
-  }
+    .row-offcanvas-left
+    .sidebar-offcanvas {
+        left: -33%;
+    }
 
-  .row-offcanvas-left.active {
-    left: 33%;
-  }
+    .row-offcanvas-left.active {
+        left: 33%;
+    }
 
-  .sidebar-offcanvas {
-    position: absolute;
-    top: 0;
-    width: 33%;
-    margin-left: 10px;
-  }
+    .sidebar-offcanvas {
+        position: absolute;
+        top: 0;
+        width: 33%;
+        margin-left: 10px;
+    }
 }
-
 
 /* Sidebar navigation */
 .nav-sidebar {
-  background-color: #f5f5f5;
-  margin-right: -15px;
-  margin-bottom: 20px;
-  margin-left: -15px;
+    background-color: #f5f5f5;
+    margin-right: -15px;
+    margin-bottom: 20px;
+    margin-left: -15px;
 }
+
 .nav-sidebar > li > a {
-  padding-right: 20px;
-  padding-left: 20px;
+    padding-right: 20px;
+    padding-left: 20px;
 }
+
 .nav-sidebar > .active > a {
-  color: #fff;
-  background-color: #428bca;
+    color: #fff;
+    background-color: #428bca;
 }
 
 .nav-sidebar > .active > a:hover {
-  color: #fff;
-  background-color: #92BFE6;
+    color: #fff;
+    background-color: #92BFE6;
 }
 
 .nav > li > a > img {
-  max-width: 100%;
+    max-width: 100%;
 }
 
 /*
@@ -146,15 +150,17 @@ body {
  */
 
 .main {
-  padding: 20px;
-  background-color: #fff;
+    padding: 20px;
+    background-color: #fff;
 }
+
 @media (min-width: 768px) {
-  .main {
-    padding-right: 40px;
-    padding-left: 40px;
-  }
+    .main {
+        padding-right: 40px;
+        padding-left: 40px;
+    }
 }
+
 .main .page-header {
-  margin-top: 0;
+    margin-top: 0;
 }
