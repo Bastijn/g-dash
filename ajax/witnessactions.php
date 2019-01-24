@@ -27,7 +27,9 @@ if(isset($_GET['action'])) {
 			
 			if($guldenresponse!="-14") {
 				if(strpos($_POST['accountname'], "*")===false) {
-					$createaccount = $gulden->createwitnessaccount($_POST['accountname']);
+					$accountnamechars = $_POST['accountname'];
+					$accountnamechars = str_replace(".", "_",$accountnamechars);
+					$createaccount = $gulden->createwitnessaccount($accountnamechars);
 					if($createaccount == false) {
 						$returnarray['code'] = $gulden->response['error']['code'];
 						$returnarray['message'] = $gulden->response['error']['message'];
@@ -175,7 +177,9 @@ if(isset($_GET['action'])) {
 				$guldenresponsemessage = $gulden->response['error']['message'];
 				
 				if($guldenresponse!="-14") {
-					$importaccount = $gulden->importwitnesskeys($_POST['importaccountname'], $_POST['importaccountkey']);
+					$accountnamechars = $_POST['importaccountname'];
+					$accountnamechars = str_replace(".", "_",$accountnamechars);
+					$importaccount = $gulden->importwitnesskeys($accountnamechars, $_POST['importaccountkey']);
 					if($importaccount == false) {
 						$returnarray['code'] = $gulden->response['error']['code'];
 						$returnarray['message'] = $gulden->response['error']['message'];
@@ -315,7 +319,9 @@ if(isset($_GET['action'])) {
 	elseif($_GET['action']=="changeacc") {
 		if(isset($_POST['changedacc'])!="" && isset($_POST['currentacc'])!="") {
 			if(strpos($_POST['changedacc'], "*")===false) {
-				$chaccount = $gulden->changeaccountname($_POST['currentacc'], trim($_POST['changedacc']));
+				$accountnamechars = $_POST['changedacc'];
+				$accountnamechars = str_replace(".", "_",$accountnamechars);
+				$chaccount = $gulden->changeaccountname($_POST['currentacc'], trim($accountnamechars));
 				if($chaccount == "false") {
 					$returnarray = $gulden->response;
 				} else {
