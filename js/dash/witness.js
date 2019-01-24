@@ -31,7 +31,7 @@ function showWitnessAddress(wuuid) {
 	
 	$('#witnessaddresstext').html("<b>"+nlgwaddresslist[wuuid]['label']+": </b>"+nlgwaddresslist[wuuid]['address']);
 	var qrcode = new QRCode("witnessaddressqr", {
-	    text: "Gulden:"+nlgwaddresslist[wuuid]['address']+"?label="+nlgwaddresslist[wuuid]['label'],
+	    text: "witness:"+nlgwaddresslist[wuuid]['address']+"?label="+nlgwaddresslist[wuuid]['label'],
 	    width: 128,
 	    height: 128,
 	    colorDark : "#000000",
@@ -39,7 +39,7 @@ function showWitnessAddress(wuuid) {
 	    correctLevel : QRCode.CorrectLevel.H
 	});
 	
-	$('#witnessaddresslinkqr').html("<a href='Gulden:"+nlgwaddresslist[wuuid]['address']+"?label="+nlgwaddresslist[wuuid]['label']+"' target='_blank'>Gulden:"+
+	$('#witnessaddresslinkqr').html("<a href='witness:"+nlgwaddresslist[wuuid]['address']+"?label="+nlgwaddresslist[wuuid]['label']+"' target='_blank'>witness:"+
 									 nlgwaddresslist[wuuid]['address']+"?label="+nlgwaddresslist[wuuid]['label']+"</a>");
 }
 
