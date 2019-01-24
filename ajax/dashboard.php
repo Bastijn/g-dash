@@ -17,6 +17,9 @@ $linuxTemp = GetLinuxTemp();
 //GetSystemMemUsage();
 $returnarray = array();
 
+$localdate = new DateTime();
+$localtz = $localdate->getTimezone();
+
 if($guldenCPU > 0 && $guldenMEM > 0) {
 	
 	$returnarray['server']['cpu'] = $guldenCPU;
@@ -148,8 +151,19 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 			if($witnessdata['last_active_block'] > $lastwitnessactionblock) {
 				$witnessdetailsname = $witnessdata['ismine_accountname'];
 				$lastwitnessactionblock = $witnessdata['last_active_block'];
-				$lastwitnessactiondate = date("d/m/Y H:i:s", time() - (($gblocks - $lastwitnessactionblock) / (576 / (24 * 60 * 60))));
+				//$lastwitnessactiondate = date("d/m/Y H:i:s", time() - (($gblocks - $lastwitnessactionblock) / (576 / (24 * 60 * 60))));
 			}
+		}
+		
+		// Get the exact time of the last witness action by block date/time
+		$lastwitnessactiondate = "Never";
+		if($lastwitnessactionblock > 0) {
+			$lastactive_blockhash = $gulden->getblockhash($lastwitnessactionblock);
+			$lastactive_getblock = $gulden->getblock($lastactive_blockhash);
+			$lastactive_blocktime = $lastactive_getblock['time'];
+			$lastactive_dt = new DateTime("@$lastactive_blocktime", new DateTimeZone('GMT'));
+			$lastactive_dt->setTimezone(new DateTimeZone($localtz->getName()));
+			$lastwitnessactiondate = $lastactive_dt->format('d/m/Y H:i:s');
 		}
 		
 		//Data array
