@@ -21,6 +21,38 @@ class GuldenConsoleRPC {
     }
   }
   
+  //The 'getcheckpoint' command
+  public static $getcheckpoint_documentation = "Print the currently set autocheckpoint";
+  public function getcheckpoint() {	
+    if ($_SESSION['G-DASH-loggedin']==TRUE) {
+      include('../../config/config.php');
+	  require_once('../../lib/EasyGulden/easygulden.php');
+	  $gulden = new Gulden($CONFIG['rpcuser'],$CONFIG['rpcpass'],$CONFIG['rpchost'],$CONFIG['rpcport']);
+      $ginfo = $gulden->getcheckpoint();
+      return $ginfo;
+    } else {
+      throw new Exception("Access Denied");
+    }
+  }
+  
+  //The 'getlastblocks' command
+  public static $getlastblocks_documentation = "Print the last blocks at the tip of our local chain";
+  public function getlastblocks() {	
+    if ($_SESSION['G-DASH-loggedin']==TRUE) {
+      include('../../config/config.php');
+	  require_once('../../lib/EasyGulden/easygulden.php');
+	  $gulden = new Gulden($CONFIG['rpcuser'],$CONFIG['rpcpass'],$CONFIG['rpchost'],$CONFIG['rpcport']);
+      $ginfo = $gulden->getlastblocks();
+	  $ginfostring = "";
+	  foreach ($ginfo as $key => $value) {
+		  $ginfostring .= "$key: $value\n";
+	  }
+      return $ginfostring;
+    } else {
+      throw new Exception("Access Denied");
+    }
+  }
+  
   //Show the last 50 lines of the Gulden debug log
   public static $showlog_documentation = "Show the last 50 lines of the Gulden debug log";
   public function showlog() {
@@ -188,10 +220,107 @@ class GuldenConsoleRPC {
     }
   }
   
+  //The resetdatadirpartial command
+  public static $resetdatadirpartial_documentation = "Selectively wipe parts of the data directory and exit GuldenD";
+  public function resetdatadirpartial() {	
+    if ($_SESSION['G-DASH-loggedin']==TRUE) {
+      include('../../config/config.php');
+	  require_once('../../lib/EasyGulden/easygulden.php');
+	  $gulden = new Gulden($CONFIG['rpcuser'],$CONFIG['rpcpass'],$CONFIG['rpchost'],$CONFIG['rpcport']);
+      $ginfo = $gulden->resetdatadirpartial();
+	  $gresponse = $gulden->response['error']['message'];
+	  if($gresponse=="") {
+	  	$gresponse = $ginfo;
+	  }
+	  
+      return $gresponse;
+    } else {
+      throw new Exception("Access Denied");
+    }
+  }
+  
+  //The resetdatadirfull command
+  public static $resetdatadirfull_documentation = "Wipe all blockchain data from the the data directory and exit GuldenD";
+  public function resetdatadirfull() {	
+    if ($_SESSION['G-DASH-loggedin']==TRUE) {
+      include('../../config/config.php');
+	  require_once('../../lib/EasyGulden/easygulden.php');
+	  $gulden = new Gulden($CONFIG['rpcuser'],$CONFIG['rpcpass'],$CONFIG['rpchost'],$CONFIG['rpcport']);
+      $ginfo = $gulden->resetdatadirfull();
+	  $gresponse = $gulden->response['error']['message'];
+	  if($gresponse=="") {
+	  	$gresponse = $ginfo;
+	  }
+	  
+      return $gresponse;
+    } else {
+      throw new Exception("Access Denied");
+    }
+  }
+  
+  //The resetconfig command
+  public static $resetconfig_documentation = "Erase all custom settings from the config file, with the exception of RPC connection settings";
+  public function resetconfig() {	
+    if ($_SESSION['G-DASH-loggedin']==TRUE) {
+      include('../../config/config.php');
+	  require_once('../../lib/EasyGulden/easygulden.php');
+	  $gulden = new Gulden($CONFIG['rpcuser'],$CONFIG['rpcpass'],$CONFIG['rpchost'],$CONFIG['rpcport']);
+      $ginfo = $gulden->resetconfig();
+	  $gresponse = $gulden->response['error']['message'];
+	  if($gresponse=="") {
+	  	$gresponse = $ginfo;
+	  }
+	  
+      return $gresponse;
+    } else {
+      throw new Exception("Access Denied");
+    }
+  }
+  
+  //The resetconfig_pi_lowmem command
+  public static $resetconfig_pi_lowmem_documentation = "Erase all custom settings from the config file, with the exception of RPC connection settings. Set some defaults that are suitable for a highly memory constrained device.";
+  public function resetconfig_pi_lowmem() {	
+    if ($_SESSION['G-DASH-loggedin']==TRUE) {
+      include('../../config/config.php');
+	  require_once('../../lib/EasyGulden/easygulden.php');
+	  $gulden = new Gulden($CONFIG['rpcuser'],$CONFIG['rpcpass'],$CONFIG['rpchost'],$CONFIG['rpcport']);
+      $ginfo = $gulden->resetconfig_pi_lowmem();
+	  $gresponse = $gulden->response['error']['message'];
+	  if($gresponse=="") {
+	  	$gresponse = $ginfo;
+	  }
+	  
+      return $gresponse;
+    } else {
+      throw new Exception("Access Denied");
+    }
+  }
+  
+  //The resetconfig_pi_medmem command
+  public static $resetconfig_pi_medmem_documentation = "Erase all custom settings from the config file, with the exception of RPC connection settings. Set some defaults that are suitable for a memory constrained device.";
+  public function resetconfig_pi_medmem() {	
+    if ($_SESSION['G-DASH-loggedin']==TRUE) {
+      include('../../config/config.php');
+	  require_once('../../lib/EasyGulden/easygulden.php');
+	  $gulden = new Gulden($CONFIG['rpcuser'],$CONFIG['rpcpass'],$CONFIG['rpchost'],$CONFIG['rpcport']);
+      $ginfo = $gulden->resetconfig_pi_medmem();
+	  $gresponse = $gulden->response['error']['message'];
+	  if($gresponse=="") {
+	  	$gresponse = $ginfo;
+	  }
+	  
+      return $gresponse;
+    } else {
+      throw new Exception("Access Denied");
+    }
+  }
+  
   public static $help_documentation = "Show available commands";
   public function help() {
     $availablecommands = "help - Show available commands\n";
 	$availablecommands .= "getinfo - Get GuldenD info\n";
+	$availablecommands .= "getcheckpoint - Print the currently set autocheckpoint, useful for debugging issues\n";
+	$availablecommands .= "getlastblocks - Print the last blocks at the tip of our local chain, useful for debugging issues\n";
 	$availablecommands .= "showlog - Show the last 50 lines of the Gulden debug log\n";
 	$availablecommands .= "addnode - Add a node by IP address (usage: addnode IP)\n";
 	$availablecommands .= "noderequest - Add a request to be added by other nodes\n";
@@ -199,6 +328,11 @@ class GuldenConsoleRPC {
 	$availablecommands .= "rescan - Rescan the blockchain for transactions\n";
 	$availablecommands .= "getrescanprogress - Rescan progess in percentage\n";
 	$availablecommands .= "guldenstop - Stop GuldenD graciously (i.e. before a reboot)\n";
+	$availablecommands .= "resetdatadirpartial - Selectively wipe parts of the data directory and exit GuldenD (Can be useful if stuck on a specific block after an upgrade)\n";
+	$availablecommands .= "resetdatadirfull - Wipe all blockchain data from the the data directory and exit GuldenD. Will cause a full resync to occur which may take some time.\n";
+	$availablecommands .= "resetconfig - Erase all custom settings from the config file, with the exception of RPC connection settings\n";
+	$availablecommands .= "resetconfig_pi_lowmem - Erase all custom settings from the config file, with the exception of RPC connection settings. Set some defaults that are suitable for a highly memory constrained device.\n";
+	$availablecommands .= "resetconfig_pi_medmem - Erase all custom settings from the config file, with the exception of RPC connection settings. Set some defaults that are suitable for a memory constrained device.\n";
 	
 	return $availablecommands;
   }
