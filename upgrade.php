@@ -26,23 +26,25 @@
   <?php
   $currentversion = $GDASH['currentversion'];
   $latestversionsarray = array();
-  $latestversionsarray = @json_decode(file_get_contents($GDASH['updatecheck']));
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $GDASH['updatecheck']);
+  curl_setopt($ch, CURLOPT_HEADER, 0);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0");
+  $choutput = curl_exec($ch);
+  curl_close($ch);
+
+  $latestversionsarray = json_decode($choutput);
+  $getlatestversion = $latestversionsarray->tag_name;
   
-  if($CONFIG['updatechannel']=="1") {
-	$getlatestversion = $latestversionsarray->beta;
-	$releasenotes = $latestversionsarray->betacl;
-  } else {
-	$getlatestversion = $latestversionsarray->stable;
-	$releasenotes = $latestversionsarray->stablecl;
-  }
-  
-  if($_GET['upgrade']==$getlatestversion)
+  if($_GET['upgrade'] != "" && $_GET['upgrade']==$getlatestversion)
   {
   	echo "Upgrading!<br><br>";
 	
-	$output = shell_exec("wget ".$GDASH['updatelocation']."G-DASH-".$getlatestversion.".tar.gz -P ".getcwd()."/updater && 
-			   tar -xvf ".getcwd()."/updater/G-DASH-".$getlatestversion.".tar.gz --directory ".getcwd()." && 
-			   rm ".getcwd()."/updater/G-DASH-".$getlatestversion.".tar.gz");
+	//New style updater directly from GitHub
+	$output = shell_exec("wget ".$GDASH['updatelocation'].$getlatestversion.".tar.gz -P ".getcwd()."/updater && 
+			   tar -xvf ".getcwd()."/updater/".$getlatestversion.".tar.gz --directory ".getcwd()." --strip 1 && 
+			   rm ".getcwd()."/updater/".$getlatestversion.".tar.gz");
 	
 	echo "Upgrade complete!<br>";
 	echo "<a href='?page=settings'>Click here to review your settings</a><br><br>";
@@ -57,15 +59,7 @@
 				 the G-DASH folder. Make sure the webserver (usually 'www-data') is the owner or has write permissions.</font><br>";
 		} else {
   		  	echo "New version of G-DASH available ($getlatestversion). You are running $currentversion.<br>
-	  	     <a href='?page=upgrade&upgrade=$getlatestversion'>Upgrade now</a><br><br>
-	  	     <div class=\"panel panel-default\">
-		     <div class=\"panel-heading\"><b>Changed in $getlatestversion</b></div>
-		     <div class=\"panel-body\">
-				<ul>
-	  	     		$releasenotes
-				</ul>
-			 </div>
-			 </div>";
+	  	     <a href='?page=upgrade&upgrade=$getlatestversion'>Upgrade now</a><br><br>";
 		}
 	  } else {
 	  	echo "You are running the latest version of G-DASH.";

@@ -10,9 +10,20 @@ if (php_sapi_name() == "cli") {
 	$gulden = new Gulden($CONFIG['rpcuser'],$CONFIG['rpcpass'],$CONFIG['rpchost'],$CONFIG['rpcport']);
 	
 	//Get the latest version info for G-DASH and Gulden
+	$latestversionsau = array();
 	$latestversionsarray = array();
 	$internalip = trim(shell_exec("ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1 -d'/'"));
-	$latestversionsarray = @json_decode(file_get_contents($GDASH['updatecheck']."?ip=".$internalip."&cv=".$CONFIG['dashversion']));
+	$latestversionsau = @json_decode(file_get_contents($GDASH['updateau']."?ip=".$internalip."&cv=".$CONFIG['dashversion']));
+
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, $GDASH['updatecheck']);
+	curl_setopt($ch, CURLOPT_HEADER, 0);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0");
+	$choutput = curl_exec($ch);
+	curl_close($ch);
+
+	$latestversionsarray = json_decode($choutput);
 	
 	//Write the current Gulden status to the log file
 	//GetSystemMemUsage();
@@ -50,7 +61,7 @@ if (php_sapi_name() == "cli") {
 		$lastmessage = $CONFIG['pushbulletguldenupdate']['lastmes'];
 		$currentmessage = "";
 		$ginfo = $gulden->getinfo();
-		$guldenversion = $latestversionsarray->gulden;
+		$guldenversion = $latestversionsau->gulden;
 		if($ginfo !="") {
 			$currentguldenversion = $ginfo['version'];
 			if($currentguldenversion < $guldenversion) {
@@ -83,11 +94,7 @@ if (php_sapi_name() == "cli") {
 		$currentversion = $GDASH['currentversion'];
 		
 		//Check which version is the latest version of G-DASH	  
-		if($CONFIG['updatechannel']=="1") {
-			$getlatestversion = $latestversionsarray->beta;
-		} else {
-			$getlatestversion = $latestversionsarray->stable;
-		}
+		$getlatestversion = $latestversionsarray->tag_name;
 		
 		//Set the message
 		$currentmessage = "Latest version is ".$getlatestversion.". You are currently running ".$currentversion;

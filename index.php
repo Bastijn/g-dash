@@ -95,13 +95,21 @@ if($CONFIG['otp']=="1" && $CONFIG['disablelogin'] != "1" && isset($_POST['login'
 <?php
 //Check if there is an update for G-DASH
 $currentversion = $GDASH['currentversion'];
+$latestversionsau = array();
 $latestversionsarray = array();
-$latestversionsarray = @json_decode(file_get_contents($GDASH['updatecheck']."?cv=$currentversion"));
-if($CONFIG['updatechannel']=="1") {
-	$getlatestversion = $latestversionsarray->beta;
-} else {
-	$getlatestversion = $latestversionsarray->stable;
-}
+$latestversionsau = @json_decode(file_get_contents($GDASH['updateau']."?cv=$currentversion"));
+
+$latestversionsarray = array();
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $GDASH['updatecheck']);
+curl_setopt($ch, CURLOPT_HEADER, 0);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0");
+$choutput = curl_exec($ch);
+curl_close($ch);
+
+$latestversionsarray = json_decode($choutput);
+$getlatestversion = $latestversionsarray->tag_name;
 
 if($getlatestversion > $currentversion) {
 	echo "<div class='alert alert-info'>
@@ -137,7 +145,7 @@ if($gulden->getinfo()=="") {
 	//Check if there is an update for Gulden
 	$checkversioninfo = $gulden->getinfo();
 	$currentguldenversion = $checkversioninfo['version'];
-	$guldenversion = $latestversionsarray->gulden;
+	$guldenversion = $latestversionsau->gulden;
 	
 	if($currentguldenversion < $guldenversion) {
 		echo "<div class='alert alert-info' id='guldenupdateavailable'>

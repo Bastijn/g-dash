@@ -24,6 +24,23 @@
   </h1>
   
   <div class="panel panel-default">
+    <div class="panel-heading"><b>1.2</b></div>
+    <div class="panel-body">
+		<ul>
+			<li>ENHANCEMENT: Next updates will be fetched from GitHub directly.</li>
+			<li>FEATURE: New commands for resetting the blockchain added to CLI. See: <code>php /var/www/html/gdcli help</code> for details</li>
+			<li>BUG: Corrected witness address URL in QR code.</li>
+			<li>ENHANCEMENT: Random sleep time for pushbullet notifications</li>
+			<li>BUG: Witness account list was not populated when not funded.</li>
+			<li>BUG: Incorrect witness timestamp in dashboard.</li>
+			<li>BUG: Replace dots with underscores in witness account names.</li>
+			<li>ENHANCEMENT: Updates will be performed directly from GitHub</li>
+			<li>REMOVED: Remove beta update channel.</li>
+		</ul>
+    </div>
+  </div>
+  
+  <div class="panel panel-default">
     <div class="panel-heading"><b>1.1</b></div>
     <div class="panel-body">
 		<ul>

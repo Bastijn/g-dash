@@ -61,7 +61,6 @@
 	$CONFIG['disablelogin'] = $_POST['disablelogin'];
 	if($_POST['disablelogin']=="1") { $CONFIG['otp'] = "0"; }
 	
-	$CONFIG['updatechannel'] = $_POST['updatechannel'];
 	$CONFIG['nodeupload'] = $_POST['nodeupload'];
 	
 	if($_POST['allownoderequests']=="") { $CONFIG['allownoderequests'] = "0"; } else { $CONFIG['allownoderequests'] = "1"; }
@@ -351,12 +350,6 @@
 			    <input type="checkbox" id="disablelogin" name="disablelogin" aria-describedby="disableloginhelp" value="1" <?php if($CONFIG['disablelogin']=="1") { echo "checked='checked'"; } ?>>Disable login screen</label><br>
 			    <small id="disableloginhelp" class="form-text text-muted">Note: By disabling the login screen, everyone on your network (or if your server can be reached 
 			                                                              from the internet --> EVERYONE) can access this dashboard</small>
-			  </div>
-			  
-			  <div class="checkbox">
-			    <label>
-			    <input type="checkbox" id="updatechannel" name="updatechannel" aria-describedby="updatechannelhelp" value="1" <?php if($CONFIG['updatechannel']=="1") { echo "checked='checked'"; } ?>>Use the Beta update channel</label><br>
-			    <small id="updatechannelhelp" class="form-text text-muted">The Beta updates may contain bugs. Use this option only if you want to help testing!</small>
 			  </div>
 			  
 			  <?php if($CONFIG['disablelogin']!="1") {
