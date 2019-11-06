@@ -56,11 +56,13 @@
   	
   	<br>
   	<img src="images/donations.png" border="0" width="175" height="175">
-  	<br>
   	
+  	<br><br><br>
   	<p class="lead">Sponsors</p>
-  	<a href="https://nocks.com/trade?utm_source=gdash" target="_blank"><img class="img-responsive" src="https://g-dash.nl/images/nocks.jpg" border="0"></a>
+  	<!--<a href="https://nocks.com/trade?utm_source=gdash" target="_blank"><img class="img-responsive" src="https://g-dash.nl/images/nocks.jpg" border="0"></a>-->
+	Send me a message if you would like to become a sponsor!
   	
+	<br><br><br>
   	<p class="lead">License and Copyright</p>
   	GNU General Public License v3.0<br>
   	

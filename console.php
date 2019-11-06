@@ -1,5 +1,5 @@
 <?php
-function resetChain($resetlevel){
+function resetChain($resetlevel, $CONFIG){
     //Connect to GuldenD
     $gulden = new Gulden($CONFIG['rpcuser'],$CONFIG['rpcpass'],$CONFIG['rpchost'],$CONFIG['rpcport']);
     
@@ -153,10 +153,10 @@ if (php_sapi_name() == "cli") {
 			
 			//If argument is to reset the Gulden chain
 			} elseif($argv[1]=="reset_blockchain_partial") {
-				resetChain(0);				
+				resetChain(0, $CONFIG);				
 			//If argument is to reset the Gulden chain
 			} elseif($argv[1]=="reset_blockchain") {
-				resetChain(1);				
+				resetChain(1, $CONFIG);				
 			//If the argument is help
 			} elseif($argv[1]=="help") {			
 				echo "-----------------------------------------------" . PHP_EOL;

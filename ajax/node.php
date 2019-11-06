@@ -30,8 +30,10 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 	$cityarray = array();
 	
 	foreach($gpeerinfo as $innerArray) {
-	  if($innerArray['inbound']=="1") {
-	  	$ginboundconnections++;
+		if($innerArray['inbound']=="1") {
+			$ginboundconnections++;
+		}
+		
 		$subvers = str_replace("/", "", $innerArray['subver']);
 		$subversarray[$subvers]++;
 		$inboundipport = $innerArray['addr'];
@@ -41,7 +43,6 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 		$ipinfo_cityname = $ipinfo['city'];
 		$countryarray[$ipinfo_countryname]++;
 		$cityarray[$ipinfo_cityname]++;
-	  }
 	}
 	
 	//Location info

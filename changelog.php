@@ -24,6 +24,18 @@
   </h1>
   
   <div class="panel panel-default">
+    <div class="panel-heading"><b>1.3</b></div>
+    <div class="panel-body">
+		<ul>
+			<li>FEATURE: Updated voluntary node upload to Dactual Nodemaps.</li>
+			<li>BUG: Commands for resetting the blockchain using the CLI did not connect to the config.</li>
+			<li>BUG: GitHub issue #20: Only inbound connections were shown in the node list.</li>
+			<li>FEATURE: Donate to G-DASH using CoinRequest banner.</li>
+		</ul>
+    </div>
+  </div>
+  
+  <div class="panel panel-default">
     <div class="panel-heading"><b>1.2</b></div>
     <div class="panel-body">
 		<ul>

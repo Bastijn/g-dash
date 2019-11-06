@@ -89,7 +89,7 @@
 	
 	//Twice per hour, random between 1-600 seconds
 	$randomstatstime = rand(1,600);
-	$nodestatscronentry = "*/10 * * * * sleep ".$randomstatstime."; ".$CONFIG['guldenlocation']."Gulden-cli -datadir=".$CONFIG['datadir']." getpeerinfo | curl -X POST -H \"Content-Type:application/json\" -d @- https://guldennodes.com/endpoint/ >/dev/null 2>&1";
+	$nodestatscronentry = "*/10 * * * * sleep ".$randomstatstime."; ".$CONFIG['guldenlocation']."Gulden-cli -datadir=".$CONFIG['datadir']." getpeerinfo | curl -X POST -H \"Content-Type:application/json\" -d @- https://dactual.com/api/v1/peerinfo.php/ >/dev/null 2>&1";
 	$currentcron = explode(PHP_EOL, shell_exec('crontab -l'));
 	
 	if($nodestatscron=="0" && $CONFIG['nodeupload']=="1") {
@@ -449,10 +449,8 @@
 			    <label>
 			    <input type="checkbox" id="nodeupload" name="nodeupload" aria-describedby="nodeuploadhelp" value="1" <?php if($CONFIG['nodeupload']=="1") { echo "checked='checked'"; } ?>>Upload node statistics</label><br>
 			    <small id="nodeuploadhelp" class="form-text text-muted">Help the Gulden network by uploading your node statistics. You can see the stats
-			    														of your node and a spider web showing all your connections on 
-			    														<a href="https://guldennodes.com/?crawler" target="_blank">
-			    														https://guldennodes.com/?crawler</a><br>(Note: This link only works if you visit 
-			    														this website from the same network as your node. Otherwise, use "?crawler=YourIP")</small>
+			    														and a map of the nodes on <a href='https://www.dactual.com/nodemaps.php' target='_blank'>
+																		Dactual</a></small>
 			  </div>
 			  
 			  <div class="checkbox">
