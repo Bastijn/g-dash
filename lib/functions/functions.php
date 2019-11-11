@@ -230,12 +230,12 @@ function fullNodeCheck() {
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
 	curl_setopt($ch, CURLOPT_DNS_CACHE_TIMEOUT, 0);
-	curl_setopt($ch, CURLOPT_URL, "https://guldennodes.com/portcheck/?json");
+	curl_setopt($ch, CURLOPT_URL, "https://guldenticker.com/api/portcheck.json");
 	$openportcheck = curl_exec($ch);
 	
 
 	if ($openportcheck && $openportreturn = json_decode($openportcheck, true)) {
-		$checks[] = $openportreturn['success']?$openportreturn['success']:$openportreturn['error'];
+		$checks[] = $openportreturn['success']?$openportreturn['local_ip'] . ' is listening':$openportreturn['local_ip'] . ' is not reachable';
 		$info = curl_getinfo($ch);		
 		curl_close($ch);
 		
@@ -243,11 +243,11 @@ function fullNodeCheck() {
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
 			curl_setopt($ch, CURLOPT_DNS_CACHE_TIMEOUT, 0);
-			curl_setopt($ch, CURLOPT_URL, "https://guldennodes.com/portcheck/?json");
+			curl_setopt($ch, CURLOPT_URL, "https://guldenticker.com/api/portcheck.json");
 			curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
 			$openportcheck = curl_exec($ch);
 			if ($openportcheck && $openportreturn = json_decode($openportcheck, true)) {
-				$checks[] = $openportreturn['success']?$openportreturn['success']:$openportreturn['error'];
+				$checks[] = $openportreturn['success']?$openportreturn['local_ip'] . ' is listening':$openportreturn['local_ip'] . ' is not reachable';
 			}
 			curl_close($ch);
 		}
