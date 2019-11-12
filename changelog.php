@@ -31,6 +31,7 @@
 			<li>BUG: Commands for resetting the blockchain using the CLI did not connect to the config.</li>
 			<li>BUG: GitHub issue #20: Only inbound connections were shown in the node list.</li>
 			<li>FEATURE: Donate to G-DASH using CoinRequest banner.</li>
+			<li>ENHANCEMENT: Migrated full node port checker to new server.</li>
 		</ul>
     </div>
   </div>
