@@ -179,7 +179,7 @@ if(isset($_GET['action'])) {
 				if($guldenresponse!="-14") {
 					$accountnamechars = $_POST['importaccountname'];
 					$accountnamechars = str_replace(".", "_",$accountnamechars);
-					$importaccount = $gulden->importwitnesskeys($accountnamechars, $_POST['importaccountkey']);
+					$importaccount = $gulden->importwitnesskeys($accountnamechars, $_POST['importaccountkey'], true);
 					if($importaccount == false) {
 						$returnarray['code'] = $gulden->response['error']['code'];
 						$returnarray['message'] = $gulden->response['error']['message'];
