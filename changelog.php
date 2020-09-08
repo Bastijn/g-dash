@@ -24,6 +24,16 @@
   </h1>
   
   <div class="panel panel-default">
+    <div class="panel-heading"><b>1.4</b></div>
+    <div class="panel-body">
+		<ul>
+			<li>BUG: Adding witness keys needed an extra parameter in RPC.</li>
+			<li>ENHANCEMENT: Removed exchanges GT and Nocks.</li>
+		</ul>
+    </div>
+  </div>
+  
+  <div class="panel panel-default">
     <div class="panel-heading"><b>1.3</b></div>
     <div class="panel-body">
 		<ul>
