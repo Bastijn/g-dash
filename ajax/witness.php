@@ -185,7 +185,7 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 				//Sum the earnings
 				$totalwitnessearnings = 0;
 				foreach ($witnesstransactions as $witnesstxearnings) {
-					$totalwitnessearnings = $totalwitnessearnings + $witnesstxearnings['amount'];
+					if ($witnesstxearnings['vout'] != 0) $totalwitnessearnings = $totalwitnessearnings + $witnesstxearnings['amount'];
 				}
 				
 				//Count the witness cycles

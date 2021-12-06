@@ -271,20 +271,6 @@
 		    	<img src="images/loading.gif" border="0" height="64" width="64"> Loading....
 		    </div>
   		</div>
-  	</div>
-  	<div class="col-md-9">
-  		<div class="panel panel-default">
-		    <div class="panel-heading" id="currentaccountname">Current account</div>
-		    <div class="panel-body" id="walletinfopanel">
-		    	<img src="images/loading.gif" border="0" height="64" width="64"> Loading....
-		    </div>
-		</div>
-  	</div>
-  </div>
-  
-  <div class="row">
-  	<div class="col-md-3"></div>
-  	<div class="col-md-9">
   		<div class="panel panel-default">
 		    <div class="panel-heading">Account actions</div>
 		    <div class="panel-body" id="accountactions">
@@ -311,11 +297,17 @@
 		    	</div>
 		    </div>
 		</div>
+    </div>
+    
+   	<div class="col-md-9">
+  		<div class="panel panel-default">
+		    <div class="panel-heading" id="currentaccountname">Current account</div>
+		    <div class="panel-body" id="walletinfopanel">
+		    	<img src="images/loading.gif" border="0" height="64" width="64"> Loading....
+		    </div>
+		</div>
   	</div>
-  </div>
-  
-  <div class="row">
-  	<div class="col-md-3"></div>
+  	
   	<div class="col-md-9">
   		<div class="panel panel-default">
 		    <div class="panel-heading">Last 30 transactions</div>
@@ -340,5 +332,4 @@
   </div>
   <hr>
 
-  </div><!--/row-->
 </div>

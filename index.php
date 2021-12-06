@@ -142,19 +142,19 @@ if($gulden->getinfo()=="") {
 			  </div>";
 	}
 } else {
-	//Check if there is an update for Gulden
-	$checkversioninfo = $gulden->getinfo();
-	$currentguldenversion = $checkversioninfo['version'];
-	$guldenversion = $latestversionsau->gulden;
+    if (!isset($_SESSION['versionschecked'])) {
 	
-	if($currentguldenversion < $guldenversion) {
-		echo "<div class='alert alert-info' id='guldenupdateavailable'>
-		   <strong>Gulden update available:</strong><br>There is an update available
-		   for Gulden. You are running version <b>$currentguldenversion</b> and the
-		   latest version is <b>$guldenversion</b>. If you run G-DASH on a Raspberry
-		   Pi with the Gulden repository configured, you can restart your Pi to
-		   automatically update to the latest version.
-		  </div>";
+        // Version check only once after login
+        // Check if there is an update for Gulden
+        $versions = checkGuldenVersion($gulden);
+        if($versions['latest'] != "" && $versions['current'] != $versions['latest']) {
+            $_SESSION['currentguldenversion'] = $versions['current'];
+            $_SESSION['latestguldenversion'] = $versions['latest'];
+        }
+        $_SESSION['versionschecked'] = true;
+    }
+	if (isset($_SESSION['latestguldenversion'])) { echo "<div class='alert alert-info' id='guldenupdateavailable'>
+		   <strong>Gulden update available:</strong><br>There is an update available for Gulden. You are running version <b>".$_SESSION['currentguldenversion']."</b> and the latest version is <b>".$_SESSION['latestguldenversion']."</b></div>";
 	}
 }
 

@@ -8,13 +8,13 @@ $(document).ready(function() {
 		  
 		  if(data['server']['cpu']!='') {
 		  	  if(data['node']['inbound']!="0") {
-				  $('#serverinfopanel').html("<div class='table-responsive'><table class='table table-striped'>"+
-				  							 "<tr><td><b>Version:</b></td><td>"+data['gulden']['version']+"</td></tr>"+
+				  $('#serverinfopanel').html("<table class='table table-striped'>"+
+				  							 "<tr><td class='col-md-2'><b>Version:</b></td><td class='col-md-2'>"+data['gulden']['version']+"</td></tr>"+
 				  							 "<tr><td><b>Server uptime:</b></td><td>"+data['gulden']['uptime']+"</td></tr>"+
 				  							 "<tr><td><b>Time offset:</b></td><td>"+data['gulden']['timeoffset']+"</td></tr>"+
 				  							 "<tr><td><b>Connections:</b></td><td>"+data['node']['connections']+"</td></tr>"+
 				  							 "<tr><td><b>Inbound connections:</b></td><td>"+data['node']['inbound']+"</td></tr>"+
-				  							 "</table></div>");
+				  							 "</table>");
 				  
 				  $('#tablelocation > tbody:last-child').html(data['location']);
 				  $('#tableversion > tbody:last-child').html(data['version']);

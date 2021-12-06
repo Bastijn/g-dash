@@ -72,7 +72,7 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 	
 	//Get the witness transactions details
 	//$witnesstransactions = getWitnessTransactions($witnesstransactions);
-	$witnesstransactions = selectElementWithValue($witnesstransactions, "category", "generate");
+    $witnesstransactions = selectElementWithValue($witnesstransactions, "category", "generate");
 	
 	//Immature witness transactions
 	//$witnesstransactions_immature = selectElementWithValue($witnesstransactions, "category", "immature");
@@ -83,7 +83,7 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 	//$sumearnings = 0;
 	foreach ($witnesstransactions as $witnesstxearnings) {
 		//$sumearnings = $sumearnings + $witnesstxearnings['amount'];
-		$totalwitnessearnings[$witnesstxearnings['time']] = $witnesstxearnings['amount'];
+		if ($witnesstxearnings['vout'] != 0) $totalwitnessearnings[$witnesstxearnings['time']] = $witnesstxearnings['amount'];
 	}
 	
 	//Put all the earnings in the return array
