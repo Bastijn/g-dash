@@ -549,7 +549,7 @@ function getTransactionDetails($accounttransactions, $numoftransactionstoshow, $
 }
 
 //Function to fetch the txdetails live from the wallet
-function getLiveTransactionDetails($accounttransactions, $numoftransactionstoshow, $addresslist, $gulden) {
+function getLiveTransactionDetails($accounttransactions, $numoftransactionstoshow, $addresslist, $gulden, $selectedaccount) {
 	$returntx = array();
 	$uniquetxids = array();
 	
@@ -569,11 +569,11 @@ function getLiveTransactionDetails($accounttransactions, $numoftransactionstosho
 	
 	//reset the keys
 	$uniquetxids = array_values($uniquetxids);
-	
-	//For each transaction ID
+
+    //For each transaction ID
 	foreach ($uniquetxids as $transactiontxid) {
 		//Get the raw transaction details from the GuldenD for this transaction
-		$txrawdetails = $gulden->getrawtransaction($transactiontxid, 1);
+		$txrawdetails = $gulden->gettransaction($transactiontxid);
 		
 		//If the getrawtransaction fails, fall back to the original Insight API and go to the next TXID
 		if(empty($txrawdetails)) {
@@ -591,83 +591,17 @@ function getLiveTransactionDetails($accounttransactions, $numoftransactionstosho
 			
 			$returntx[] = $singletxdata[0];
 		} else {
-							
-			//Get the first vout txID and N (sender)
-			$txfromdetailstxid = $txrawdetails['vin'][0]['txid'];
-			$txfromdetailsvout = $txrawdetails['vin'][0]['vout'];
-			
-			//Get the raw transaction details from GuldenD for the senders' transaction
-			$txrawdetailssender = $gulden->getrawtransaction($txfromdetailstxid, 1);
-			
-			//If the getrawtransaction fails, fall back to the original Insight API and go to the next TXID
-			if(empty($txrawdetailssender)) {
-				$temptxarray = array();
-				$temptxarray[]['txid'] = $transactiontxid;
-				$singletxdata = getTransactionDetails($temptxarray, 1, $addresslist);
-				$returntx[] = $singletxdata[0];
-			} else {
-				
-				//Get the first address of the sender
-				$txfromaddress = $txrawdetailssender['vout'][$txfromdetailsvout]['scriptPubKey']['addresses'][0];
-				
-				//Time, # of confirmations and transaction fee
-				$txtime = $txrawdetails['time'];
-				$txconfirmations = $txrawdetails['confirmations'];
-				$txfee = 0; //TODO
-				
-				$fromme = FALSE;
-				if(in_array($txfromaddress, $addresslist)==TRUE) {
-					$fromme = TRUE;
-					$foundFromMe = FALSE;
-				}
-				
-				for ($x=0; $x<count($txrawdetails['vout']); $x++) {
-					//From other, to me
-					if($fromme==FALSE && in_array($txrawdetails['vout'][$x]['scriptPubKey']['addresses'][0], $addresslist)==TRUE) {
-						$txtoaddress = $txrawdetails['vout'][$x]['scriptPubKey']['addresses'][0];
-						$txvalue = $txrawdetails['vout'][$x]['value'];
-						$transactionamount = round($txvalue,2);
-					}
-					
-					//From me, to other
-					if($fromme==TRUE && in_array($txrawdetails['vout'][$x]['scriptPubKey']['addresses'][0], $addresslist)==FALSE) {
-						//If this is a "sendmany" transaction
-						if($foundFromMe == TRUE) {
-							$txtoaddress = $txrawdetails['vout'][$x]['scriptPubKey']['addresses'][0];
-							$txvalue = $txrawdetails['vout'][$x]['value'];
-							$transactionamount = $transactionamount + -round($txvalue,2);
-						} else {
-							$txtoaddress = $txrawdetails['vout'][$x]['scriptPubKey']['addresses'][0];
-							$txvalue = $txrawdetails['vout'][$x]['value'];
-							$transactionamount = -round($txvalue,2);
-							
-							//We found a first transaction; set to TRUE in case this is a sendmany transaction
-							$foundFromMe = TRUE;
-						}
-					}
-				}
-				
-				//IGNORED: unconfirmed transactions, don't show them in the list
-				/*
-				if($txconfirmations<6) {
-					$transactiondate = "Unconfirmed (".$txconfirmations.") (".date('d/m/Y H:i', $txtime).")";
-				}
-				*/
-				
-				$transactiondate = date('d/m/Y H:i', $txtime);
-				$transactionid = "<a href='https://blockchain.gulden.com/tx/".$transactiontxid."' target='_blank' title='".$transactiontxid."'>".substr($transactiontxid, 0, 7)."...</a>";
-				
-				$currenttx['txfromaddress'] = $txfromaddress;
-				$currenttx['txtime'] = $txtime;
-				$currenttx['txconfirmations'] = $txconfirmations;
-				$currenttx['txfee'] = $txfee;
-				$currenttx['txtoaddress'] = $txtoaddress;
-				$currenttx['transactionamount'] = $transactionamount;
-				$currenttx['transactiondate'] = $transactiondate;
-				$currenttx['transactionid'] = $transactionid;
-				
-				$returntx[] = $currenttx;
-			}
+   			$transactiondate = date('d/m/Y H:i', $txrawdetails['time']);
+            $txdetails = $txrawdetails['details'];
+            for ($x=0; $x<count($txdetails); $x++) {
+                if (strcmp($txdetails[$x]['account'], $selectedaccount) == 0) {
+                    $currenttx['transactiondate'] = $transactiondate;
+                    $currenttx['transactionamount'] = $txdetails[$x]['amount'];
+                    if ($x == 0) $currenttx['transactionid'] = $txrawdetails['txid'];
+                    else $currenttx['transactionid'] = "";
+                    $returntx[] = $currenttx;
+                }
+            }
 		}
 	}
 
@@ -731,4 +665,33 @@ function getWitnessTransactions($witnesstransactions) {
 
 	return $tempwitnesstransactions;
 }
+
+// Check if there is an update for Gulden
+function checkGuldenVersion ($gulden) {
+    // Return array_values
+    $versions = array();
+
+    // Get installed version
+	$checkversioninfo = $gulden->getinfo();
+	$currentguldenversion = $checkversioninfo['version'];
+
+    // Get latest Gulden version
+    $json = json_decode(file_get_contents('https://api.github.com/repos/Gulden/gulden-official/releases/latest', false,
+        stream_context_create(['http' => ['header' => "User-Agent: Vestibulum\r\n"]])), true);
+    $versions['latest'] = $json['tag_name'];
+    
+    // Format current version
+    $cvarray = str_split($currentguldenversion);
+    $cv = "v" . $cvarray[0] . ".";
+    if ($cvarray[1] == 0) $cv = $cv . $cvarray[2];
+    else $cv = $cv . $cvarray[1] . $cvarray [2];
+    $cv = $cv . ".";
+    if ($cvarray[5] == 0) $cv = $cv . $cvarray[6];
+    else $cv = $cv . $cvarray[5] . $cvarray [6];
+	$versions['current'] = $cv;
+	
+	// Return latest and current version
+	return $versions;
+}
 ?>
+

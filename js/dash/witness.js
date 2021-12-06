@@ -255,7 +255,7 @@ function calculateWeight(sliderval) {
 	var lockedamount = parseFloat($('#lockamount').val());
 	
 	//To calculate the weight step by step
-	var BlocksPerMonth = (576 * 30) + 50;
+	var BlocksPerMonth = (576 * (365 / 12)) + 50;
 	var LockForMonthsInBlocks = parseFloat(BlocksPerMonth * slidervalue);
 	var BlocksPerYear = 576 * 365;
 	

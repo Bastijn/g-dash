@@ -12,5 +12,13 @@
 		    'symbol' => 'BTC',
 		    'rounding' => 6,
 		  ),
-	  ),
-); ?>
+	    '1' => array (
+		    'exchange' => 'CoinGecko',
+		    'market' => 'https://api.coingecko.com/api/v3/simple/price?ids=gulden&vs_currencies=eur',
+		    'link' => 'gulden->eur',
+		    'symbol' => '&euro;',
+		    'rounding' => 2,
+		  ),
+      ),
+  );
+?>

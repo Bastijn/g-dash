@@ -34,56 +34,54 @@
     </div>
   </div>
   <hr>
+  
   <div class="panel panel-default">
     <div class="panel-heading">Node configuration (Gulden.conf)</div>
     <div class="panel-body" id="nodeconfig">
     	<?php
     		$nodeconfig = readGuldenConf($CONFIG['datadir']."Gulden.conf");
 			if($nodeconfig['maxconnections']=="") { $nodeconfig['maxconnections'] = 0; }
-			echo "<div class='table-responsive'><table class='table table-striped'>";
-			echo "<tr><td><b>Max connections:</b></td><td>".$nodeconfig['maxconnections']."</td></tr>";
-			echo "</table></div>";
+			echo "<table class='table table-striped'>";
+			echo "<tr><td class='col-md-2'><b>Max connections:</b></td><td class='col-md-2'>".$nodeconfig['maxconnections']."</td></tr>";
+			echo "</table>";
     	?>
     </div>
   </div>
   <hr>
+  
   <div class="panel panel-default">
     <div class="panel-heading">Node connections</div>
     <div class="panel-body" id="nodeconfig">
-    <div class="table-responsive">
 	    <table class="table table-striped" id="tablelocation">
 	      <thead>
 	        <tr>
-	          <th>Location</th>
-	          <th>Count</th>
+	          <th class='col-md-2'>Location</th>
+	          <th class='col-md-2'>Count</th>
 	        </tr>
 	      </thead>
 	      <tbody>
 	        <tr><td colspan="2"><img src="images/loading.gif" border="0" height="64" width="64"> Loading....</td></tr>
 	      </tbody>
 	    </table>
-	</div>
     </div>
   </div>
   <hr>
+  
   <div class="panel panel-default">
     <div class="panel-heading">Client Gulden versions</div>
     <div class="panel-body" id="guldenversions">
-    <div class="table-responsive">
 	    <table class="table table-striped" id="tableversion">
 	      <thead>
 	        <tr>
-	          <th>Version</th>
-	          <th>Count</th>
+	          <th class='col-md-2'>Version</th>
+	          <th class='col-md-2'>Count</th>
 	        </tr>
 	      </thead>
 	      <tbody>
 	        <tr><td colspan="2"><img src="images/loading.gif" border="0" height="64" width="64"> Loading....</td></tr>
 	      </tbody>
 	    </table>
-	</div>
     </div>
   </div>
-
   </div><!--/row-->
 </div>

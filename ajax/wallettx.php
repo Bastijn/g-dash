@@ -56,7 +56,7 @@ if($guldenCPU > 0 && $guldenMEM > 0) {
 		$tablerows = "";
 		
 		//Get the raw transaction details
-		$transactiondetails = getLiveTransactionDetails($accounttransactions, $numoftransactionstoshow, $addresslist, $gulden);
+		$transactiondetails = getLiveTransactionDetails($accounttransactions, $numoftransactionstoshow, $addresslist, $gulden, $selectedaccount);
 				
 		//Loop through the transactions
 		foreach ($transactiondetails as $transactiondetailsitem) {

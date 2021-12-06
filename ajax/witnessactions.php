@@ -73,7 +73,7 @@ if(isset($_GET['action'])) {
 				}
 				
 				//Send funds from witness account to specified wallet account
-				$gulden->move($fromaccount, $sendtoaccount, $amounttowithdraw);
+                $gulden->move($fromaccount, $sendtoaccount, $amounttowithdraw);
 				$witnessresponse = $gulden->response['error']['code'];
 				$witnessresponsemessage = $gulden->response['error']['message'];
 				

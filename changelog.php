@@ -24,6 +24,19 @@
   </h1>
   
   <div class="panel panel-default">
+    <div class="panel-heading"><b>Modifications by Frans</b></div>
+    <div class="panel-body">
+		<ul>
+			<li>ENHANCEMENT: Added exchange CoinGecko.</li>
+			<li>BUG: Changed the way that the list of last 30 wallet transactions is derived and displayed.</li>
+			<li>BUG: Gulden earned by witness now correct displayed.</li>
+			<li>Gulden version check adapted to GitHub latest release, only executed at logon</li>
+			<li>Layout Wallet and Node pages adjusted</li>
+		</ul>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
     <div class="panel-heading"><b>1.4</b></div>
     <div class="panel-body">
 		<ul>
@@ -32,7 +45,7 @@
 		</ul>
     </div>
   </div>
-  
+
   <div class="panel panel-default">
     <div class="panel-heading"><b>1.3</b></div>
     <div class="panel-body">
